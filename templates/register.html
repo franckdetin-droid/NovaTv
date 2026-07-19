@@ -1,96 +1,52 @@
 {% extends "base.html" %}
 
-
 {% block title %}
 Inscription - MY TV APP
 {% endblock %}
 
-
-
 {% block content %}
-
 
 <section class="auth-box">
 
+    <h1>👤 Créer un compte</h1>
 
-    <h1>
-        👤 Créer un compte
-    </h1>
+    <form method="POST">
 
-
-
-    <form method="POST" action="{{ url_for('main.register') }}">
-
-
-
-        <label>
-            Nom d'utilisateur
-        </label>
-
-
-        <input
-        type="text"
-        name="username"
-        minlength="3"
-        maxlength="100"
-        autocomplete="username"
+        <input 
+        type="text" 
+        name="username" 
+        placeholder="Nom d'utilisateur"
         required>
 
 
-
-
-        <label>
-            Email
-        </label>
-
-
-        <input
-        type="email"
-        name="email"
-        autocomplete="email"
+        <input 
+        type="email" 
+        name="email" 
+        placeholder="Email"
         required>
 
 
-
-
-        <label>
-            Mot de passe
-        </label>
-
-
-        <input
-        type="password"
-        name="password"
-        minlength="8"
-        autocomplete="new-password"
+        <input 
+        type="password" 
+        name="password" 
+        placeholder="Mot de passe"
         required>
-
-
 
 
         <button type="submit">
             Créer mon compte
         </button>
 
-
-
     </form>
 
 
-
     <p>
-
         Déjà un compte ?
-
         <a href="{{ url_for('main.login') }}">
             Se connecter
         </a>
-
     </p>
 
-
-
 </section>
-
 
 {% endblock %}
