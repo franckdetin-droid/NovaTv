@@ -27,7 +27,7 @@ def socket_events(socketio):
 
 
     # ==========================
-    # REJOINDRE LIVE CAMERA
+    # REJOINDRE SALLE CAMERA
     # ==========================
 
     @socketio.on("join_camera")
@@ -43,12 +43,15 @@ def socket_events(socketio):
         )
 
 
+        # prévenir le créateur qu'un spectateur arrive
+
         emit(
             "viewer_joined",
             {
                 "room": room
             },
-            room=room
+            room=room,
+            include_self=False
         )
 
 
@@ -60,15 +63,12 @@ def socket_events(socketio):
     @socketio.on("camera_offer")
     def camera_offer(data):
 
-        room = data["room"]
-
-
         emit(
             "camera_offer",
             {
                 "offer": data["offer"]
             },
-            room=room,
+            room=data["room"],
             include_self=False
         )
 
@@ -81,61 +81,52 @@ def socket_events(socketio):
     @socketio.on("camera_answer")
     def camera_answer(data):
 
-        room = data["room"]
-
-
         emit(
             "camera_answer",
             {
                 "answer": data["answer"]
             },
-            room=room,
+            room=data["room"],
             include_self=False
         )
 
 
 
     # ==========================
-    # ICE CREATEUR / SPECTATEUR
+    # ICE WEBRTC
     # ==========================
 
     @socketio.on("camera_ice")
     def camera_ice(data):
-
-        room = data["room"]
-
 
         emit(
             "camera_ice",
             {
                 "candidate": data["candidate"]
             },
-            room=room,
+            room=data["room"],
             include_self=False
         )
 
 
 
     # ==========================
-    # ARRET LIVE CAMERA
+    # ARRET LIVE
     # ==========================
 
     @socketio.on("stop_camera")
     def stop_camera(data):
 
-        room = data["room"]
-
-
         emit(
             "camera_stopped",
             {},
-            room=room
+            room=data["room"]
         )
 
 
         print(
-            "⛔ Live arrêté :",
-            room
+            "⛔ Live caméra arrêté :",
+            data["room"]
         )
 
 
@@ -147,11 +138,12 @@ def socket_events(socketio):
     @socketio.on("leave_camera")
     def leave_camera(data):
 
-        room = data["room"]
+        leave_room(
+            data["room"]
+        )
 
-        leave_room(room)
 
         print(
-            "Sortie salle :",
-            room
-    )
+            "👋 Sortie salle :",
+            data["room"]
+        )
