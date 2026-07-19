@@ -244,7 +244,7 @@ def register():
 
             email=email,
 
-            password=password
+            password=generate_password_hash(password)
 
         )
 
