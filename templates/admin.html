@@ -1,1 +1,274 @@
+{% extends "base.html" %}
 
+
+{% block title %}
+Administration - MY TV APP
+{% endblock %}
+
+
+
+{% block content %}
+
+
+
+<section class="admin-page">
+
+
+
+
+
+<header class="page-header">
+
+
+<h1>
+⚙️ Administration
+</h1>
+
+
+<p>
+Gestion de la plateforme MY TV APP.
+</p>
+
+
+</header>
+
+
+
+
+
+
+
+<div class="admin-grid">
+
+
+
+
+
+
+<div class="admin-card">
+
+
+<h2>
+👥 Utilisateurs
+</h2>
+
+
+<p>
+Nombre :
+{{ users|length }}
+</p>
+
+
+<a href="/admin/users">
+Gérer
+</a>
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="admin-card">
+
+
+<h2>
+📺 Chaînes
+</h2>
+
+
+<p>
+Nombre :
+{{ channels|length }}
+</p>
+
+
+<a href="/admin/channels">
+Gérer
+</a>
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="admin-card">
+
+
+<h2>
+🎬 Vidéos
+</h2>
+
+
+<p>
+Nombre :
+{{ videos|length }}
+</p>
+
+
+<a href="/admin/videos">
+Gérer
+</a>
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="admin-card">
+
+
+<h2>
+🟢 Directs
+</h2>
+
+
+<p>
+Nombre :
+{{ lives|length }}
+</p>
+
+
+<a href="/admin/live">
+Gérer
+</a>
+
+
+</div>
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+<section class="admin-table">
+
+
+
+<h2>
+Dernières chaînes créées
+</h2>
+
+
+
+<table>
+
+
+
+<tr>
+
+<th>
+Nom
+</th>
+
+
+<th>
+Catégorie
+</th>
+
+
+<th>
+Action
+</th>
+
+
+</tr>
+
+
+
+
+
+{% for channel in channels %}
+
+
+
+<tr>
+
+
+<td>
+{{ channel.name }}
+</td>
+
+
+<td>
+{{ channel.category }}
+</td>
+
+
+<td>
+
+<a href="/channel/{{ channel.id }}">
+Voir
+</a>
+
+</td>
+
+
+
+</tr>
+
+
+
+{% else %}
+
+
+
+<tr>
+
+<td colspan="3">
+
+Aucune chaîne.
+
+</td>
+
+
+</tr>
+
+
+
+{% endfor %}
+
+
+
+
+
+</table>
+
+
+
+</section>
+
+
+
+
+
+
+</section>
+
+
+
+
+{% endblock %}
