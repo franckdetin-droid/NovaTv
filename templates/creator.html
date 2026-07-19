@@ -155,7 +155,6 @@ alt="{{ channel.name }}">
 action="{{ url_for('main.delete_channel', channel_id=channel.id) }}"
 method="POST">
 
-{{ csrf_token() }}
 
 <button
 type="submit"
@@ -258,10 +257,9 @@ alt="{{ video.title }}">
 
 
 <form
-action="{{ url_for('main.delete_video, video_id=video.id) }}"
+action="{{ url_for('main.delete_video', video_id=video.id) }}"
 method="POST">
 
-{{ csrf_token() }}
 
 <button
 type="submit"
