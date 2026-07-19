@@ -18,14 +18,12 @@ Connexion - MY TV APP
         placeholder="Nom d'utilisateur"
         required>
 
-
         <input
         type="password"
         name="password"
         placeholder="Mot de passe"
         required>
 
-
         <button type="submit">
             Se connecter
         </button>
@@ -41,45 +39,5 @@ Connexion - MY TV APP
     </p>
 
 </section>
-
-{% endblock %}
-
-
-        <label>
-            Mot de passe
-        </label>
-
-
-        <input
-        type="password"
-        name="password"
-        minlength="8"
-        required>
-
-
-
-
-        <button type="submit">
-            Se connecter
-        </button>
-
-
-    </form>
-
-
-
-    <p>
-        Pas encore de compte ?
-
-        <a href="{{ url_for('main.register') }}">
-            Créer un compte
-        </a>
-
-    </p>
-
-
-
-</section>
-
 
 {% endblock %}
