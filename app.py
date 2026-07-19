@@ -19,7 +19,6 @@ app = Flask(
     static_folder="static"
 )
 
-
 app.config.from_object(
     Config
 )
