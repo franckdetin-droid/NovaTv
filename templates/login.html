@@ -1,40 +1,48 @@
 {% extends "base.html" %}
 
-
 {% block title %}
 Connexion - MY TV APP
 {% endblock %}
 
-
-
 {% block content %}
-
 
 <section class="auth-box">
 
+    <h1>🔐 Connexion</h1>
 
-    <h1>
-        🔐 Connexion
-    </h1>
-
-
-
-    <form method="POST" action="{{ url_for('main.login') }}">
-
-
-
-        <label>
-            Nom d'utilisateur
-        </label>
-
+    <form method="POST">
 
         <input
         type="text"
         name="username"
-        maxlength="100"
+        placeholder="Nom d'utilisateur"
         required>
 
 
+        <input
+        type="password"
+        name="password"
+        placeholder="Mot de passe"
+        required>
+
+
+        <button type="submit">
+            Se connecter
+        </button>
+
+    </form>
+
+
+    <p>
+        Pas encore de compte ?
+        <a href="{{ url_for('main.register') }}">
+            Créer un compte
+        </a>
+    </p>
+
+</section>
+
+{% endblock %}
 
 
         <label>
