@@ -372,26 +372,25 @@ def create_channel():
 
 
 
-        upload_folder = current_app.config[
+                upload_folder = current_app.config[
             "UPLOAD_FOLDER"
         ]
-    os.makedirs(
-    os.path.join(upload_folder, "logos"),
-    exist_ok=True
-)
 
-os.makedirs(
-    os.path.join(upload_folder, "covers"),
-    exist_ok=True
-)
 
+        os.makedirs(
+            os.path.join(upload_folder, "logos"),
+            exist_ok=True
+        )
+
+        os.makedirs(
+            os.path.join(upload_folder, "covers"),
+            exist_ok=True
+        )
 
 
         logo_name = None
 
         cover_name = None
-
-
 
         if logo and logo.filename:
 
