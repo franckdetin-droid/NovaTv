@@ -196,7 +196,8 @@ def live():
         "live.html",
         lives=lives
     )
-    # ==========================
+    
+# ==========================
 # INSCRIPTION
 # ==========================
 
@@ -209,9 +210,7 @@ def register():
     if request.method == "POST":
 
         username = request.form["username"]
-
         email = request.form["email"]
-
         password = request.form["password"]
 
 
@@ -244,7 +243,7 @@ def register():
 
             email=email,
 
-            password=password
+            password=generate_password_hash(password)
 
         )
 
@@ -263,6 +262,9 @@ def register():
     return render_template(
         "register.html"
     )
+
+
+
 # ==========================
 # CONNEXION
 # ==========================
@@ -273,9 +275,7 @@ def register():
 )
 def login():
 
-
     if request.method == "POST":
-
 
         username = request.form["username"]
 
@@ -318,13 +318,13 @@ def login():
 
 
 
-
-
 # ==========================
 # DECONNEXION
 # ==========================
 
-@main.route("/logout")
+@main.route(
+    "/logout"
+)
 def logout():
 
 
@@ -333,8 +333,7 @@ def logout():
 
     return redirect(
         url_for("main.home")
-    ) 
-
+)
 
 # ==========================
 # CREER UNE CHAINE
