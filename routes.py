@@ -27,15 +27,14 @@ from models import (
     VideoLike
 )
 
-from broadcast_scheduler import (
-    get_current_program
-)
+from broadcast_scheduler import get_current_program
 
 
-main = Blueprint(
-    "main",
-    __name__
-)
+# ==========================
+# BLUEPRINT
+# ==========================
+main = Blueprint("main", __name__)
+
 
 # ==========================
 # ACCUEIL
@@ -44,11 +43,9 @@ main = Blueprint(
 def home():
 
     channels = Channel.query.all()
-
     videos = Video.query.all()
 
     history_videos = []
-
 
     if "user_id" in session:
 
@@ -56,17 +53,12 @@ def home():
             user_id=session["user_id"]
         ).all()
 
-
         for item in histories:
 
-            video = Video.query.get(
-                item.video_id
-            )
+            video = Video.query.get(item.video_id)
 
             if video:
                 history_videos.append(video)
-
-
 
     return render_template(
         "home.html",
@@ -75,249 +67,90 @@ def home():
         history_videos=history_videos
     )
 
+
 # ==========================
 # VERIFICATION FICHIERS
 # ==========================
 
-ALLOWED_IMAGES = {
-    "png",
-    "jpg",
-    "jpeg",
-    "webp"
-}
-
-
-ALLOWED_VIDEOS = {
-    "mp4",
-    "mkv",
-    "avi"
-}
-
+ALLOWED_IMAGES = {"png", "jpg", "jpeg", "webp"}
+ALLOWED_VIDEOS = {"mp4", "mkv", "avi"}
 
 
 def file_extension(filename):
-
-    return filename.rsplit(
-        ".",
-        1
-    )[-1].lower()
-
-
-
+    return filename.rsplit(".", 1)[-1].lower()
 
 
 def is_image(filename):
-
-    return (
-        "." in filename
-        and
-        file_extension(filename) in ALLOWED_IMAGES
-    )
-
-
-
+    return "." in filename and file_extension(filename) in ALLOWED_IMAGES
 
 
 def is_video(filename):
-
-    return (
-        "." in filename
-        and
-        file_extension(filename) in ALLOWED_VIDEOS
-    )
-
-
-
+    return "." in filename and file_extension(filename) in ALLOWED_VIDEOS
 
 
 # ==========================
-# CHAÎNES
-# ==========================
-
-@main.route("/channels")
-def channels():
-
-
-    channels = Channel.query.all()
-
-
-    return render_template(
-        "channels.html",
-        channels=channels
-    )
-
-
-
-
-
-# ==========================
-# PROFIL
-# ==========================
-
-@main.route("/profile")
-def profile():
-
-
-    if "user_id" not in session:
-
-        return redirect(
-            url_for("main.login")
-        )
-
-
-
-    user = User.query.get(
-        session["user_id"]
-    )
-
-
-    return render_template(
-        "profile.html",
-        user=user
-    )
-
-
-
-
-
-# ==========================
-# DIRECT TV
-# ==========================
-
-@main.route("/live")
-def live():
-
-    lives = LiveStream.query.filter_by(
-        is_live=True
-    ).all()
-
-
-    return render_template(
-        "live.html",
-        lives=lives
-    )
-    # ==========================
 # INSCRIPTION
 # ==========================
 
-@main.route(
-    "/register",
-    methods=["GET", "POST"]
-)
+@main.route("/register", methods=["GET", "POST"])
 def register():
 
     if request.method == "POST":
 
         username = request.form["username"]
-
         email = request.form["email"]
-
         password = request.form["password"]
 
-
-        existing_email = User.query.filter_by(
-            email=email
-        ).first()
-
-
-        existing_username = User.query.filter_by(
-            username=username
-        ).first()
-
-
+        existing_email = User.query.filter_by(email=email).first()
+        existing_username = User.query.filter_by(username=username).first()
 
         if existing_email:
-
             return "Email déjà utilisé"
 
-
-
         if existing_username:
-
             return "Nom d'utilisateur déjà utilisé"
 
-
+        # ✅ HASH PASSWORD
+        hashed_password = generate_password_hash(password)
 
         user = User(
-
             username=username,
-
             email=email,
-
-            password=password
-
+            password=hashed_password
         )
-
 
         db.session.add(user)
-
         db.session.commit()
 
+        return redirect(url_for("main.login"))
+
+    return render_template("register.html")
 
 
-        return redirect(
-            url_for("main.login")
-        )
-
-
-    return render_template(
-        "register.html"
-    )
 # ==========================
 # CONNEXION
 # ==========================
 
-@main.route(
-    "/login",
-    methods=["GET", "POST"]
-)
+@main.route("/login", methods=["GET", "POST"])
 def login():
-
 
     if request.method == "POST":
 
-
         username = request.form["username"]
-
         password = request.form["password"]
 
+        user = User.query.filter_by(username=username).first()
 
-
-        user = User.query.filter_by(
-            username=username
-        ).first()
-
-
-
-        if user and check_password_hash(
-            user.password,
-            password
-        ):
-
+        if user and check_password_hash(user.password, password):
 
             session.permanent = True
-
-
             session["user_id"] = user.id
 
-
-
-            return redirect(
-                url_for("main.home")
-            )
-
-
+            return redirect(url_for("main.home"))
 
         return "Identifiants incorrects"
 
-
-
-    return render_template(
-        "login.html"
-    )
-
-
-
+    return render_template("login.html")
 
 
 # ==========================
@@ -327,15 +160,9 @@ def login():
 @main.route("/logout")
 def logout():
 
-
     session.clear()
 
-
-    return redirect(
-        url_for("main.home")
-    ) 
-
-
+    return redirect(url_for("main.home"))
 # ==========================
 # CREER UNE CHAINE
 # ==========================
