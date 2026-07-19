@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}
+Historique - MY TV APP
+{% endblock %}
+
+
+{% block content %}
+
+<section class="container">
+
+    <h1 class="section-title">
+        📜 Reprendre le visionnage
+    </h1>
+
+
+    <div class="netflix-grid">
+
+        {% for video in videos %}
+
+        <div class="netflix-card">
+
+            <a href="{{ url_for('main.watch', video_id=video.id) }}">
+
+                {% if video.thumbnail %}
+
+                    <img 
+                    src="{{ url_for('static', filename=video.thumbnail) }}"
+                    alt="{{ video.title }}"
+                    >
+
+                {% else %}
+
+                    <img 
+                    src="{{ url_for('static', filename='default.jpg') }}"
+                    alt="Image par défaut"
+                    >
+
+                {% endif %}
+
+
+                <div class="card-info">
+
+                    <h3>
+                        {{ video.title }}
+                    </h3>
+
+
+                    {% if video.category %}
+
+                    <p>
+                        {{ video.category }}
+                    </p>
+
+                    {% endif %}
+
+
+                    {% if video.duration %}
+
+                    <span>
+                        ⏱ {{ video.duration }}
+                    </span>
+
+                    {% endif %}
+
+                </div>
+
+            </a>
+
+
+        </div>
+
+
+        {% else %}
+
+
+        <div class="empty-box">
+
+            <h3>
+                📺 Aucun historique
+            </h3>
+
+            <p>
+                Les vidéos que tu regardes apparaîtront ici.
+            </p>
+
+        </div>
+
+
+        {% endfor %}
+
+
+    </div>
+
+</section>
+
+{% endblock %}

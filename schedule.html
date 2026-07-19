@@ -1,0 +1,249 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Programmation TV - MY TV APP
+{% endblock %}
+
+
+
+{% block content %}
+
+
+
+<section class="form-page">
+
+
+
+<h1>
+⏰ Programmation automatique
+</h1>
+
+
+
+
+<form
+method="POST"
+action="{{ url_for('main.schedule') }}">
+
+
+{{ csrf_token() }}
+
+
+
+
+
+
+<label>
+Chaîne
+</label>
+
+
+<select
+name="channel_id"
+required>
+
+
+
+{% for channel in channels %}
+
+
+
+<option value="{{ channel.id }}">
+
+
+{{ channel.name }}
+
+
+</option>
+
+
+
+{% endfor %}
+
+
+
+</select>
+
+
+
+
+
+
+
+<label>
+Programme vidéo
+</label>
+
+
+<select
+name="video_id"
+required>
+
+
+
+{% for video in videos %}
+
+
+
+<option value="{{ video.id }}">
+
+
+{{ video.title }}
+
+
+</option>
+
+
+
+{% endfor %}
+
+
+
+</select>
+
+
+
+
+
+
+
+<label>
+Date et heure de début
+</label>
+
+
+<input
+type="datetime-local"
+name="start_time"
+required>
+
+
+
+
+
+
+
+<label>
+Date et heure de fin
+</label>
+
+
+<input
+type="datetime-local"
+name="end_time"
+required>
+
+
+
+
+
+
+
+<label class="checkbox">
+
+
+
+<input
+type="checkbox"
+name="repeat"
+value="true">
+
+
+Répéter automatiquement
+
+
+
+</label>
+
+
+
+
+
+
+
+<button
+type="submit">
+
+Ajouter au programme TV
+
+</button>
+
+
+
+
+
+</form>
+
+
+
+
+
+
+<section class="program-list">
+
+
+<h2>
+Programmes programmés
+</h2>
+
+
+
+
+{% for program in programs %}
+
+
+
+
+<div class="program-card">
+
+
+
+<h3>
+{{ program.video.title }}
+</h3>
+
+
+<p>
+Début :
+{{ program.start_time }}
+</p>
+
+
+<p>
+Fin :
+{{ program.end_time }}
+</p>
+
+
+
+</div>
+
+
+
+
+{% else %}
+
+
+
+<p>
+Aucun programme enregistré.
+</p>
+
+
+
+{% endfor %}
+
+
+
+</section>
+
+
+
+
+
+</section>
+
+
+
+{% endblock %}

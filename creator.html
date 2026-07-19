@@ -1,0 +1,311 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Creator Studio - MY TV APP
+{% endblock %}
+
+
+
+{% block content %}
+
+
+<section class="creator-page">
+
+
+<header class="page-header">
+
+    <h1>
+        🎬 Creator Studio
+    </h1>
+
+    <p>
+        Gérez vos chaînes, vidéos et programmations.
+    </p>
+
+</header>
+
+
+
+
+
+<!-- ACTIONS CREATEUR -->
+
+<div class="creator-actions">
+
+
+    <a href="{{ url_for('main.create_channel') }}" class="action-card">
+
+        <h3>
+            📺 Créer une chaîne
+        </h3>
+
+        <p>
+            Créer votre propre chaîne TV.
+        </p>
+
+    </a>
+
+
+
+
+
+    <a href="{{ url_for('main.upload_video') }}" class="action-card">
+
+        <h3>
+            🎬 Ajouter une vidéo
+        </h3>
+
+        <p>
+            Importer un film, journal ou programme.
+        </p>
+
+    </a>
+
+
+
+
+
+    <a href="{{ url_for('main.schedule') }}" class="action-card">
+
+        <h3>
+            ⏰ Programmation
+        </h3>
+
+        <p>
+            Organiser la diffusion automatique.
+        </p>
+
+    </a>
+
+
+
+
+
+    <a href="{{ url_for('main.create_live') }}" class="action-card">
+
+        <h3>
+            🟢 Direct
+        </h3>
+
+        <p>
+            Configurer une diffusion en direct.
+        </p>
+
+    </a>
+
+
+
+</div>
+
+
+
+
+
+
+
+<!-- MES CHAINES -->
+
+<section class="my-channels">
+
+
+<h2>
+    📺 Mes chaînes
+</h2>
+
+
+
+<div class="card-grid">
+
+
+
+{% for channel in channels %}
+
+
+
+<div class="media-card">
+
+
+
+{% if channel.logo %}
+
+<img
+src="{{ url_for('static', filename=channel.logo) }}"
+class="channel-logo"
+alt="{{ channel.name }}">
+
+{% endif %}
+
+
+
+<h3>
+    {{ channel.name }}
+</h3>
+
+
+
+<a href="{{ url_for('main.channel_detail', channel_id=channel.id) }}">
+    ▶ Ouvrir
+</a>
+
+
+
+
+<form
+action="{{ url_for('main.delete_channel', channel_id=channel.id) }}"
+method="POST">
+
+{{ csrf_token() }}
+
+<button
+type="submit"
+class="delete-button"
+onclick="return confirm('Supprimer cette chaîne et toutes ses vidéos ?');">
+
+🗑 Supprimer la chaîne
+
+</button>
+
+
+</form>
+
+
+
+</div>
+
+
+
+{% else %}
+
+
+<p>
+    Vous n'avez aucune chaîne.
+</p>
+
+
+{% endfor %}
+
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+
+
+
+
+<!-- MES VIDEOS -->
+
+<section class="my-videos">
+
+
+<h2>
+    🎬 Mes vidéos
+</h2>
+
+
+
+<div class="card-grid">
+
+
+
+{% for video in videos %}
+
+
+
+<div class="media-card">
+
+
+
+{% if video.thumbnail %}
+
+<img
+src="{{ url_for('static', filename=video.thumbnail) }}"
+class="video-thumbnail"
+alt="{{ video.title }}">
+
+{% endif %}
+
+
+
+
+
+<h3>
+    {{ video.title }}
+</h3>
+
+
+
+<p>
+    👁 {{ video.views }} vues
+</p>
+
+
+
+<a href="{{ url_for('main.watch', video_id=video.id) }}">
+    ▶ Regarder
+</a>
+
+
+
+
+
+
+<form
+action="{{ url_for('main.delete_video, video_id=video.id) }}"
+method="POST">
+
+{{ csrf_token() }}
+
+<button
+type="submit"
+class="delete-button"
+onclick="return confirm('Voulez-vous supprimer cette vidéo ?');">
+
+🗑 Supprimer la vidéo
+
+</button>
+
+
+</form>
+
+
+
+</div>
+
+
+
+{% else %}
+
+
+<p>
+    Vous n'avez aucune vidéo.
+</p>
+
+
+
+{% endfor %}
+
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+
+</section>
+
+
+
+{% endblock %}

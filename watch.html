@@ -1,0 +1,436 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+{{ video.title }} - MY TV APP
+{% endblock %}
+
+
+
+{% block content %}
+
+
+<section class="player-page">
+
+
+<!-- ==========================
+     LECTEUR VIDEO
+========================== -->
+
+
+<div class="video-player video-overlay">
+
+
+<video
+controls
+autoplay
+playsinline
+width="100%"
+poster="{{ url_for('static', filename=video.thumbnail) }}"
+>
+
+
+{% if video.file_path %}
+
+<source
+src="{{ url_for('static', filename=video.file_path) }}"
+type="video/mp4"
+>
+
+{% endif %}
+
+
+Votre navigateur ne supporte pas la vidéo.
+
+
+</video>
+
+
+
+{% if video.channel %}
+
+
+<div class="tv-watermark">
+
+
+{% if video.channel.logo %}
+
+<img
+src="{{ url_for('static', filename=video.channel.logo) }}"
+alt="{{ video.channel.name }}"
+>
+
+{% endif %}
+
+
+
+<span>
+{{ video.channel.name }}
+</span>
+
+
+
+</div>
+
+
+{% endif %}
+
+
+
+</div>
+
+
+
+
+
+
+
+<!-- ==========================
+     DETAILS VIDEO
+========================== -->
+
+
+<section class="video-details">
+
+
+
+<h1>
+{{ video.title }}
+</h1>
+
+
+
+
+{% if video.channel %}
+
+
+<div class="watch-channel">
+
+
+{% if video.channel.logo %}
+
+
+<img
+src="{{ url_for('static', filename=video.channel.logo) }}"
+class="watch-channel-logo"
+>
+
+
+{% endif %}
+
+
+
+<h3>
+📺 {{ video.channel.name }}
+</h3>
+
+
+
+</div>
+
+
+{% endif %}
+
+
+
+
+
+
+
+<p>
+{{ video.description }}
+</p>
+
+
+
+
+
+
+
+<div class="video-meta">
+
+
+<span>
+🎬 {{ video.category }}
+</span>
+
+
+<span>
+⏱️ {{ video.duration }}
+</span>
+
+
+<span>
+👁️ {{ video.views }} vues
+</span>
+
+
+</div>
+
+
+
+
+
+
+
+<!-- ==========================
+     ACTIONS
+========================== -->
+
+
+<div class="video-actions">
+
+
+
+<form
+action="{{ url_for('main.like_video', video_id=video.id) }}"
+method="POST"
+>
+
+
+<button class="btn-action">
+
+❤️ J'aime
+
+</button>
+
+
+</form>
+
+
+
+
+
+
+
+{% if session.get("user_id") %}
+
+
+{% set already = false %}
+
+
+{% for fav in video.favorites %}
+
+{% if fav.user_id == session.get("user_id") %}
+
+{% set already = true %}
+
+{% endif %}
+
+{% endfor %}
+
+
+
+
+
+{% if already %}
+
+
+<a
+href="{{ url_for('main.remove_favorite', video_id=video.id) }}"
+class="btn-action"
+>
+
+✅ Dans ma liste
+
+</a>
+
+
+
+
+{% else %}
+
+
+
+<a
+href="{{ url_for('main.add_favorite', video_id=video.id) }}"
+class="btn-action"
+>
+
+➕ Ma liste
+
+</a>
+
+
+
+{% endif %}
+
+
+
+
+
+{% else %}
+
+
+
+<a
+href="{{ url_for('main.login') }}"
+class="btn-action"
+>
+
+➕ Ma liste
+
+</a>
+
+
+
+{% endif %}
+
+
+
+
+
+</div>
+
+
+
+
+
+
+</section>
+
+
+
+
+
+
+
+
+
+<!-- ==========================
+     VIDEOS SIMILAIRES
+========================== -->
+
+
+<section class="related">
+
+
+<h2>
+🎬 Autres vidéos
+</h2>
+
+
+
+
+
+<div class="netflix-grid">
+
+
+
+{% for item in related_videos %}
+
+
+
+
+<div class="netflix-card">
+
+
+
+<a href="{{ url_for('main.watch', video_id=item.id) }}">
+
+
+
+
+
+{% if item.thumbnail %}
+
+
+
+<img
+src="{{ url_for('static', filename=item.thumbnail) }}"
+alt="{{ item.title }}"
+>
+
+
+
+{% else %}
+
+
+
+<div class="no-image">
+🎬
+</div>
+
+
+
+{% endif %}
+
+
+
+
+
+
+
+<div class="card-info">
+
+
+
+<h3>
+{{ item.title }}
+</h3>
+
+
+
+<p>
+{{ item.category }}
+</p>
+
+
+
+<span>
+❤️ {{ item.likes }}
+</span>
+
+
+
+<span>
+👁️ {{ item.views }}
+</span>
+
+
+
+</div>
+
+
+
+
+
+</a>
+
+
+
+</div>
+
+
+
+
+{% else %}
+
+
+<p>
+Aucune autre vidéo.
+</p>
+
+
+{% endfor %}
+
+
+
+
+
+</div>
+
+
+
+</section>
+
+
+
+
+
+
+</section>
+
+
+
+{% endblock %}

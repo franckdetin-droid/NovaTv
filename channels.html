@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Chaînes - MY TV APP
+{% endblock %}
+
+
+
+{% block content %}
+
+
+
+<section class="page-header">
+
+
+<h1>
+📺 Toutes les chaînes
+</h1>
+
+
+<p>
+Découvrez les chaînes disponibles sur MY TV APP.
+</p>
+
+
+</section>
+
+
+
+
+
+<section class="content-section">
+
+
+
+<div class="card-grid">
+
+
+
+{% for channel in channels %}
+
+
+
+<div class="media-card">
+
+
+
+{% if channel.cover %}
+
+
+<img
+src="{{ channel.cover }}"
+alt="{{ channel.name }}"
+class="cover-image">
+
+
+{% endif %}
+
+
+
+
+<div class="channel-info">
+
+
+
+{% if channel.logo %}
+
+
+<img
+src="{{ channel.logo }}"
+alt="Logo {{ channel.name }}"
+class="small-logo">
+
+
+{% endif %}
+
+
+
+
+
+<h2>
+{{ channel.name }}
+</h2>
+
+
+
+<p>
+{{ channel.description }}
+</p>
+
+
+
+<p>
+Catégorie :
+{{ channel.category }}
+</p>
+
+
+
+<a href="/channel/{{ channel.id }}">
+Accéder à la chaîne
+</a>
+
+
+
+</div>
+
+
+</div>
+
+
+
+{% else %}
+
+
+
+<p>
+Aucune chaîne disponible actuellement.
+</p>
+
+
+
+{% endfor %}
+
+
+
+</div>
+
+
+
+</section>
+
+
+
+{% endblock %}

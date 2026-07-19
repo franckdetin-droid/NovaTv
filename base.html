@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+
+<meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+
+
+<title>
+{% block title %}MY TV APP{% endblock %}
+</title>
+
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+
+</head>
+
+
+
+<body>
+
+
+
+<header class="header">
+
+
+    <div class="logo">
+        📺 MY TV APP
+    </div>
+
+
+
+    <nav class="nav">
+
+
+        <a href="{{ url_for('main.home') }}">
+            🏠 Accueil
+        </a>
+
+
+        <a href="{{ url_for('main.channels') }}">
+            📺 Chaînes
+        </a>
+
+
+        <a href="{{ url_for('main.live') }}">
+            🔴 Direct
+        </a>
+
+
+        <a href="{{ url_for('main.camera_live') }}">
+            🎥 Caméra
+        </a>
+
+
+
+
+        <!-- Recherche -->
+
+        <form 
+        action="{{ url_for('main.search') }}" 
+        method="get" 
+        class="search-form">
+
+
+            <input 
+            type="search"
+            name="q"
+            placeholder="Rechercher..."
+            autocomplete="off"
+            maxlength="100"
+            required>
+
+
+        </form>
+
+
+
+
+
+        {% if session.get("user_id") %}
+
+
+
+            <a href="{{ url_for('main.my_list') }}">
+                ➕ Ma liste
+            </a>
+
+
+
+            <a href="{{ url_for('main.history') }}">
+                📜 Historique
+            </a>
+
+
+
+            <a href="{{ url_for('main.profile') }}">
+                👤 Profil
+            </a>
+
+
+
+            <a href="{{ url_for('main.creator') }}">
+                🎬 Studio
+            </a>
+
+
+
+            <a href="{{ url_for('main.logout') }}">
+                🚪 Déconnexion
+            </a>
+
+
+
+        {% else %}
+
+
+
+            <a href="{{ url_for('main.login') }}">
+                🔑 Connexion
+            </a>
+
+
+
+            <a href="{{ url_for('main.register') }}">
+                📝 Inscription
+            </a>
+
+
+
+        {% endif %}
+
+
+
+
+    </nav>
+
+
+</header>
+
+
+
+
+
+
+<main class="main-content">
+
+
+
+    {% with messages = get_flashed_messages() %}
+
+        {% if messages %}
+
+            <div class="flash-message">
+
+                {% for message in messages %}
+
+                    <p>
+                        {{ message }}
+                    </p>
+
+                {% endfor %}
+
+            </div>
+
+        {% endif %}
+
+    {% endwith %}
+
+
+
+
+
+    {% block content %}
+
+    {% endblock %}
+
+
+
+</main>
+
+
+
+
+
+
+
+<footer class="footer">
+
+
+    <p>
+        © 2026 MY TV APP - Tous droits réservés
+    </p>
+
+
+</footer>
+
+
+
+
+
+
+
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+
+
+
+</body>
+
+
+</html>

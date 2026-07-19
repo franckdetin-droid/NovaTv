@@ -1,0 +1,223 @@
+{% extends "base.html" %}
+
+{% block title %}
+Regarder Live Caméra - MY TV APP
+{% endblock %}
+
+
+{% block content %}
+
+<section class="watch-camera">
+
+
+<h1>
+🎥 {{ live.title }}
+</h1>
+
+
+<video
+id="remoteVideo"
+autoplay
+playsinline
+controls
+width="100%">
+</video>
+
+
+<p id="status">
+⏳ Connexion au live...
+</p>
+
+
+</section>
+
+
+
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+
+
+<script>
+
+
+const socket = io();
+
+
+const video =
+document.getElementById("remoteVideo");
+
+
+const status =
+document.getElementById("status");
+
+
+
+let peer =
+new RTCPeerConnection();
+
+
+
+const room =
+"camera_live_{{ live.channel.user_id }}";
+
+
+
+
+// ==========================
+// REJOINDRE LA SALLE
+// ==========================
+
+socket.emit(
+"join_camera",
+{
+room: room
+}
+);
+
+
+
+
+
+// ==========================
+// RECEVOIR OFFRE CREATEUR
+// ==========================
+
+socket.on(
+"camera_offer",
+async data=>{
+
+
+await peer.setRemoteDescription(
+data.offer
+);
+
+
+
+let answer =
+await peer.createAnswer();
+
+
+
+await peer.setLocalDescription(
+answer
+);
+
+
+
+socket.emit(
+"camera_answer",
+{
+room: room,
+answer: answer
+}
+);
+
+
+
+});
+
+
+
+
+
+
+// ==========================
+// RECEVOIR VIDEO
+// ==========================
+
+peer.ontrack = event=>{
+
+
+video.srcObject =
+event.streams[0];
+
+
+status.innerHTML =
+"🔴 Live connecté";
+
+
+};
+
+
+
+
+
+
+// ==========================
+// ICE
+// ==========================
+
+peer.onicecandidate = event=>{
+
+
+if(event.candidate){
+
+
+socket.emit(
+"camera_ice",
+{
+room:room,
+candidate:event.candidate
+}
+);
+
+
+}
+
+
+};
+
+
+
+
+
+socket.on(
+"camera_ice",
+async data=>{
+
+
+try{
+
+
+await peer.addIceCandidate(
+data.candidate
+);
+
+
+}
+catch(e){
+
+console.log(e);
+
+}
+
+
+});
+
+
+
+
+
+// ==========================
+// LIVE ARRETE
+// ==========================
+
+socket.on(
+"camera_stopped",
+()=>{
+
+
+status.innerHTML =
+"⛔ Live terminé";
+
+
+video.srcObject=null;
+
+
+});
+
+
+
+</script>
+
+
+{% endblock %}

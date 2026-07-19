@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}Ma liste{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+    <h2 class="section-title">🎬 Ma liste</h2>
+
+    {% if favorites and favorites|length > 0 %}
+
+    <div class="netflix-grid">
+
+        {% for fav in favorites %}
+
+            {% if fav.video %}
+
+            <div class="netflix-card">
+
+                <!-- LIEN VIDEO -->
+                <a href="{{ url_for('main.watch', video_id=fav.video.id) }}">
+
+                    <!-- IMAGE -->
+                    {% if fav.video.thumbnail %}
+                        <img 
+                            src="{{ url_for('static', filename=fav.video.thumbnail) }}" 
+                            alt="thumbnail"
+                            loading="lazy"
+                        >
+                    {% else %}
+                        <img 
+                            src="{{ url_for('static', filename='default.jpg') }}" 
+                            alt="default"
+                            loading="lazy"
+                        >
+                    {% endif %}
+
+                </a>
+
+                <!-- INFOS -->
+                <div class="card-body">
+
+                    <h3>
+                        {{ fav.video.title or "Sans titre" }}
+                    </h3>
+
+                    <!-- ACTIONS -->
+                    <div class="card-actions">
+
+                        <a href="{{ url_for('main.watch', video_id=fav.video.id) }}" class="btn">
+                            ▶️ Regarder
+                        </a>
+
+                        <a href="{{ url_for('main.remove_favorite', video_id=fav.video.id) }}" class="btn btn-danger">
+                            ❌ Retirer
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% endif %}
+
+        {% endfor %}
+
+    </div>
+
+    {% else %}
+
+    <div class="empty-state">
+
+        <p>📭 Ta liste est vide</p>
+
+        <a href="{{ url_for('main.home') }}" class="btn">
+            🔎 Découvrir des vidéos
+        </a>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

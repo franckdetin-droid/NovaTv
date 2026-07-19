@@ -1,0 +1,169 @@
+
+{% extends "base.html" %}
+
+
+{% block title %}
+Créer une chaîne - MY TV APP
+{% endblock %}
+
+
+
+{% block content %}
+
+
+
+<section class="form-page">
+
+
+
+<h1>
+📺 Créer une nouvelle chaîne
+</h1>
+
+
+
+
+
+<form
+method="POST"
+action="{{ url_for('main.create_channel') }}"
+enctype="multipart/form-data">
+
+
+
+{{ csrf_token() }
+
+
+
+
+
+<label>
+Nom de la chaîne
+</label>
+
+
+<input
+type="text"
+name="name"
+placeholder="Ex: MY TV NEWS"
+maxlength="150"
+required>
+
+
+
+
+
+
+
+<label>
+Catégorie
+</label>
+
+
+<select name="category">
+
+
+<option value="actualite">
+Actualité
+</option>
+
+
+<option value="sport">
+Sport
+</option>
+
+
+<option value="film">
+Film
+</option>
+
+
+<option value="musique">
+Musique
+</option>
+
+
+<option value="divertissement">
+Divertissement
+</option>
+
+
+</select>
+
+
+
+
+
+
+
+<label>
+Description
+</label>
+
+
+<textarea
+name="description"
+placeholder="Description de votre chaîne">
+</textarea>
+
+
+
+
+
+
+
+<label>
+Logo de la chaîne
+</label>
+
+
+<input
+type="file"
+name="logo"
+accept="image/*"
+required>
+
+
+
+
+
+
+
+<label>
+Image de couverture
+</label>
+
+
+<input
+type="file"
+name="cover"
+accept="image/*"
+required>
+
+
+
+
+
+
+
+
+<button
+type="submit">
+
+Créer la chaîne
+
+</button>
+
+
+
+
+
+</form>
+
+
+
+</section>
+
+
+
+{% endblock %}

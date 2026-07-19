@@ -1,0 +1,287 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+{{ channel.name }} - TV
+{% endblock %}
+
+
+
+{% block content %}
+
+
+<section class="tv-screen">
+
+
+
+{% if channel.logo %}
+
+<img
+src="{{ url_for('static', filename=channel.logo) }}"
+class="live-logo"
+alt="{{ channel.name }}">
+
+{% endif %}
+
+
+
+<h1>
+📺 {{ channel.name }}
+</h1>
+
+
+
+
+
+{% if program %}
+
+
+
+<h2>
+🎬 Programme en cours
+</h2>
+
+
+
+{% if video %}
+
+
+
+<h3>
+{{ video.title }}
+</h3>
+
+
+
+<video
+id="tv-player"
+controls
+autoplay
+playsinline
+width="100%"
+>
+
+
+
+<source
+src="{{ url_for('static', filename=video.file_path) }}"
+type="video/mp4">
+
+
+Votre navigateur ne supporte pas la vidéo.
+
+
+</video>
+
+
+
+{% else %}
+
+
+<p>
+❌ Vidéo introuvable.
+</p>
+
+
+{% endif %}
+
+
+
+
+
+{% else %}
+
+
+
+<h2>
+⏰ Aucun programme en cours.
+</h2>
+
+
+<p>
+La chaîne est en attente de diffusion.
+</p>
+
+
+
+{% endif %}
+
+
+
+
+
+</section>
+
+
+
+
+
+
+<!-- PROGRAMME TV -->
+
+<section class="tv-programs">
+
+
+<h2>
+📅 Programme de la journée
+</h2>
+
+
+
+<div class="program-list">
+
+
+
+{% for item in channel.programs|sort(attribute="start_time") %}
+
+
+
+<div class="program-card">
+
+
+
+<div class="program-time">
+
+⏰
+
+{{ item.start_time.strftime("%H:%M") }}
+
+
+</div>
+
+
+
+<div class="program-info">
+
+
+{% if item.video %}
+
+<h3>
+🎬 {{ item.video.title }}
+</h3>
+
+
+<p>
+{{ item.video.category }}
+</p>
+
+
+{% else %}
+
+
+<h3>
+Programme sans vidéo
+</h3>
+
+
+{% endif %}
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+{% else %}
+
+
+
+<p>
+Aucun programme prévu.
+</p>
+
+
+
+{% endfor %}
+
+
+
+</div>
+
+
+
+</section>
+
+
+
+
+
+
+
+
+
+<script>
+
+
+// Vérification automatique du changement de programme
+
+setInterval(function(){
+
+
+    fetch(window.location.href)
+
+    .then(response => response.text())
+
+    .then(html => {
+
+
+
+        let parser = new DOMParser();
+
+
+        let doc = parser.parseFromString(
+            html,
+            "text/html"
+        );
+
+
+
+        let newVideo =
+        doc.querySelector("#tv-player source");
+
+
+
+        let currentVideo =
+        document.querySelector("#tv-player source");
+
+
+
+
+
+        if(newVideo && currentVideo){
+
+
+
+            if(
+                newVideo.src !== currentVideo.src
+            ){
+
+
+                location.reload();
+
+
+            }
+
+
+        }
+
+
+
+    });
+
+
+
+}, 60000);
+
+
+
+</script>
+
+
+
+
+{% endblock %}

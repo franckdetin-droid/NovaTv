@@ -1,0 +1,226 @@
+{% extends "base.html" %}
+
+{% block title %}
+Caméra Live - MY TV APP
+{% endblock %}
+
+
+{% block content %}
+
+<section class="camera-live">
+
+<h1>
+🎥 Live caméra MY TV APP
+</h1>
+
+
+<video
+id="camera"
+autoplay
+playsinline
+muted
+width="100%">
+</video>
+
+
+<br><br>
+
+
+<button id="startBtn">
+🔴 Démarrer le live
+</button>
+
+
+<button id="stopBtn">
+⛔ Arrêter
+</button>
+
+
+<p id="status">
+⏹ Aucun live
+</p>
+
+
+</section>
+
+
+
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+
+
+<script>
+
+const socket = io();
+
+
+let stream;
+let peer;
+
+
+const video =
+document.getElementById("camera");
+
+
+const status =
+document.getElementById("status");
+
+
+
+const room =
+"camera_live_{{ session['user_id'] }}";
+
+
+
+
+// rejoindre la salle
+
+socket.emit(
+"join_camera",
+{
+room:room
+}
+);
+
+
+
+
+
+// Démarrer caméra
+
+document.getElementById("startBtn").onclick = async()=>{
+
+
+stream =
+await navigator.mediaDevices.getUserMedia({
+
+video:true,
+audio:true
+
+});
+
+
+video.srcObject =
+stream;
+
+
+
+peer =
+new RTCPeerConnection();
+
+
+
+stream.getTracks().forEach(track=>{
+
+peer.addTrack(
+track,
+stream
+);
+
+});
+
+
+
+peer.onicecandidate=e=>{
+
+if(e.candidate){
+
+socket.emit(
+"camera_ice",
+{
+room:room,
+candidate:e.candidate
+}
+);
+
+}
+
+};
+
+
+
+// créer offre
+
+let offer =
+await peer.createOffer();
+
+
+await peer.setLocalDescription(
+offer
+);
+
+
+
+socket.emit(
+"camera_offer",
+{
+room:room,
+offer:offer
+}
+);
+
+
+
+status.innerHTML =
+"🔴 Live en cours";
+
+
+
+};
+
+
+
+
+
+// recevoir réponse spectateur
+
+socket.on(
+"camera_answer",
+async data=>{
+
+
+await peer.setRemoteDescription(
+data.answer
+);
+
+
+});
+
+
+
+
+
+// arrêter
+
+document.getElementById("stopBtn").onclick=()=>{
+
+
+if(stream){
+
+stream.getTracks()
+.forEach(t=>t.stop());
+
+}
+
+
+
+socket.emit(
+"stop_camera",
+{
+room:room
+}
+);
+
+
+
+status.innerHTML =
+"⛔ Arrêté";
+
+
+};
+
+
+
+</script>
+
+
+{% endblock %}

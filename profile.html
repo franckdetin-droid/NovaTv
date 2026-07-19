@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Mon profil - MY TV APP
+{% endblock %}
+
+
+
+{% block content %}
+
+
+
+<section class="profile-page">
+
+
+
+
+
+<div class="profile-header">
+
+
+
+{% if user.profile_image %}
+
+
+<img
+src="{{ user.profile_image }}"
+class="profile-image"
+alt="{{ user.username }}">
+
+
+{% endif %}
+
+
+
+
+<h1>
+{{ user.username }}
+</h1>
+
+
+
+<p>
+{{ user.email }}
+</p>
+
+
+
+<span class="role">
+
+{{ user.role }}
+
+</span>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="profile-menu">
+
+
+
+
+
+<a href="/creator"
+class="profile-card">
+
+
+🎬
+
+<h3>
+Creator Studio
+</h3>
+
+
+<p>
+Gérer mes chaînes et contenus.
+</p>
+
+
+</a>
+
+
+
+
+
+
+
+
+<a href="/channels"
+class="profile-card">
+
+
+📺
+
+<h3>
+Mes chaînes
+</h3>
+
+
+<p>
+Voir les chaînes disponibles.
+</p>
+
+
+</a>
+
+
+
+
+
+
+
+<a href="/history"
+class="profile-card">
+
+
+🕒
+
+<h3>
+Historique
+</h3>
+
+
+<p>
+Voir les vidéos regardées.
+</p>
+
+
+</a>
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+</section>
+
+
+
+
+{% endblock %}

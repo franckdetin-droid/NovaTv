@@ -1,0 +1,218 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Recherche - MY TV APP
+{% endblock %}
+
+
+
+{% block content %}
+
+
+
+<section class="search-page">
+
+
+
+<h1>
+🔎 Rechercher
+</h1>
+
+
+
+
+
+<form
+method="GET"
+action="/search"
+class="search-form">
+
+
+
+<input
+type="text"
+name="q"
+placeholder="Rechercher une chaîne, un film..."
+value="{{ query }}">
+
+
+
+
+
+<button
+type="submit">
+
+Rechercher
+
+</button>
+
+
+
+</form>
+
+
+
+
+
+
+
+
+<section class="content-section">
+
+
+<h2>
+📺 Chaînes
+</h2>
+
+
+
+<div class="card-grid">
+
+
+
+{% for channel in channels %}
+
+
+
+<div class="media-card">
+
+
+
+{% if channel.logo %}
+
+
+<img
+src="{{ channel.logo }}"
+class="channel-logo"
+alt="{{ channel.name }}">
+
+
+{% endif %}
+
+
+
+
+
+<h3>
+{{ channel.name }}
+</h3>
+
+
+
+<a href="/channel/{{ channel.id }}">
+Voir
+</a>
+
+
+
+</div>
+
+
+
+
+{% else %}
+
+
+<p>
+Aucune chaîne trouvée.
+</p>
+
+
+
+{% endfor %}
+
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+
+
+
+<section class="content-section">
+
+
+<h2>
+🎬 Vidéos
+</h2>
+
+
+
+<div class="card-grid">
+
+
+
+{% for video in videos %}
+
+
+
+<div class="media-card">
+
+
+
+{% if video.thumbnail %}
+
+
+<img
+src="{{ video.thumbnail }}"
+class="thumbnail"
+alt="{{ video.title }}">
+
+
+{% endif %}
+
+
+
+
+
+<h3>
+{{ video.title }}
+</h3>
+
+
+
+<a href="/watch/{{ video.id }}">
+Regarder
+</a>
+
+
+
+</div>
+
+
+
+
+{% else %}
+
+
+<p>
+Aucune vidéo trouvée.
+</p>
+
+
+
+{% endfor %}
+
+
+
+</div>
+
+
+</section>
+
+
+
+
+</section>
+
+
+
+
+{% endblock %}

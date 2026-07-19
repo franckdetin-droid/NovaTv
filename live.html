@@ -1,0 +1,317 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Direct - MY TV APP
+{% endblock %}
+
+
+
+{% block content %}
+
+
+
+<section class="live-page">
+
+
+<h1>
+🟢 Direct TV
+</h1>
+
+
+
+
+{% for live in lives %}
+
+
+
+<div class="live-card">
+
+
+
+<div class="live-header">
+
+
+
+{% if live.channel and live.channel.logo %}
+
+<img
+src="{{ live.channel.logo }}"
+class="live-logo"
+alt="{{ live.channel.name }}">
+
+{% endif %}
+
+
+
+
+<h2>
+
+{% if live.channel %}
+
+{{ live.channel.name }}
+
+{% else %}
+
+Chaîne inconnue
+
+{% endif %}
+
+</h2>
+
+
+
+<span class="live-badge">
+🔴 EN DIRECT
+</span>
+
+
+
+</div>
+
+
+
+
+
+
+
+<div class="live-player">
+
+
+
+<!-- ==========================
+     LIVE HLS / M3U8
+========================== -->
+
+{% if live.stream_url and live.stream_url.startswith("http") %}
+
+
+
+<video
+controls
+autoplay
+playsinline
+width="100%">
+
+
+<source
+src="{{ live.stream_url }}"
+type="application/x-mpegURL">
+
+
+Votre navigateur ne supporte pas ce flux.
+
+</video>
+
+
+
+<!-- ==========================
+     LIVE CAMERA WEBRTC
+========================== -->
+
+
+{% elif live.stream_url == "camera" %}
+
+
+
+<video
+id="remoteVideo-{{ live.id }}"
+autoplay
+playsinline
+controls
+width="100%">
+</video>
+
+
+
+<p id="liveStatus-{{ live.id }}">
+🔄 Connexion au live caméra...
+</p>
+
+
+
+<!-- ==========================
+     AUCUN FLUX
+========================== -->
+
+
+{% else %}
+
+
+<p>
+⚠️ Flux indisponible.
+</p>
+
+
+{% endif %}
+
+
+
+</div>
+
+
+
+
+
+
+
+<h3>
+{{ live.title }}
+</h3>
+
+
+
+<p>
+
+Chaîne :
+
+{% if live.channel %}
+
+{{ live.channel.name }}
+
+{% else %}
+
+Inconnue
+
+{% endif %}
+
+</p>
+
+
+
+</div>
+
+
+
+
+
+{% else %}
+
+
+
+<p>
+Aucun direct disponible actuellement.
+</p>
+
+
+
+{% endfor %}
+
+
+
+</section>
+
+
+
+
+
+
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+
+
+
+<script>
+
+
+const socket = io();
+
+
+
+// ==========================
+// CONNEXION SOCKET
+// ==========================
+
+
+socket.on(
+"connect",
+function(){
+
+
+console.log(
+"✅ Connecté au serveur live"
+);
+
+
+});
+
+
+
+
+
+
+// ==========================
+// LIVE DEMARRE
+// ==========================
+
+
+socket.on(
+"live_started",
+function(data){
+
+
+const status = document.getElementById(
+"liveStatus-" + data.live_id
+);
+
+
+
+if(status){
+
+
+status.innerHTML =
+"🔴 Live caméra connecté";
+
+
+}
+
+
+
+});
+
+
+
+
+
+
+
+// ==========================
+// LIVE ARRETE
+// ==========================
+
+
+socket.on(
+"live_stopped",
+function(data){
+
+
+
+const status = document.getElementById(
+"liveStatus-" + data.live_id
+);
+
+
+
+if(status){
+
+
+status.innerHTML =
+"⛔ Live arrêté";
+
+
+}
+
+
+
+});
+
+
+
+
+
+
+</script>
+
+
+
+
+{% endblock %}

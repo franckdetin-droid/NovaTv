@@ -1,0 +1,267 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+{{ channel.name }} - MY TV APP
+{% endblock %}
+
+
+
+{% block content %}
+
+
+
+<section class="channel-header">
+
+
+
+{% if channel.cover %}
+
+<img
+src="{{ channel.cover }}"
+class="channel-cover"
+alt="{{ channel.name }}">
+
+{% endif %}
+
+
+
+
+
+<div class="channel-profile">
+
+
+
+{% if channel.logo %}
+
+<img
+src="{{ channel.logo }}"
+class="channel-logo"
+alt="Logo {{ channel.name }}">
+
+{% endif %}
+
+
+
+
+
+<h1>
+{{ channel.name }}
+</h1>
+
+
+
+<p>
+{{ channel.description }}
+</p>
+
+
+
+<p>
+Catégorie :
+{{ channel.category }}
+</p>
+
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+
+
+<section class="content-section">
+
+
+<h2>
+🟢 Direct
+</h2>
+
+
+
+{% if live %}
+
+
+
+<div class="live-box">
+
+
+<p>
+🟢 EN DIRECT
+</p>
+
+
+<a href="/live/{{ channel.id }}">
+Regarder le direct
+</a>
+
+
+</div>
+
+
+
+{% else %}
+
+
+<p>
+Aucun direct actuellement.
+</p>
+
+
+
+{% endif %}
+
+
+
+</section>
+
+
+
+
+
+
+
+<section class="content-section">
+
+
+<h2>
+⏰ Programme
+</h2>
+
+
+
+<div class="program-list">
+
+
+
+{% for program in programs %}
+
+
+
+<div class="program-card">
+
+
+<h3>
+{{ program.title }}
+</h3>
+
+
+<p>
+Début :
+{{ program.start_time }}
+</p>
+
+
+<p>
+Fin :
+{{ program.end_time }}
+</p>
+
+
+</div>
+
+
+
+{% else %}
+
+
+
+<p>
+Aucun programme prévu.
+</p>
+
+
+
+{% endfor %}
+
+
+
+</div>
+
+
+
+</section>
+
+
+
+
+
+
+
+<section class="content-section">
+
+
+<h2>
+🎬 Vidéos de la chaîne
+</h2>
+
+
+
+<div class="card-grid">
+
+
+
+{% for video in videos %}
+
+
+
+<div class="media-card">
+
+
+{% if video.thumbnail %}
+
+<img
+src="{{ video.thumbnail }}"
+class="thumbnail"
+alt="{{ video.title }}">
+
+{% endif %}
+
+
+
+<h3>
+{{ video.title }}
+</h3>
+
+
+
+<a href="/watch/{{ video.id }}">
+Regarder
+</a>
+
+
+
+</div>
+
+
+
+{% else %}
+
+
+
+<p>
+Aucune vidéo disponible.
+</p>
+
+
+
+{% endfor %}
+
+
+
+</div>
+
+
+
+</section>
+
+
+
+
+
+{% endblock %}

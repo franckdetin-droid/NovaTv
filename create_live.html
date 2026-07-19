@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Créer un direct - MY TV APP
+{% endblock %}
+
+
+
+{% block content %}
+
+
+<section class="form-page">
+
+
+
+<h1>
+🟢 Créer un direct
+</h1>
+
+
+
+
+<form
+method="POST"
+action="{{ url_for('main.create_live') }}">
+
+
+
+{{ csrf_token() }}
+
+
+
+
+
+
+<label>
+Chaîne
+</label>
+
+
+<select
+name="channel_id"
+required>
+
+
+{% for channel in channels %}
+
+
+<option value="{{ channel.id }}">
+
+{{ channel.name }}
+
+</option>
+
+
+{% endfor %}
+
+
+</select>
+
+
+
+
+
+
+<label>
+Titre du direct
+</label>
+
+
+<input
+type="text"
+name="title"
+placeholder="Journal, émission..."
+maxlength="200"
+required>
+
+
+
+
+
+
+<label>
+Adresse du flux direct
+</label>
+
+
+<input
+type="text"
+name="stream_url"
+placeholder="URL du flux"
+required>
+
+
+
+
+
+
+
+<button
+type="submit">
+
+Démarrer le direct
+
+</button>
+
+
+
+
+</form>
+
+
+
+</section>
+
+
+
+{% endblock %}
