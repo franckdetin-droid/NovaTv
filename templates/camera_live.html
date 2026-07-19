@@ -9,9 +9,53 @@ Caméra Live - MY TV APP
 
 <section class="camera-live">
 
+
 <h1>
-🎥 Live caméra MY TV APP
+🎥 Caméras en direct
 </h1>
+
+
+{% if cameras %}
+
+{% for camera in cameras %}
+
+<div class="camera-card">
+
+<h2>
+{{ camera.title }}
+</h2>
+
+
+<a href="{{ url_for('main.watch_camera', live_id=camera.id) }}">
+▶️ Regarder ce live
+</a>
+
+</div>
+
+
+{% endfor %}
+
+
+{% else %}
+
+<p>
+Aucune caméra en direct actuellement.
+</p>
+
+
+{% endif %}
+
+
+
+
+<hr>
+
+
+
+<h1>
+📷 Ma caméra
+</h1>
+
 
 
 <video
@@ -41,7 +85,9 @@ width="100%">
 </p>
 
 
+
 </section>
+
 
 
 
@@ -50,11 +96,14 @@ width="100%">
 
 <script>
 
+
 const socket = io();
 
 
 let stream;
+
 let peer;
+
 
 
 const video =
@@ -72,14 +121,58 @@ const room =
 
 
 
+
 // rejoindre la salle
 
 socket.emit(
 "join_camera",
 {
-room:room
+room: room
 }
 );
+
+
+
+
+
+
+// nouveau spectateur
+
+socket.on(
+"viewer_joined",
+async data=>{
+
+
+if(peer){
+
+
+let offer =
+await peer.createOffer();
+
+
+
+await peer.setLocalDescription(
+offer
+);
+
+
+
+socket.emit(
+"camera_offer",
+{
+room:data.room,
+offer:offer
+}
+);
+
+
+
+}
+
+
+});
+
+
 
 
 
@@ -94,13 +187,16 @@ stream =
 await navigator.mediaDevices.getUserMedia({
 
 video:true,
+
 audio:true
 
 });
 
 
+
 video.srcObject =
 stream;
+
 
 
 
@@ -111,42 +207,56 @@ new RTCPeerConnection();
 
 stream.getTracks().forEach(track=>{
 
+
 peer.addTrack(
 track,
 stream
 );
 
+
 });
 
 
 
-peer.onicecandidate=e=>{
 
-if(e.candidate){
+
+
+peer.onicecandidate = (event)=>{
+
+
+if(event.candidate){
+
 
 socket.emit(
 "camera_ice",
 {
 room:room,
-candidate:e.candidate
+candidate:event.candidate
 }
 );
 
+
 }
+
 
 };
 
 
 
-// créer offre
+
+
+
 
 let offer =
 await peer.createOffer();
 
 
+
 await peer.setLocalDescription(
 offer
 );
+
+
 
 
 
@@ -171,16 +281,35 @@ status.innerHTML =
 
 
 
-// recevoir réponse spectateur
+
+
+
+
+// recevoir ICE
 
 socket.on(
-"camera_answer",
+"camera_ice",
 async data=>{
 
 
-await peer.setRemoteDescription(
-data.answer
+try{
+
+
+await peer.addIceCandidate(
+data.candidate
 );
+
+
+
+}
+
+catch(e){
+
+
+console.log(e);
+
+
+}
 
 
 });
@@ -189,15 +318,20 @@ data.answer
 
 
 
+
+
+
 // arrêter
 
-document.getElementById("stopBtn").onclick=()=>{
+document.getElementById("stopBtn").onclick = ()=>{
 
 
 if(stream){
 
+
 stream.getTracks()
-.forEach(t=>t.stop());
+.forEach(track=>track.stop());
+
 
 }
 
@@ -213,7 +347,7 @@ room:room
 
 
 status.innerHTML =
-"⛔ Arrêté";
+"⛔ Live arrêté";
 
 
 };
@@ -221,6 +355,7 @@ status.innerHTML =
 
 
 </script>
+
 
 
 {% endblock %}
