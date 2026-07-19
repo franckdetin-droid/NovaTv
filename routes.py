@@ -196,8 +196,7 @@ def live():
         "live.html",
         lives=lives
     )
-    
-# ==========================
+    # ==========================
 # INSCRIPTION
 # ==========================
 
@@ -210,7 +209,9 @@ def register():
     if request.method == "POST":
 
         username = request.form["username"]
+
         email = request.form["email"]
+
         password = request.form["password"]
 
 
@@ -243,7 +244,7 @@ def register():
 
             email=email,
 
-            password=generate_password_hash(password)
+            password=password
 
         )
 
@@ -262,9 +263,6 @@ def register():
     return render_template(
         "register.html"
     )
-
-
-
 # ==========================
 # CONNEXION
 # ==========================
@@ -275,7 +273,9 @@ def register():
 )
 def login():
 
+
     if request.method == "POST":
+
 
         username = request.form["username"]
 
@@ -289,7 +289,10 @@ def login():
 
 
 
-        if user and user.password == password:
+        if user and check_password_hash(
+            user.password,
+            password
+        ):
 
 
             session.permanent = True
@@ -315,13 +318,13 @@ def login():
 
 
 
+
+
 # ==========================
 # DECONNEXION
 # ==========================
 
-@main.route(
-    "/logout"
-)
+@main.route("/logout")
 def logout():
 
 
@@ -330,7 +333,8 @@ def logout():
 
     return redirect(
         url_for("main.home")
-)
+    ) 
+
 
 # ==========================
 # CREER UNE CHAINE
@@ -1106,29 +1110,6 @@ def history():
 
 
 
-# ==========================
-# CAMERA LIVE PAGE
-# ==========================
-
-@main.route("/camera-live")
-def camera_live():
-
-
-    if "user_id" not in session:
-
-        return redirect(
-            url_for("main.login")
-        )
-
-
-
-    return render_template(
-        "camera_live.html"
-    )
-
-
-
-
 
 # ==========================
 # CREER LIVE CAMERA
@@ -1388,143 +1369,4 @@ def delete_video(video_id):
 
 
 
-    db.session.delete(video)
-
-    db.session.commit()
-
-
-
-    return redirect(
-        url_for("main.creator")
-    )
-    # ==========================
-# SUPPRIMER CHAINE CREATEUR
-# ==========================
-
-@main.route(
-    "/delete-channel/<int:channel_id>",
-    methods=["POST"]
-)
-def delete_channel(channel_id):
-
-    if "user_id" not in session:
-        return redirect(
-            url_for("main.login")
-        )
-
-
-    channel = Channel.query.get_or_404(
-        channel_id
-    )
-
-
-    # Vérifier propriétaire
-
-    if channel.user_id != session["user_id"]:
-        return "Accès refusé"
-
-
-    # Supprimer les vidéos liées
-
-    for video in channel.videos:
-
-        db.session.delete(video)
-
-
-    # Supprimer les lives liés
-
-    for live in channel.lives:
-
-        db.session.delete(live)
-
-
-    # Supprimer la chaîne
-
-    db.session.delete(channel)
-
-    db.session.commit()
-
-
-    return redirect(
-        url_for("main.creator")
-    )
-def delete_channel(channel_id):
-
-    if "user_id" not in session:
-        return redirect(
-            url_for("main.login")
-        )
-
-
-    channel = Channel.query.get_or_404(
-        channel_id
-    )
-
-
-    # Vérifier que la chaîne appartient au créateur
-
-    if channel.user_id != session["user_id"]:
-        return "Accès refusé"
-
-
-
-    # Supprimer toutes les vidéos de la chaîne
-
-    videos = Video.query.filter_by(
-        channel_id=channel.id
-    ).all()
-
-
-    for video in videos:
-
-        # Supprimer fichier vidéo
-
-        if video.file_path:
-
-            file_path = os.path.join(
-                current_app.config["UPLOAD_FOLDER"],
-                video.file_path.replace(
-                    "uploads/",
-                    ""
-                )
-            )
-
-
-            if os.path.exists(file_path):
-                os.remove(file_path)
-
-
-
-        # Supprimer miniature
-
-        if video.thumbnail:
-
-            image_path = os.path.join(
-                current_app.config["UPLOAD_FOLDER"],
-                video.thumbnail.replace(
-                    "uploads/",
-                    ""
-                )
-            )
-
-
-            if os.path.exists(image_path):
-                os.remove(image_path)
-
-
-
-        db.session.delete(video)
-
-
-
-    # Supprimer la chaîne
-
-    db.session.delete(channel)
-
-    db.session.commit()
-
-
-
-    return redirect(
-        url_for("main.creator")
-    )    
+    db.se
