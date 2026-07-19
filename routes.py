@@ -289,10 +289,7 @@ def login():
 
 
 
-        if user and check_password_hash(
-            user.password,
-            password
-        ):
+        if user and user.password == password:
 
 
             session.permanent = True
