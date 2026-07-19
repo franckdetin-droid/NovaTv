@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-Regarder Live Caméra - MY TV APP
+Regarder caméra - MY TV APP
 {% endblock %}
 
 
@@ -25,7 +25,7 @@ width="100%">
 
 
 <p id="status">
-⏳ Connexion au live...
+Connexion au live...
 </p>
 
 
@@ -51,25 +51,68 @@ document.getElementById("status");
 
 
 
+// Même salle que le créateur
+
+const room =
+"camera_live_{{ live.channel.owner.id }}";
+
+
+
 let peer =
 new RTCPeerConnection();
 
 
 
-const room =
-"camera_live_{{ live.channel.user_id }}";
+
+// recevoir le flux distant
+
+peer.ontrack = (event)=>{
+
+
+video.srcObject =
+event.streams[0];
+
+
+status.innerHTML =
+"🔴 Live en cours";
+
+
+};
 
 
 
 
-// ==========================
-// REJOINDRE LA SALLE
-// ==========================
+
+peer.onicecandidate = (event)=>{
+
+
+if(event.candidate){
+
+
+socket.emit(
+"camera_ice",
+{
+room:room,
+candidate:event.candidate
+}
+);
+
+
+}
+
+
+};
+
+
+
+
+
+// rejoindre la salle
 
 socket.emit(
 "join_camera",
 {
-room: room
+room:room
 }
 );
 
@@ -77,9 +120,7 @@ room: room
 
 
 
-// ==========================
-// RECEVOIR OFFRE CREATEUR
-// ==========================
+// recevoir l'offre du créateur
 
 socket.on(
 "camera_offer",
@@ -106,89 +147,11 @@ answer
 socket.emit(
 "camera_answer",
 {
-room: room,
-answer: answer
-}
-);
-
-
-
-});
-
-
-
-
-
-
-// ==========================
-// RECEVOIR VIDEO
-// ==========================
-
-peer.ontrack = event=>{
-
-
-video.srcObject =
-event.streams[0];
-
-
-status.innerHTML =
-"🔴 Live connecté";
-
-
-};
-
-
-
-
-
-
-// ==========================
-// ICE
-// ==========================
-
-peer.onicecandidate = event=>{
-
-
-if(event.candidate){
-
-
-socket.emit(
-"camera_ice",
-{
 room:room,
-candidate:event.candidate
+answer:answer
 }
 );
 
-
-}
-
-
-};
-
-
-
-
-
-socket.on(
-"camera_ice",
-async data=>{
-
-
-try{
-
-
-await peer.addIceCandidate(
-data.candidate
-);
-
-
-}
-catch(e){
-
-console.log(e);
-
-}
 
 
 });
@@ -197,9 +160,7 @@ console.log(e);
 
 
 
-// ==========================
-// LIVE ARRETE
-// ==========================
+// recevoir arrêt du live
 
 socket.on(
 "camera_stopped",
@@ -207,10 +168,11 @@ socket.on(
 
 
 status.innerHTML =
-"⛔ Live terminé";
+"⛔ Live arrêté";
 
 
-video.srcObject=null;
+video.srcObject =
+null;
 
 
 });
@@ -218,6 +180,27 @@ video.srcObject=null;
 
 
 </script>
+// Nouveau spectateur arrivé
 
+socket.on(
+"viewer_joined",
+async data => {
+
+    let offer = await peer.createOffer();
+
+    await peer.setLocalDescription(
+        offer
+    );
+
+
+    socket.emit(
+        "camera_offer",
+        {
+            room: data.room,
+            offer: offer
+        }
+    );
+
+});
 
 {% endblock %}
