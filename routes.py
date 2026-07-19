@@ -354,7 +354,6 @@ def create_channel():
         )
 
 
-
     if request.method == "POST":
 
 
@@ -365,16 +364,13 @@ def create_channel():
         description = request.form["description"]
 
 
-
         logo = request.files.get("logo")
 
         cover = request.files.get("cover")
 
 
 
-                upload_folder = current_app.config[
-            "UPLOAD_FOLDER"
-        ]
+        upload_folder = current_app.config["UPLOAD_FOLDER"]
 
 
         os.makedirs(
@@ -391,6 +387,8 @@ def create_channel():
         logo_name = None
 
         cover_name = None
+
+
 
         if logo and logo.filename:
 
@@ -410,7 +408,6 @@ def create_channel():
 
 
 
-
         if cover and cover.filename:
 
 
@@ -426,7 +423,6 @@ def create_channel():
                     cover_name
                 )
             )
-
 
 
 
@@ -453,7 +449,6 @@ def create_channel():
         )
 
 
-
         db.session.add(channel)
 
         db.session.commit()
@@ -465,15 +460,9 @@ def create_channel():
         )
 
 
-
     return render_template(
         "create_channel.html"
-    )
-
-
-
-
-
+        )
 # ==========================
 # UPLOAD VIDEO
 # ==========================
