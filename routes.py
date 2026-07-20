@@ -74,6 +74,16 @@ def home():
         videos=videos,
         history_videos=history_videos
     )
+    # ==========================
+# TELECHARGEMENT APPLICATION
+# ==========================
+
+@main.route("/download")
+def download():
+
+    return render_template(
+        "download.html"
+    )
 
 # ==========================
 # VERIFICATION FICHIERS
