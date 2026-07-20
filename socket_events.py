@@ -1,6 +1,7 @@
 from flask_socketio import emit, join_room, leave_room
 from flask import request
 
+
 def socket_events(socketio):
 
 
@@ -27,7 +28,7 @@ def socket_events(socketio):
 
 
     # ==========================
-    # REJOINDRE LIVE CAMERA
+    # REJOINDRE SALLE CAMERA
     # ==========================
 
     @socketio.on("join_camera")
@@ -41,18 +42,19 @@ def socket_events(socketio):
             "📡 Salle caméra :",
             room
         )
+
+
+        # prévenir le créateur qu'un spectateur arrive
+
         emit(
-    "viewer_joined",
-    {
-        "room": room,
-        "viewer_id": request.sid
-    },
-    room=room,
-    include_self=False
+            "viewer_joined",
+            {
+                "room": room,
+                "viewer_id": request.sid
+            },
+            room=room,
+            include_self=False
         )
-
-
-        
 
 
 
@@ -63,15 +65,13 @@ def socket_events(socketio):
     @socketio.on("camera_offer")
     def camera_offer(data):
 
-        room = data["room"]
-
-
         emit(
             "camera_offer",
             {
-                "offer": data["offer"]
+                "offer": data["offer"],
+                "sender": request.sid
             },
-            room=room,
+            room=data["room"],
             include_self=False
         )
 
@@ -81,61 +81,57 @@ def socket_events(socketio):
     # REPONSE DU SPECTATEUR
     # ==========================
 
-    @socketio.on("camera_offer")
-def camera_offer(data):
-
-    emit(
-        "camera_offer",
-        {
-            "offer": data["offer"],
-            "sender": request.sid
-        },
-        room=data["room"],
-        include_self=False
-        )
-
-
-    # ==========================
-    # ICE CREATEUR / SPECTATEUR
-    # ==========================
-
-    @socketio.on("camera_ice")
-    def camera_ice(data):
-
-        room = data["room"]
-
+    @socketio.on("camera_answer")
+    def camera_answer(data):
 
         emit(
-            "camera_ice",
+            "camera_answer",
             {
-                "candidate": data["candidate"]
+                "answer": data["answer"],
+                "sender": request.sid
             },
-            room=room,
+            room=data["room"],
             include_self=False
         )
 
 
 
     # ==========================
-    # ARRET LIVE CAMERA
+    # ICE WEBRTC
+    # ==========================
+
+    @socketio.on("camera_ice")
+    def camera_ice(data):
+
+        emit(
+            "camera_ice",
+            {
+                "candidate": data["candidate"],
+                "sender": request.sid
+            },
+            room=data["room"],
+            include_self=False
+        )
+
+
+
+    # ==========================
+    # ARRET LIVE
     # ==========================
 
     @socketio.on("stop_camera")
     def stop_camera(data):
 
-        room = data["room"]
-
-
         emit(
             "camera_stopped",
             {},
-            room=room
+            room=data["room"]
         )
 
 
         print(
-            "⛔ Live arrêté :",
-            room
+            "⛔ Live caméra arrêté :",
+            data["room"]
         )
 
 
@@ -147,11 +143,12 @@ def camera_offer(data):
     @socketio.on("leave_camera")
     def leave_camera(data):
 
-        room = data["room"]
+        leave_room(
+            data["room"]
+        )
 
-        leave_room(room)
 
         print(
-            "Sortie salle :",
-            room
+            "👋 Sortie salle :",
+            data["room"]
         )
