@@ -179,28 +179,41 @@ null;
 
 
 
-</script>
+
+
 // Nouveau spectateur arrivé
 
 socket.on(
 "viewer_joined",
 async data => {
 
-    let offer = await peer.createOffer();
 
-    await peer.setLocalDescription(
-        offer
-    );
+let offer =
+await peer.createOffer();
 
 
-    socket.emit(
-        "camera_offer",
-        {
-            room: data.room,
-            offer: offer
-        }
-    );
+
+await peer.setLocalDescription(
+offer
+);
+
+
+
+socket.emit(
+"camera_offer",
+{
+room:data.room,
+offer:offer
+}
+);
+
+
 
 });
+
+
+
+</script>
+
 
 {% endblock %}
