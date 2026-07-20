@@ -130,7 +130,7 @@ Creator Studio - MY TV APP
 {% if channel.logo %}
 
 <img
-src="{{ url_for('static', filename=channel.logo) }}"
+src="{{ channel.logo }}"
 class="channel-logo"
 alt="{{ channel.name }}">
 
@@ -225,7 +225,7 @@ onclick="return confirm('Supprimer cette chaîne et toutes ses vidéos ?');">
 {% if video.thumbnail %}
 
 <img
-src="{{ url_for('static', filename=video.thumbnail) }}"
+src="{{ video.thumbnail }}"
 class="video-thumbnail"
 alt="{{ video.title }}">
 
