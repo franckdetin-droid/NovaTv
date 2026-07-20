@@ -20,7 +20,7 @@ Accueil - MY TV APP
 
 <div class="hero-background"
 style="
-background-image:url('{{ url_for('static', filename=videos[0].thumbnail) }}');
+background-image:url('{{ videos[0].thumbnail }}');
 ">
 
 
@@ -95,34 +95,36 @@ class="btn-list">
 
 <div class="movie-card">
 
-    <a href="/channel/{{ channel.id }}">
+<a href="/channel/{{ channel.id }}">
 
-        {% if channel.logo %}
+{% if channel.logo %}
 
-        <img
-        src="{{ url_for('static', filename=channel.logo) }}"
-        alt="{{ channel.name }}">
+<img
+src="{{ channel.logo }}"
+alt="{{ channel.name }}">
 
-        {% endif %}
+{% endif %}
 
-    </a>
+</a>
+
 <div class="channel-title">
 
-    <h4>
-        {{ channel.name }}
-    </h4>
+<h4>
+{{ channel.name }}
+</h4>
 
 
-    {% if channel.live %}
+{% if channel.live %}
 
-    <span class="live-badge">
-        🔴 EN DIRECT
-    </span>
+<span class="live-badge">
+🔴 EN DIRECT
+</span>
 
-    {% endif %}
+{% endif %}
 
 
 </div>
+
 {% else %}
 
 <p>Aucune chaîne disponible.</p>
@@ -135,6 +137,11 @@ class="btn-list">
 
 
 
+
+
+<!-- ======================
+     FILMS ET VIDEOS
+====================== -->
 
 <section class="content-section">
 
@@ -158,7 +165,7 @@ class="btn-list">
 {% if video.thumbnail %}
 
 <img
-src="{{ url_for('static', filename=video.thumbnail) }}"
+src="{{ video.thumbnail }}"
 alt="{{ video.title }}"
 >
 
@@ -214,6 +221,11 @@ Aucune vidéo disponible.
 
 
 </section>
+
+
+
+
+
 <!-- ======================
      TENDANCES
 ====================== -->
@@ -240,7 +252,7 @@ Aucune vidéo disponible.
 {% if video.thumbnail %}
 
 <img
-src="{{ url_for('static', filename=video.thumbnail) }}"
+src="{{ video.thumbnail }}"
 alt="{{ video.title }}"
 >
 
@@ -265,6 +277,7 @@ alt="{{ video.title }}"
 
 
 </section>
+
 
 
 
@@ -296,7 +309,7 @@ alt="{{ video.title }}"
 {% if video.thumbnail %}
 
 <img
-src="{{ url_for('static', filename=video.thumbnail) }}"
+src="{{ video.thumbnail }}"
 alt="{{ video.title }}"
 >
 
@@ -321,6 +334,9 @@ alt="{{ video.title }}"
 
 
 </section>
+
+
+
 
 
 <!-- ======================
@@ -354,7 +370,7 @@ alt="{{ video.title }}"
 
 
 <img
-src="{{ url_for('static', filename=video.thumbnail) }}"
+src="{{ video.thumbnail }}"
 alt="{{ video.title }}"
 >
 
@@ -385,4 +401,5 @@ alt="{{ video.title }}"
 </section>
 
 {% endif %}
+
 {% endblock %}
