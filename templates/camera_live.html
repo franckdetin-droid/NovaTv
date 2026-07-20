@@ -193,7 +193,13 @@ audio:true
 });
 
 await fetch("/start-camera-live", {
-    method: "POST"
+    method: "POST",
+    headers:{
+        "Content-Type":"application/json"
+    },
+    body: JSON.stringify({
+        room: room
+    })
 });
 
 video.srcObject =
@@ -284,7 +290,27 @@ status.innerHTML =
 
 
 
+// recevoir la réponse du spectateur
 
+socket.on(
+"camera_answer",
+async data=>{
+
+    try{
+
+        await peer.setRemoteDescription(
+            new RTCSessionDescription(data.answer)
+        );
+
+    }
+
+    catch(e){
+
+        console.log(e);
+
+    }
+
+});
 
 
 // recevoir ICE
