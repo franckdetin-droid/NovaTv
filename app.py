@@ -15,9 +15,10 @@ from routes import main
 
 app = Flask(
     __name__,
-    template_folder="templates",
-    static_folder="static"
+    template_folder="../templates",
+    static_folder="../static"
 )
+
 
 app.config.from_object(
     Config
@@ -45,43 +46,11 @@ db.init_app(app)
 
 
 
-
-# ==========================
-# UPLOADS
-# ==========================
-
-upload_folder = app.config["UPLOAD_FOLDER"]
-
-os.makedirs(
-    upload_folder,
-    exist_ok=True
-)
-
-
-for folder in [
-    "logos",
-    "covers",
-    "videos",
-    "thumbnails"
-]:
-
-    os.makedirs(
-        os.path.join(
-            upload_folder,
-            folder
-        ),
-        exist_ok=True
-    )
-
-
-
-
 # ==========================
 # MODELES
 # ==========================
 
 from models import *
-
 
 
 
@@ -95,7 +64,6 @@ app.register_blueprint(
 
 
 
-
 # ==========================
 # BASE DE DONNEES
 # ==========================
@@ -103,7 +71,6 @@ app.register_blueprint(
 with app.app_context():
 
     db.create_all()
-
 
 
 
@@ -117,7 +84,6 @@ from socket_events import socket_events
 socket_events(
     socketio
 )
-
 
 
 
