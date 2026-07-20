@@ -81,21 +81,18 @@ def socket_events(socketio):
     # REPONSE DU SPECTATEUR
     # ==========================
 
-    @socketio.on("camera_answer")
-    def camera_answer(data):
+    @socketio.on("camera_offer")
+def camera_offer(data):
 
-        room = data["room"]
-
-
-        emit(
-            "camera_answer",
-            {
-                "answer": data["answer"]
-            },
-            room=room,
-            include_self=False
+    emit(
+        "camera_offer",
+        {
+            "offer": data["offer"],
+            "sender": request.sid
+        },
+        room=data["room"],
+        include_self=False
         )
-
 
 
     # ==========================
