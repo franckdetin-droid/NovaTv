@@ -16,6 +16,10 @@ class Config:
         "n6em*QhKz8RSAHD"
         "@aws-0-eu-north-1.pooler.supabase.com:5432/postgres"
     )
+    SQLALCHEMY_ENGINE_OPTIONS = {
+    "pool_pre_ping": True,
+    "pool_recycle": 300
+    }
 
 
     # Désactive les notifications inutiles de SQLAlchemy
