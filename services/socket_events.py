@@ -1,4 +1,5 @@
 from flask_socketio import emit, join_room, leave_room
+from flask import request
 
 
 def socket_events(socketio):
@@ -48,7 +49,8 @@ def socket_events(socketio):
         emit(
             "viewer_joined",
             {
-                "room": room
+                "room": room,
+                "viewer_id": request.sid
             },
             room=room,
             include_self=False
@@ -66,7 +68,8 @@ def socket_events(socketio):
         emit(
             "camera_offer",
             {
-                "offer": data["offer"]
+                "offer": data["offer"],
+                "sender": request.sid
             },
             room=data["room"],
             include_self=False
@@ -84,7 +87,8 @@ def socket_events(socketio):
         emit(
             "camera_answer",
             {
-                "answer": data["answer"]
+                "answer": data["answer"],
+                "sender": request.sid
             },
             room=data["room"],
             include_self=False
@@ -102,7 +106,8 @@ def socket_events(socketio):
         emit(
             "camera_ice",
             {
-                "candidate": data["candidate"]
+                "candidate": data["candidate"],
+                "sender": request.sid
             },
             room=data["room"],
             include_self=False
