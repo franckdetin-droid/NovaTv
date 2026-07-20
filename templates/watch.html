@@ -26,14 +26,14 @@ controls
 autoplay
 playsinline
 width="100%"
-poster="{{ url_for('static', filename=video.thumbnail) }}"
+poster="{{ video.thumbnail }}"
 >
 
 
 {% if video.file_path %}
 
 <source
-src="{{ url_for('static', filename=video.file_path) }}"
+src="{{ video.file_path }}"
 type="video/mp4"
 >
 
@@ -56,7 +56,7 @@ Votre navigateur ne supporte pas la vidéo.
 {% if video.channel.logo %}
 
 <img
-src="{{ url_for('static', filename=video.channel.logo) }}"
+src="{{ video.channel.logo }}"
 alt="{{ video.channel.name }}"
 >
 
@@ -111,7 +111,7 @@ alt="{{ video.channel.name }}"
 
 
 <img
-src="{{ url_for('static', filename=video.channel.logo) }}"
+src="{{ video.channel.logo }}"
 class="watch-channel-logo"
 >
 
@@ -337,7 +337,7 @@ class="btn-action"
 
 
 <img
-src="{{ url_for('static', filename=item.thumbnail) }}"
+src="{{ item.thumbnail }}"
 alt="{{ item.title }}"
 >
 
