@@ -368,14 +368,23 @@ stream.getTracks()
 socket.emit(
 "stop_camera",
 {
-room:room
+    room: room
 }
 );
 
 
+if(peer){
+
+    peer.close();
+
+    peer = null;
+
+}
+
 
 status.innerHTML =
 "⛔ Live arrêté";
+
 
 
 };
