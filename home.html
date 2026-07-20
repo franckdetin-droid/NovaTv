@@ -1,0 +1,390 @@
+{% extends "base.html" %}
+
+{% block title %}
+Accueil - MY TV APP
+{% endblock %}
+
+
+{% block content %}
+
+
+<section class="hero-netflix">
+
+{% if videos %}
+
+<div class="hero-background"
+style="
+background-image:url('{{ videos[0].thumbnail }}');
+">
+
+<div class="hero-dark">
+
+<div class="hero-content">
+
+<h1>
+{{ videos[0].title }}
+</h1>
+
+
+<p>
+{{ videos[0].description }}
+</p>
+
+
+<div class="hero-buttons">
+
+
+<a href="{{ url_for('main.watch', video_id=videos[0].id) }}"
+class="btn-watch">
+
+▶ Regarder
+
+</a>
+
+
+<a href="#"
+class="btn-list">
+
+＋ Ma liste
+
+</a>
+
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+{% endif %}
+
+</section>
+
+
+
+<section class="content-section">
+
+<h2>📺 Chaînes disponibles</h2>
+
+
+<div class="movie-row">
+
+
+{% for channel in channels %}
+
+
+<div class="movie-card">
+
+
+<a href="/channel/{{ channel.id }}">
+
+
+{% if channel.logo %}
+
+<img
+src="{{ channel.logo }}"
+alt="{{ channel.name }}">
+
+{% endif %}
+
+
+</a>
+
+
+<div class="channel-title">
+
+
+<h4>
+{{ channel.name }}
+</h4>
+
+
+{% if channel.live %}
+
+<span class="live-badge">
+🔴 EN DIRECT
+</span>
+
+{% endif %}
+
+
+</div>
+
+
+</div>
+
+
+{% else %}
+
+<p>
+Aucune chaîne disponible.
+</p>
+
+
+{% endfor %}
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+<section class="content-section">
+
+
+<h2>
+🎬 Films et vidéos
+</h2>
+
+
+<div class="netflix-grid">
+
+
+{% for video in videos %}
+
+
+<div class="netflix-card">
+
+
+<a href="{{ url_for('main.watch', video_id=video.id) }}">
+
+
+
+{% if video.thumbnail %}
+
+
+<img
+src="{{ video.thumbnail }}"
+alt="{{ video.title }}">
+
+
+{% else %}
+
+
+<div class="no-image">
+🎬
+</div>
+
+
+{% endif %}
+
+
+
+
+<div class="card-info">
+
+
+<h3>
+{{ video.title }}
+</h3>
+
+
+<p>
+{{ video.category }}
+</p>
+
+
+<span>
+👁️ {{ video.views or 0 }} vues
+</span>
+
+
+</div>
+
+
+</a>
+
+
+</div>
+
+
+{% else %}
+
+
+<p>
+Aucune vidéo disponible.
+</p>
+
+
+{% endfor %}
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+<section class="content-section">
+
+
+<h2>
+🔥 Tendances
+</h2>
+
+
+<div class="movie-row">
+
+
+{% for video in videos[:6] %}
+
+
+<div class="movie-card">
+
+
+<a href="{{ url_for('main.watch', video_id=video.id) }}">
+
+
+{% if video.thumbnail %}
+
+<img
+src="{{ video.thumbnail }}"
+alt="{{ video.title }}">
+
+{% endif %}
+
+
+<h4>
+{{ video.title }}
+</h4>
+
+
+</a>
+
+
+</div>
+
+
+{% endfor %}
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+<section class="content-section">
+
+
+<h2>
+🆕 Nouveautés
+</h2>
+
+
+<div class="movie-row">
+
+
+{% for video in videos[-6:] %}
+
+
+<div class="movie-card">
+
+
+<a href="{{ url_for('main.watch', video_id=video.id) }}">
+
+
+{% if video.thumbnail %}
+
+
+<img
+src="{{ video.thumbnail }}"
+alt="{{ video.title }}">
+
+
+{% endif %}
+
+
+<h4>
+{{ video.title }}
+</h4>
+
+
+</a>
+
+
+</div>
+
+
+{% endfor %}
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+{% if session.get("user_id") %}
+
+
+<section class="content-section">
+
+
+<h2>
+▶ Continuer à regarder
+</h2>
+
+
+<div class="movie-row">
+
+
+{% for video in history_videos %}
+
+
+<div class="movie-card">
+
+
+<a href="{{ url_for('main.watch', video_id=video.id) }}">
+
+
+{% if video.thumbnail %}
+
+
+<img
+src="{{ video.thumbnail }}"
+alt="{{ video.title }}">
+
+
+{% endif %}
+
+
+<h4>
+{{ video.title }}
+</h4>
+
+
+</a>
+
+
+</div>
+
+
+{% endfor %}
+
+
+</div>
+
+
+</section>
+
+
+{% endif %}
+
+
+{% endblock %}
