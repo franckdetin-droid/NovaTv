@@ -125,6 +125,37 @@ def is_video(filename):
         and
         file_extension(filename) in ALLOWED_VIDEOS
     )
+    # ==========================
+# EXTRAIRE PUBLIC ID CLOUDINARY
+# ==========================
+
+def get_cloudinary_public_id(url):
+
+    if not url:
+        return None
+
+
+    parts = url.split("/")
+
+
+    filename = parts[-1]
+
+    public_id = filename.rsplit(
+        ".",
+        1
+    )[0]
+
+
+    folder = "/".join(
+        parts[parts.index("upload")+1:-1]
+    )
+
+
+    if folder:
+        public_id = folder + "/" + public_id
+
+
+    return public_id
 
 
 
@@ -1341,31 +1372,41 @@ def delete_video(video_id):
 
 
 
-    # Supprimer fichier vidéo
+    # ==========================
+    # SUPPRESSION VIDEO CLOUDINARY
+    # ==========================
 
     if video.file_path:
 
-        file_path = os.path.join(
-            current_app.config["UPLOAD_FOLDER"],
-            video.file_path.replace("uploads/", "")
-        )
+        try:
 
-        if os.path.exists(file_path):
-            os.remove(file_path)
+            cloudinary.uploader.destroy(
+                get_cloudinary_public_id(video.file_path),
+                resource_type="video"
+            )
+
+        except Exception:
+            pass
 
 
 
-    # Supprimer miniature
+
+    # ==========================
+    # SUPPRESSION MINIATURE CLOUDINARY
+    # ==========================
 
     if video.thumbnail:
 
-        image_path = os.path.join(
-            current_app.config["UPLOAD_FOLDER"],
-            video.thumbnail.replace("uploads/", "")
-        )
+        try:
 
-        if os.path.exists(image_path):
-            os.remove(image_path)
+            cloudinary.uploader.destroy(
+                get_cloudinary_public_id(video.thumbnail)
+            )
+
+        except Exception:
+            pass
+
+
 
 
 
@@ -1378,7 +1419,12 @@ def delete_video(video_id):
     return redirect(
         url_for("main.creator")
     )
-    # ==========================
+
+
+
+
+
+# ==========================
 # SUPPRIMER CHAINE CREATEUR
 # ==========================
 
@@ -1388,109 +1434,79 @@ def delete_video(video_id):
 )
 def delete_channel(channel_id):
 
+
     if "user_id" not in session:
+
         return redirect(
             url_for("main.login")
         )
 
 
+
     channel = Channel.query.get_or_404(
         channel_id
     )
+
 
 
     # Vérifier propriétaire
 
     if channel.user_id != session["user_id"]:
-        return "Accès refusé"
 
-
-    # Supprimer les vidéos liées
-
-    for video in channel.videos:
-
-        db.session.delete(video)
-
-
-    # Supprimer les lives liés
-
-    for live in channel.lives:
-
-        db.session.delete(live)
-
-
-    # Supprimer la chaîne
-
-    db.session.delete(channel)
-
-    db.session.commit()
-
-
-    return redirect(
-        url_for("main.creator")
-    )
-def delete_channel(channel_id):
-
-    if "user_id" not in session:
-        return redirect(
-            url_for("main.login")
-        )
-
-
-    channel = Channel.query.get_or_404(
-        channel_id
-    )
-
-
-    # Vérifier que la chaîne appartient au créateur
-
-    if channel.user_id != session["user_id"]:
         return "Accès refusé"
 
 
 
-    # Supprimer toutes les vidéos de la chaîne
+
+
+    # ==========================
+    # SUPPRIMER VIDEOS CLOUDINARY
+    # ==========================
 
     videos = Video.query.filter_by(
         channel_id=channel.id
     ).all()
 
 
+
     for video in videos:
 
-        # Supprimer fichier vidéo
+
 
         if video.file_path:
 
-            file_path = os.path.join(
-                current_app.config["UPLOAD_FOLDER"],
-                video.file_path.replace(
-                    "uploads/",
-                    ""
+
+            try:
+
+                cloudinary.uploader.destroy(
+                    get_cloudinary_public_id(
+                        video.file_path
+                    ),
+                    resource_type="video"
                 )
-            )
+
+            except Exception:
+
+                pass
 
 
-            if os.path.exists(file_path):
-                os.remove(file_path)
 
-
-
-        # Supprimer miniature
 
         if video.thumbnail:
 
-            image_path = os.path.join(
-                current_app.config["UPLOAD_FOLDER"],
-                video.thumbnail.replace(
-                    "uploads/",
-                    ""
+
+            try:
+
+                cloudinary.uploader.destroy(
+                    get_cloudinary_public_id(
+                        video.thumbnail
+                    )
                 )
-            )
 
+            except Exception:
 
-            if os.path.exists(image_path):
-                os.remove(image_path)
+                pass
+
 
 
 
@@ -1498,7 +1514,23 @@ def delete_channel(channel_id):
 
 
 
-    # Supprimer la chaîne
+
+
+    # ==========================
+    # SUPPRIMER LES LIVES
+    # ==========================
+
+    for live in channel.lives:
+
+        db.session.delete(live)
+
+
+
+
+
+    # ==========================
+    # SUPPRIMER CHAINE
+    # ==========================
 
     db.session.delete(channel)
 
@@ -1509,4 +1541,4 @@ def delete_channel(channel_id):
     return redirect(
         url_for("main.creator")
     )
-   
+    
