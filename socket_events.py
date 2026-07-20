@@ -1,5 +1,5 @@
 from flask_socketio import emit, join_room, leave_room
-
+from flask import request
 
 def socket_events(socketio):
 
@@ -41,15 +41,18 @@ def socket_events(socketio):
             "📡 Salle caméra :",
             room
         )
-
-
         emit(
-            "viewer_joined",
-            {
-                "room": room
-            },
-            room=room
+    "viewer_joined",
+    {
+        "room": room,
+        "viewer_id": request.sid
+    },
+    room=room,
+    include_self=False
         )
+
+
+        
 
 
 
