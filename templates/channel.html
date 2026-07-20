@@ -96,7 +96,7 @@ Catégorie :
 </p>
 
 
-<a href="/live/{{ channel.id }}">
+<a href="{{ url_for('main.live') }}">
 Regarder le direct
 </a>
 
@@ -230,7 +230,7 @@ alt="{{ video.title }}">
 
 
 
-<a href="/watch/{{ video.id }}">
+<a href="{{ url_for('main.watch', video_id=video.id) }}">
 Regarder
 </a>
 
