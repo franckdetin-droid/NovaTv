@@ -2043,3 +2043,229 @@ footer{
     1px solid #222;
 
 }
+:root{
+    --bg:#0f0f0f;
+    --bg-soft:#181818;
+    --primary:#e50914;
+    --text:#ffffff;
+    --text-soft:#b3b3b3;
+}
+.main-header{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:70px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 40px;
+    background:linear-gradient(
+        to bottom,
+        rgba(0,0,0,0.9),
+        rgba(0,0,0,0)
+    );
+    z-index:999;
+}
+
+.logo a{
+    color:var(--primary);
+    font-size:28px;
+    font-weight:bold;
+    text-decoration:none;
+}
+
+.nav-menu{
+    display:flex;
+    gap:25px;
+}
+
+.nav-menu a{
+    color:white;
+    text-decoration:none;
+    font-size:15px;
+    transition:.3s;
+}
+
+.nav-menu a:hover{
+    color:var(--primary);
+}
+
+.nav-right{
+    display:flex;
+    align-items:center;
+}
+
+.btn-login{
+    background:var(--primary);
+    padding:8px 15px;
+    border-radius:5px;
+    color:white;
+    text-decoration:none;
+    font-size:14px;
+    transition:.3s;
+}
+
+.btn-login:hover{
+    background:#b20710;
+    }
+
+body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding-top:70px;
+}
+.hero-background{
+    height:600px;
+    background-size:cover;
+    background-position:center;
+    position:relative;
+}
+
+.hero-dark{
+    height:100%;
+    display:flex;
+    align-items:center;
+    background:linear-gradient(
+        90deg,
+        rgba(0,0,0,0.95),
+        rgba(0,0,0,0.3)
+    );
+}
+
+.hero-content{
+    max-width:600px;
+    margin-left:60px;
+}
+
+.hero-content h1{
+    font-size:60px;
+    font-weight:900;
+    margin-bottom:20px;
+}
+.btn-watch{
+    background:white;
+    color:black;
+    padding:12px 25px;
+    border-radius:5px;
+    font-weight:bold;
+    text-decoration:none;
+    transition:.3s;
+}
+
+.btn-watch:hover{
+    transform:scale(1.05);
+}
+
+.btn-list{
+    background:rgba(255,255,255,0.2);
+    color:white;
+    padding:12px 25px;
+    border-radius:5px;
+    margin-left:10px;
+    text-decoration:none;
+    transition:.3s;
+}
+
+.btn-list:hover{
+    background:rgba(255,255,255,0.4);
+}
+.netflix-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+    gap:20px;
+}
+
+.netflix-card{
+    background:var(--bg-soft);
+    border-radius:10px;
+    overflow:hidden;
+    transition:.3s;
+}
+
+.netflix-card:hover{
+    transform:scale(1.05);
+}
+
+.netflix-card img{
+    width:100%;
+    height:300px;
+    object-fit:cover;
+}
+
+.card-info{
+    padding:10px;
+}
+
+.card-info h3{
+    font-size:16px;
+}
+
+.card-info p{
+    color:var(--text-soft);
+    font-size:13px;
+}
+
+
+.hero-content p{
+    color:var(--text-soft);
+    font-size:18px;
+    line-height:1.6;
+    }
+.movie-row{
+    display:flex;
+    overflow-x:auto;
+    gap:15px;
+    padding-bottom:10px;
+}
+
+.movie-card{
+    min-width:150px;
+    transition:.3s;
+}
+
+.movie-card:hover{
+    transform:scale(1.1);
+}
+
+.movie-card img{
+    width:150px;
+    height:220px;
+    object-fit:cover;
+    border-radius:8px;
+}
+.live-badge{
+    background:red;
+    padding:3px 8px;
+    border-radius:5px;
+    font-size:12px;
+    margin-left:5px;
+}
+
+.content-section{
+    padding:30px;
+}
+
+.content-section h2{
+    margin-bottom:15px;
+}
+
+@media(max-width:768px){
+
+    .nav-menu{
+        display:none;
+    }
+
+    .hero-content{
+        margin-left:20px;
+    }
+
+    .hero-content h1{
+        font-size:35px;
+    }
+
+}
+
+
+
