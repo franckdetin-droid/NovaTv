@@ -12,7 +12,7 @@ class Config:
 
     # Base de données Supabase PostgreSQL
     SQLALCHEMY_DATABASE_URI = (
-        "postgresql+pg8000://postgres.mctfgwglsiwtogiwjxio:"
+        "postgresql+psycopg2://postgres.mctfgwglsiwtogiwjxio:"
         "n6em*QhKz8RSAHD"
         "@aws-0-eu-north-1.pooler.supabase.com:5432/postgres"
     )
