@@ -3,8 +3,9 @@ import os
 
 class Config:
 
+
     # ==========================
-    # FLASK
+    # CLÉ SECRÈTE FLASK
     # ==========================
 
     SECRET_KEY = os.environ.get(
@@ -13,8 +14,9 @@ class Config:
     )
 
 
+
     # ==========================
-    # DATABASE SUPABASE
+    # BASE DE DONNÉES SUPABASE
     # ==========================
 
     SQLALCHEMY_DATABASE_URI = os.environ.get(
@@ -29,21 +31,25 @@ class Config:
 
 
 
+
     # ==========================
-    # CLOUDINARY
+    # CLOUDINARY STOCKAGE CLOUD
     # ==========================
 
     CLOUDINARY_CLOUD_NAME = os.environ.get(
         "CLOUDINARY_CLOUD_NAME"
     )
 
+
     CLOUDINARY_API_KEY = os.environ.get(
         "CLOUDINARY_API_KEY"
     )
 
+
     CLOUDINARY_API_SECRET = os.environ.get(
         "CLOUDINARY_API_SECRET"
     )
+
 
 
 
