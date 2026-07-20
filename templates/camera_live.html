@@ -192,7 +192,9 @@ audio:true
 
 });
 
-
+await fetch("/start-camera-live", {
+    method: "POST"
+});
 
 video.srcObject =
 stream;
