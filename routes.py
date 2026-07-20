@@ -842,7 +842,7 @@ def channel_detail(channel_id):
         programs=programs,
         live=live
     )
-    #==========================
+    # ==========================
 # LIKE VIDEO
 # ==========================
 
@@ -870,6 +870,7 @@ def like_video(video_id):
             "main.watch",
             video_id=video.id
         )
+    )
         # ==========================
 # LECTURE VIDEO
 # ==========================
