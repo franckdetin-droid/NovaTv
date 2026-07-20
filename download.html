@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}
+Télécharger MYTIVIA
+{% endblock %}
+
+
+{% block content %}
+
+<section class="download-page">
+
+    <div class="download-box">
+
+        <img 
+        src="{{ url_for('static', filename='images/logo.png') }}"
+        class="app-logo"
+        alt="MYTIVIA">
+
+
+        <h1>
+            📱 MYTIVIA Android
+        </h1>
+
+
+        <p>
+            Regardez vos films, chaînes et contenus en direct
+            avec l'application officielle MYTIVIA.
+        </p>
+
+
+        <div class="app-info">
+
+            <div>
+                <strong>Nom</strong>
+                <span>MYTIVIA</span>
+            </div>
+
+
+            <div>
+                <strong>Version</strong>
+                <span>1.0</span>
+            </div>
+
+
+            <div>
+                <strong>Système</strong>
+                <span>Android</span>
+            </div>
+
+
+        </div>
+
+
+
+        <a href="/static/apk/MYTIVIA.apk" 
+           class="download-btn">
+
+            ⬇️ Télécharger l'APK
+
+        </a>
+
+
+
+        <p class="warning">
+
+            ⚠️ Autorisez l'installation des applications
+            provenant de sources inconnues sur Android.
+
+        </p>
+
+
+    </div>
+
+
+</section>
+
+
+{% endblock %}
