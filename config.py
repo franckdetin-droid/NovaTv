@@ -11,28 +11,40 @@ class Config:
 
 
     # Base de données Supabase PostgreSQL
-    SQLALCHEMY_DATABASE_URI = os.environ.get(
-        "DATABASE_URL"
+    SQLALCHEMY_DATABASE_URI = (
+        "postgresql+pg8000://postgres.mctfgwglsiwtogiwjxio:"
+        "n6em*QhKz8RSAHD"
+        "@aws-0-eu-north-1.pooler.supabase.com:5432/postgres"
     )
 
 
-    # Désactive les notifications SQLAlchemy
+    # Désactive les notifications inutiles de SQLAlchemy
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
-    # Cloudinary
+
+    # Taille maximale des fichiers (100 Mo)
+    MAX_CONTENT_LENGTH = 100 * 1024 * 1024
+
+
+
+    # ==========================
+    # CLOUDINARY
+    # ==========================
+
     CLOUDINARY_CLOUD_NAME = os.environ.get(
-        "CLOUDINARY_CLOUD_NAME"
+        "CLOUDINARY_CLOUD_NAME",
+        "nf8uv7f4"
     )
+
 
     CLOUDINARY_API_KEY = os.environ.get(
-        "CLOUDINARY_API_KEY"
+        "CLOUDINARY_API_KEY",
+        "921943687156619"
     )
+
 
     CLOUDINARY_API_SECRET = os.environ.get(
-        "CLOUDINARY_API_SECRET"
+        "CLOUDINARY_API_SECRET",
+        ""
     )
-
-
-    # Taille maximale fichiers
-    MAX_CONTENT_LENGTH = 100 * 1024 * 1024
