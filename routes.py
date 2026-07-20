@@ -7,7 +7,7 @@ from flask import (
     session,
     current_app
 )
-
+import cloudinary.uploader
 import os
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
@@ -335,7 +335,6 @@ def logout():
         url_for("main.home")
     ) 
 
-
 # ==========================
 # CREER UNE CHAINE
 # ==========================
@@ -370,61 +369,45 @@ def create_channel():
 
 
 
-        upload_folder = current_app.config["UPLOAD_FOLDER"]
+        logo_url = None
+
+        cover_url = None
 
 
-        os.makedirs(
-            os.path.join(upload_folder, "logos"),
-            exist_ok=True
-        )
 
-        os.makedirs(
-            os.path.join(upload_folder, "covers"),
-            exist_ok=True
-        )
-
-
-        logo_name = None
-
-        cover_name = None
-
-
+        # ==========================
+        # UPLOAD LOGO CLOUDINARY
+        # ==========================
 
         if logo and logo.filename:
 
-
-            logo_name = secure_filename(
-                logo.filename
+            upload_logo = cloudinary.uploader.upload(
+                logo,
+                folder="novatv/logos"
             )
 
-
-            logo.save(
-                os.path.join(
-                    upload_folder,
-                    "logos",
-                    logo_name
-                )
-            )
+            logo_url = upload_logo["secure_url"]
 
 
+
+        # ==========================
+        # UPLOAD COVER CLOUDINARY
+        # ==========================
 
         if cover and cover.filename:
 
-
-            cover_name = secure_filename(
-                cover.filename
+            upload_cover = cloudinary.uploader.upload(
+                cover,
+                folder="novatv/covers"
             )
 
-
-            cover.save(
-                os.path.join(
-                    upload_folder,
-                    "covers",
-                    cover_name
-                )
-            )
+            cover_url = upload_cover["secure_url"]
 
 
+
+        # ==========================
+        # CREATION CHAINE
+        # ==========================
 
         channel = Channel(
 
@@ -436,17 +419,12 @@ def create_channel():
 
             description=description,
 
-            logo=(
-                "uploads/logos/" + logo_name
-                if logo_name else None
-            ),
+            logo=logo_url,
 
-            cover=(
-                "uploads/covers/" + cover_name
-                if cover_name else None
-            )
+            cover=cover_url
 
         )
+
 
 
         db.session.add(channel)
@@ -460,10 +438,11 @@ def create_channel():
         )
 
 
+
     return render_template(
         "create_channel.html"
-        )
-# ==========================
+    )
+    # ==========================
 # UPLOAD VIDEO
 # ==========================
 
@@ -513,53 +492,50 @@ def upload_video():
 
 
 
-        upload_folder = current_app.config[
-            "UPLOAD_FOLDER"
-        ]
+        video_url = None
+
+        thumbnail_url = None
 
 
 
-        video_name = None
-
-        thumbnail_name = None
-
-
+        # ==========================
+        # UPLOAD VIDEO CLOUDINARY
+        # ==========================
 
         if video_file and video_file.filename:
 
 
-            video_name = secure_filename(
-                video_file.filename
+            upload_video = cloudinary.uploader.upload(
+                video_file,
+                resource_type="video",
+                folder="novatv/videos"
             )
 
 
-            video_file.save(
-                os.path.join(
-                    upload_folder,
-                    "videos",
-                    video_name
-                )
-            )
+            video_url = upload_video["secure_url"]
 
 
+
+        # ==========================
+        # UPLOAD MINIATURE CLOUDINARY
+        # ==========================
 
         if thumbnail and thumbnail.filename:
 
 
-            thumbnail_name = secure_filename(
-                thumbnail.filename
+            upload_thumbnail = cloudinary.uploader.upload(
+                thumbnail,
+                folder="novatv/thumbnails"
             )
 
 
-            thumbnail.save(
-                os.path.join(
-                    upload_folder,
-                    "thumbnails",
-                    thumbnail_name
-                )
-            )
+            thumbnail_url = upload_thumbnail["secure_url"]
 
 
+
+        # ==========================
+        # ENREGISTREMENT VIDEO
+        # ==========================
 
         video = Video(
 
@@ -573,15 +549,9 @@ def upload_video():
 
             content_type=content_type,
 
-            file_path=(
-                "uploads/videos/" + video_name
-                if video_name else None
-            ),
+            file_path=video_url,
 
-            thumbnail=(
-                "uploads/thumbnails/" + thumbnail_name
-                if thumbnail_name else None
-            )
+            thumbnail=thumbnail_url
 
         )
 
@@ -603,6 +573,11 @@ def upload_video():
         "upload_video.html",
         channels=channels
     )
+            
+
+
+
+
     # ==========================
 # CREATOR STUDIO
 # ==========================
@@ -638,6 +613,8 @@ def creator():
         channels=channels,
         videos=videos
     )
+
+
 
 
 
@@ -834,86 +811,7 @@ def channel_detail(channel_id):
         programs=programs,
         live=live
     )
-
-
-
-
-
-# ==========================
-# LECTURE VIDEO
-# ==========================
-@main.route(
-    "/watch/<int:video_id>"
-)
-def watch(video_id):
-
-    video = Video.query.get_or_404(
-        video_id
-    )
-
-
-    # AJOUTER UNE VUE
-
-    try:
-        video.views += 1
-        db.session.commit()
-
-    except Exception:
-        db.session.rollback()
-
-
-
-    # AJOUT HISTORIQUE
-
-    if "user_id" in session:
-
-        history = History.query.filter_by(
-            user_id=session["user_id"],
-            video_id=video.id
-        ).first()
-
-
-        if not history:
-
-            history = History(
-                user_id=session["user_id"],
-                video_id=video.id
-            )
-
-            db.session.add(history)
-
-            db.session.commit()
-
-
-
-    related_videos = Video.query.filter(
-        Video.channel_id == video.channel_id,
-        Video.id != video.id
-    ).all()
-
-
-
-    # URL VIDEO
-
-    video_url = None
-
-
-    if video.file_path:
-
-        video_url = url_for(
-            "static",
-            filename=video.file_path
-        )
-
-
-
-    return render_template(
-        "watch.html",
-        video=video,
-        video_url=video_url,
-        related_videos=related_videos
-    )
-#==========================
+    #==========================
 # LIKE VIDEO
 # ==========================
 
@@ -941,8 +839,97 @@ def like_video(video_id):
             "main.watch",
             video_id=video.id
         )
+        # ==========================
+# LECTURE VIDEO
+# ==========================
+@main.route(
+    "/watch/<int:video_id>"
+)
+def watch(video_id):
+
+    video = Video.query.get_or_404(
+        video_id
     )
+
+
+    # AJOUTER UNE VUE
+
+    try:
+
+        video.views += 1
+
+        db.session.commit()
+
+
+    except Exception:
+
+        db.session.rollback()
+
+
+
+    # AJOUT HISTORIQUE
+
+    if "user_id" in session:
+
+
+        history = History.query.filter_by(
+            user_id=session["user_id"],
+            video_id=video.id
+        ).first()
+
+
+
+        if not history:
+
+
+            history = History(
+                user_id=session["user_id"],
+                video_id=video.id
+            )
+
+
+            db.session.add(history)
+
+            db.session.commit()
+
+
+
+
+    related_videos = Video.query.filter(
+        Video.channel_id == video.channel_id,
+        Video.id != video.id
+    ).all()
+
+
+
+    # ==========================
+    # URL VIDEO CLOUDINARY
+    # ==========================
+
+    video_url = None
+
+
+    if video.file_path:
+
+        video_url = video.file_path
+
+
+
+
+    return render_template(
+        "watch.html",
+        video=video,
+        video_url=video_url,
+        related_videos=related_videos
+    )
+    
    
+
+
+
+
+
+
 # ==========================
 # CREER UN LIVE AVEC URL
 # ==========================
