@@ -53,7 +53,6 @@ Titre
 <input
 type="text"
 name="title"
-placeholder="Titre de la vidéo"
 maxlength="200"
 required>
 
@@ -66,25 +65,15 @@ Type de contenu
 
 <select name="content_type">
 
-<option value="film">
-🎬 Film
-</option>
+<option value="film">🎬 Film</option>
 
-<option value="serie">
-📺 Série
-</option>
+<option value="serie">📺 Série</option>
 
-<option value="journal">
-📰 Journal
-</option>
+<option value="journal">📰 Journal</option>
 
-<option value="emission">
-🎤 Émission
-</option>
+<option value="emission">🎤 Émission</option>
 
-<option value="clip">
-🎵 Clip
-</option>
+<option value="clip">🎵 Clip</option>
 
 </select>
 
@@ -109,8 +98,7 @@ Description
 </label>
 
 <textarea
-name="description"
-placeholder="Description"></textarea>
+name="description"></textarea>
 
 
 
@@ -120,12 +108,21 @@ placeholder="Description"></textarea>
 Vidéo
 </label>
 
+
 <input
 type="file"
-name="video"
 id="video"
 accept="video/*"
 required>
+
+
+
+<input
+type="hidden"
+name="video_url"
+id="video_url">
+
+
 
 
 
@@ -141,6 +138,7 @@ max="100">
 <p id="upload_status">
 Aucune vidéo sélectionnée
 </p>
+
 
 </div>
 
@@ -163,11 +161,13 @@ accept="image/*">
 
 <button
 type="submit"
-id="submit_btn">
+id="submit_btn"
+disabled>
 
 🚀 Importer la vidéo
 
 </button>
+
 
 
 </form>
@@ -192,6 +192,10 @@ const videoInput =
 document.getElementById("video");
 
 
+const videoUrl =
+document.getElementById("video_url");
+
+
 const progressBar =
 document.getElementById("progressBar");
 
@@ -205,37 +209,8 @@ document.getElementById("submit_btn");
 
 
 
-form.addEventListener(
-"submit",
-function(e){
+let uploading = false;
 
-
-const file =
-videoInput.files[0];
-
-
-if(!file){
-
-e.preventDefault();
-
-alert(
-"Sélectionnez une vidéo"
-);
-
-return;
-
-}
-
-
-
-button.disabled = true;
-
-
-status.innerHTML =
-"⏳ Envoi de la vidéo...";
-
-
-});
 
 
 
@@ -248,21 +223,188 @@ const file =
 videoInput.files[0];
 
 
-if(file){
+if(!file)
+return;
 
 
-let size =
-(file.size / 1024 / 1024)
-.toFixed(2);
 
+uploading = true;
+
+button.disabled = true;
 
 
 status.innerHTML =
-"Vidéo sélectionnée : "
+"⏳ Préparation de l'envoi...";
+
+
+
+let formData =
+new FormData();
+
+
+
+formData.append(
+"file",
+file
+);
+
+
+
+formData.append(
+"upload_preset",
+"novatv_video"
+);
+
+
+
+
+let xhr =
+new XMLHttpRequest();
+
+
+
+
+xhr.upload.onprogress =
+function(event){
+
+
+if(event.lengthComputable){
+
+
+let percent =
+(event.loaded / event.total) * 100;
+
+
+progressBar.value =
+percent;
+
+
+status.innerHTML =
+"⏳ Envoi : "
 +
-size
+percent.toFixed(1)
 +
-" Mo";
+"%";
+
+}
+
+
+};
+
+
+
+
+xhr.onload =
+function(){
+
+
+if(xhr.status === 200){
+
+
+let data =
+JSON.parse(
+xhr.responseText
+);
+
+
+
+if(data.secure_url){
+
+
+videoUrl.value =
+data.secure_url;
+
+
+status.innerHTML =
+"✅ Vidéo envoyée";
+
+
+button.disabled =
+false;
+
+
+}
+
+else{
+
+
+status.innerHTML =
+"❌ URL vidéo introuvable";
+
+
+}
+
+
+}
+
+else{
+
+
+status.innerHTML =
+"❌ Erreur Cloudinary";
+
+
+}
+
+
+uploading = false;
+
+
+};
+
+
+
+
+xhr.onerror =
+function(){
+
+
+status.innerHTML =
+"❌ Erreur réseau";
+
+
+uploading = false;
+
+
+};
+
+
+
+
+xhr.open(
+"POST",
+"https://api.cloudinary.com/v1_1/kvua1rmc/video/upload"
+);
+
+
+
+xhr.send(
+formData
+);
+
+
+
+});
+
+
+
+
+
+
+form.addEventListener(
+"submit",
+function(e){
+
+
+if(uploading || !videoUrl.value){
+
+
+e.preventDefault();
+
+
+alert(
+"Attendez la fin de l'envoi vidéo"
+);
 
 
 }
