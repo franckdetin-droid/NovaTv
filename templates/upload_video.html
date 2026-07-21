@@ -121,18 +121,28 @@ Importer une vidéo - MY TV APP
 
 
 
-
-        <!-- Vidéo -->
+        <!-- VIDEO CLOUDINARY DIRECT -->
 
         <label>
             Fichier vidéo
         </label>
 
+
         <input
             type="file"
-            name="video"
+            id="video"
             accept="video/*"
             required>
+
+
+        <input
+            type="hidden"
+            name="video_url"
+            id="video_url">
+
+
+
+        <p id="upload_status"></p>
 
 
 
@@ -141,6 +151,7 @@ Importer une vidéo - MY TV APP
         <label>
             Miniature
         </label>
+
 
         <input
             type="file"
@@ -162,6 +173,138 @@ Importer une vidéo - MY TV APP
 
 
 </section>
+
+
+
+
+<script>
+
+const videoInput =
+document.getElementById("video");
+
+
+const status =
+document.getElementById("upload_status");
+
+
+const videoUrl =
+document.getElementById("video_url");
+
+
+
+videoInput.addEventListener(
+"change",
+async function(){
+
+
+    const file =
+    videoInput.files[0];
+
+
+    if(!file)
+    return;
+
+
+
+    status.innerHTML =
+    "⏳ Envoi de la vidéo vers Cloudinary...";
+
+
+
+    let formData =
+    new FormData();
+
+
+
+    formData.append(
+        "file",
+        file
+    );
+
+
+    formData.append(
+        "upload_preset",
+        "novatv_video"
+    );
+
+
+
+    try{
+
+
+        let response =
+        await fetch(
+
+        "https://api.cloudinary.com/v1_1/kvua1rmc/video/upload",
+
+        {
+
+            method:"POST",
+
+            body:formData
+
+        }
+
+        );
+
+
+
+        let data =
+        await response.json();
+
+
+
+        console.log(data);
+
+
+
+        if(data.secure_url){
+
+
+            videoUrl.value =
+            data.secure_url;
+
+
+
+            status.innerHTML =
+            "✅ Vidéo envoyée avec succès";
+
+
+        }
+
+        else{
+
+
+            status.innerHTML =
+            "❌ Erreur Cloudinary";
+
+
+        }
+
+
+
+    }
+
+
+    catch(error){
+
+
+        console.log(error);
+
+
+        status.innerHTML =
+        "❌ Erreur connexion";
+
+
+    }
+
+
+
+});
+
+
+</script>
+
 
 
 {% endblock %}
