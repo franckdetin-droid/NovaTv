@@ -19,29 +19,44 @@ class Config:
 
 
     SQLALCHEMY_ENGINE_OPTIONS = {
+
         "pool_pre_ping": True,
+
         "pool_recycle": 300,
+
         "pool_size": 5,
+
         "max_overflow": 10
+
     }
 
 
-    # Upload
+
+    # Upload gros fichiers
+
     UPLOAD_FOLDER = "storage"
+
 
     MAX_CONTENT_LENGTH = (
         5 * 1024 * 1024 * 1024
     )
 
 
+    CLOUDINARY_UPLOAD_CHUNK_SIZE = 6000000
+
+
+
     # Cloudinary
+
     CLOUDINARY_CLOUD_NAME = os.environ.get(
         "CLOUDINARY_CLOUD_NAME"
     )
 
+
     CLOUDINARY_API_KEY = os.environ.get(
         "CLOUDINARY_API_KEY"
     )
+
 
     CLOUDINARY_API_SECRET = os.environ.get(
         "CLOUDINARY_API_SECRET"
