@@ -4,7 +4,7 @@ import os
 class Config:
 
     # ==========================
-    # FLASK
+    # FLASK SECRET KEY
     # ==========================
 
     SECRET_KEY = os.environ.get(
@@ -14,50 +14,43 @@ class Config:
 
 
     # ==========================
-    # DATABASE SUPABASE
+    # DATABASE SUPABASE POSTGRES
     # ==========================
 
-    SQLALCHEMY_DATABASE_URI = (
-        "postgresql://postgres.mctfgwglsiwtogiwjxio:"
-        "n6em*QhKz8RSAHD"
-        "@aws-0-eu-north-1.pooler.supabase.com:5432/postgres"
+    SQLALCHEMY_DATABASE_URI = os.environ.get(
+        "DATABASE_URL",
+        "postgresql+psycopg://postgres.iokvvjkgehewlszzkcvb:"
+        "franckdetin2012"
+        "@aws-0-eu-west-1.pooler.supabase.com:6543/postgres"
+        "?pgbouncer=true"
     )
-
-
-    SQLALCHEMY_ENGINE_OPTIONS = {
-
-        # Vérifie que la connexion existe encore
-        "pool_pre_ping": True,
-
-        # Renouvelle les connexions régulièrement
-        "pool_recycle": 280,
-
-        # Nombre de connexions gardées
-        "pool_size": 5,
-
-        # Connexions supplémentaires possibles
-        "max_overflow": 10
-
-    }
 
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
+    # Reconnexion automatique si Supabase coupe la connexion
+
+    SQLALCHEMY_ENGINE_OPTIONS = {
+        "pool_pre_ping": True,
+        "pool_recycle": 300,
+        "pool_size": 5,
+        "max_overflow": 10
+    }
+
 
     # ==========================
-    # UPLOAD
+    # STOCKAGE FICHIERS
     # ==========================
 
     UPLOAD_FOLDER = "storage"
 
 
-    # Taille maximale fichier : 5 Go
+    # Taille maximale upload : 5 Go
 
     MAX_CONTENT_LENGTH = (
         5 * 1024 * 1024 * 1024
     )
-
 
 
     # ==========================
@@ -79,13 +72,11 @@ class Config:
     )
 
 
-
     # ==========================
     # SESSION
     # ==========================
 
     SESSION_COOKIE_SECURE = True
-
     SESSION_COOKIE_HTTPONLY = True
-
     SESSION_COOKIE_SAMESITE = "Lax"
+    
