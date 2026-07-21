@@ -528,23 +528,23 @@ def upload_video():
         db.session.commit()
 
     # ==========================
-    # REDIRECTION
-    # ==========================
-    return redirect(url_for("main.home"))
-        # ==========================
-        # UPLOAD MINIATURE CLOUDINARY
-        # ==========================
+# UPLOAD MINIATURE CLOUDINARY
+# ==========================
 
-        if thumbnail and thumbnail.filename:
+if thumbnail and thumbnail.filename:
 
+    upload_thumbnail = cloudinary.uploader.upload(
+        thumbnail,
+        folder="novatv/thumbnails"
+    )
 
-            upload_thumbnail = cloudinary.uploader.upload(
-                thumbnail,
-                folder="novatv/thumbnails"
-            )
+    thumbnail_url = upload_thumbnail.get("secure_url")
 
 
-            thumbnail_url = upload_thumbnail["secure_url"]
+# ==========================
+# REDIRECTION (TOUJOURS À LA FIN)
+# ==========================
+return redirect(url_for("main.home"))
 
 
 
