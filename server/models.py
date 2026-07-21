@@ -180,9 +180,10 @@ class Video(db.Model):
     file_path = db.Column(
         db.String(500)
     )
-        video_url = db.Column(
+    video_url = db.Column(
         db.String(500)
-        )
+    )
+        
 
 
     thumbnail = db.Column(
