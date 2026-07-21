@@ -18,31 +18,35 @@ class Config:
     )
 
 
-    # Désactive les notifications inutiles de SQLAlchemy
+    # Vérification connexion avant utilisation
+    SQLALCHEMY_ENGINE_OPTIONS = {
+        "pool_pre_ping": True,
+        "pool_recycle": 300,
+        "pool_size": 5,
+        "max_overflow": 10
+    }
+
+
+    # Désactive les notifications SQLAlchemy
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
-    # Dossier des fichiers uploadés
+    # Upload
     UPLOAD_FOLDER = "storage"
 
 
-    # Taille maximale des fichiers (5 Go)
+    # Taille maximale upload 5 Go
     MAX_CONTENT_LENGTH = 5 * 1024 * 1024 * 1024
 
 
-    # ==========================
-    # CLOUDINARY
-    # ==========================
-
+    # Cloudinary
     CLOUDINARY_CLOUD_NAME = os.environ.get(
         "CLOUDINARY_CLOUD_NAME"
     )
 
-
     CLOUDINARY_API_KEY = os.environ.get(
         "CLOUDINARY_API_KEY"
     )
-
 
     CLOUDINARY_API_SECRET = os.environ.get(
         "CLOUDINARY_API_SECRET"
