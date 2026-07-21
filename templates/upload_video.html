@@ -19,10 +19,15 @@ Importer une vidéo - MY TV APP
 
 
 
+
 <form
+id="uploadForm"
 method="POST"
 action="{{ url_for('main.upload_video') }}"
 enctype="multipart/form-data">
+
+
+
 
 
 
@@ -46,6 +51,10 @@ Chaîne
 
 
 
+
+
+
+
 <label>
 Titre
 </label>
@@ -55,7 +64,11 @@ Titre
 type="text"
 name="title"
 placeholder="Titre de la vidéo"
+maxlength="200"
 required>
+
+
+
 
 
 
@@ -68,27 +81,36 @@ Type de contenu
 
 <select name="content_type">
 
+
 <option value="film">
 🎬 Film
 </option>
+
 
 <option value="serie">
 📺 Série
 </option>
 
+
 <option value="journal">
 📰 Journal
 </option>
+
 
 <option value="emission">
 🎤 Émission
 </option>
 
+
 <option value="clip">
 🎵 Clip
 </option>
 
+
 </select>
+
+
+
 
 
 
@@ -108,6 +130,9 @@ placeholder="Action, sport, musique...">
 
 
 
+
+
+
 <label>
 Description
 </label>
@@ -116,6 +141,9 @@ Description
 <textarea
 name="description"
 placeholder="Description"></textarea>
+
+
+
 
 
 
@@ -135,6 +163,7 @@ required>
 
 
 
+
 <input
 type="hidden"
 name="video_url"
@@ -142,9 +171,30 @@ id="video_url">
 
 
 
+
+
+
+
+<div class="upload-progress">
+
+
+<progress
+id="progressBar"
+value="0"
+max="100">
+</progress>
+
+
+
 <p id="upload_status">
 Aucune vidéo sélectionnée
 </p>
+
+
+</div>
+
+
+
 
 
 
@@ -166,13 +216,19 @@ accept="image/*">
 
 
 
+
 <button
 type="submit"
-id="submit_btn">
+id="submit_btn"
+disabled>
+
 
 🚀 Importer la vidéo
 
+
 </button>
+
+
 
 
 
@@ -188,23 +244,52 @@ id="submit_btn">
 
 
 
+
+
 <script>
 
 
+
+const form =
+document.getElementById(
+"uploadForm"
+);
+
+
+
 const videoInput =
-document.getElementById("video");
+document.getElementById(
+"video"
+);
+
 
 
 const videoUrl =
-document.getElementById("video_url");
+document.getElementById(
+"video_url"
+);
+
 
 
 const status =
-document.getElementById("upload_status");
+document.getElementById(
+"upload_status"
+);
+
+
+
+const progressBar =
+document.getElementById(
+"progressBar"
+);
+
 
 
 const button =
-document.getElementById("submit_btn");
+document.getElementById(
+"submit_btn"
+);
+
 
 
 
@@ -212,14 +297,14 @@ let uploading = false;
 
 
 
-button.disabled = true;
+
 
 
 
 
 videoInput.addEventListener(
 "change",
-async function(){
+function(){
 
 
 
@@ -228,11 +313,9 @@ videoInput.files[0];
 
 
 
-if(!file){
-
+if(!file)
 return;
 
-}
 
 
 
@@ -242,8 +325,16 @@ button.disabled = true;
 
 
 
+progressBar.value = 0;
+
+
+
 status.innerHTML =
-"⏳ Envoi vers Cloudinary...";
+"⏳ Préparation de l'envoi...";
+
+
+
+
 
 
 
@@ -268,40 +359,80 @@ formData.append(
 
 
 
-try{
 
 
-let response =
-await fetch(
+let xhr =
+new XMLHttpRequest();
 
-"https://api.cloudinary.com/v1_1/kvua1rmc/video/upload",
 
-{
 
-method:"POST",
 
-body:formData
+
+
+
+xhr.upload.addEventListener(
+"progress",
+function(event){
+
+
+
+if(event.lengthComputable){
+
+
+
+let percent =
+(event.loaded / event.total) * 100;
+
+
+
+progressBar.value =
+percent;
+
+
+
+status.innerHTML =
+"⏳ Envoi : "
++
+percent.toFixed(0)
++
+"%";
+
 
 }
 
-);
 
+
+});
+
+
+
+
+
+
+
+
+
+
+xhr.onload =
+function(){
+
+
+
+if(xhr.status === 200){
 
 
 
 let data =
-await response.json();
-
-
-
-
-console.log(data);
+JSON.parse(
+xhr.responseText
+);
 
 
 
 
 
 if(data.secure_url){
+
 
 
 videoUrl.value =
@@ -314,7 +445,8 @@ status.innerHTML =
 
 
 
-button.disabled = false;
+button.disabled =
+false;
 
 
 
@@ -324,7 +456,10 @@ else{
 
 
 status.innerHTML =
-"❌ Erreur Cloudinary";
+"❌ Cloudinary n'a pas retourné d'URL";
+
+
+}
 
 
 
@@ -332,19 +467,11 @@ status.innerHTML =
 
 
 
-
-
-}
-
-
-catch(error){
-
-
-console.log(error);
+else{
 
 
 status.innerHTML =
-"❌ Erreur réseau";
+"❌ Erreur Cloudinary";
 
 
 }
@@ -355,6 +482,55 @@ uploading = false;
 
 
 
+};
+
+
+
+
+
+
+
+
+
+xhr.onerror =
+function(){
+
+
+uploading = false;
+
+
+status.innerHTML =
+"❌ Erreur réseau pendant l'envoi";
+
+
+};
+
+
+
+
+
+
+
+
+
+xhr.open(
+
+"POST",
+
+"https://api.cloudinary.com/v1_1/kvua1rmc/video/upload"
+
+);
+
+
+
+
+
+xhr.send(
+formData
+);
+
+
+
 });
 
 
@@ -362,8 +538,10 @@ uploading = false;
 
 
 
-document.querySelector("form")
-.addEventListener(
+
+
+
+form.addEventListener(
 "submit",
 function(e){
 
@@ -372,12 +550,13 @@ function(e){
 if(uploading || !videoUrl.value){
 
 
+
 e.preventDefault();
 
 
 
 alert(
-"Attendez la fin de l'envoi Cloudinary avant de continuer."
+"Veuillez attendre la fin de l'envoi de la vidéo."
 );
 
 
@@ -390,7 +569,10 @@ alert(
 
 
 
+
+
 </script>
+
 
 
 
