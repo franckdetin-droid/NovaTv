@@ -9,167 +9,175 @@ Importer une vidéo - MY TV APP
 
 {% block content %}
 
+
 <section class="form-page">
 
 
-    <h1>
-        🎬 Importer une vidéo
-    </h1>
+<h1>
+🎬 Importer une vidéo
+</h1>
 
 
-    <form
-        method="POST"
-        action="{{ url_for('main.upload_video') }}"
-        enctype="multipart/form-data">
 
+<form
+method="POST"
+action="{{ url_for('main.upload_video') }}"
+enctype="multipart/form-data">
 
-        <!-- Chaîne -->
 
-        <label>
-            Chaîne
-        </label>
 
-        <select name="channel_id" required>
+<label>
+Chaîne
+</label>
 
-            {% for channel in channels %}
 
-            <option value="{{ channel.id }}">
-                {{ channel.name }}
-            </option>
+<select name="channel_id" required>
 
-            {% endfor %}
+{% for channel in channels %}
 
-        </select>
+<option value="{{ channel.id }}">
+{{ channel.name }}
+</option>
 
+{% endfor %}
 
+</select>
 
-        <!-- Titre -->
 
-        <label>
-            Titre
-        </label>
 
-        <input
-            type="text"
-            name="title"
-            placeholder="Titre de la vidéo"
-            maxlength="200"
-            required>
 
+<label>
+Titre
+</label>
 
 
-        <!-- Type -->
+<input
+type="text"
+name="title"
+placeholder="Titre de la vidéo"
+required>
 
-        <label>
-            Type de contenu
-        </label>
 
-        <select name="content_type">
 
 
-            <option value="film">
-                🎬 Film
-            </option>
 
+<label>
+Type de contenu
+</label>
 
-            <option value="serie">
-                📺 Série
-            </option>
 
+<select name="content_type">
 
-            <option value="journal">
-                📰 Journal
-            </option>
+<option value="film">
+🎬 Film
+</option>
 
+<option value="serie">
+📺 Série
+</option>
 
-            <option value="emission">
-                🎤 Émission
-            </option>
+<option value="journal">
+📰 Journal
+</option>
 
+<option value="emission">
+🎤 Émission
+</option>
 
-            <option value="clip">
-                🎵 Clip
-            </option>
+<option value="clip">
+🎵 Clip
+</option>
 
+</select>
 
-        </select>
 
 
 
-        <!-- Catégorie -->
 
-        <label>
-            Catégorie
-        </label>
+<label>
+Catégorie
+</label>
 
-        <input
-            type="text"
-            name="category"
-            placeholder="Action, sport, musique...">
 
+<input
+type="text"
+name="category"
+placeholder="Action, sport, musique...">
 
 
-        <!-- Description -->
 
-        <label>
-            Description
-        </label>
 
-        <textarea
-            name="description"
-            placeholder="Description de la vidéo"></textarea>
 
+<label>
+Description
+</label>
 
 
-        <!-- VIDEO CLOUDINARY DIRECT -->
+<textarea
+name="description"
+placeholder="Description"></textarea>
 
-        <label>
-            Fichier vidéo
-        </label>
 
 
-        <input
-            type="file"
-            id="video"
-            accept="video/*"
-            required>
 
 
-        <input
-            type="hidden"
-            name="video_url"
-            id="video_url">
 
+<label>
+Vidéo
+</label>
 
 
-        <p id="upload_status"></p>
+<input
+type="file"
+id="video"
+accept="video/*"
+required>
 
 
 
-        <!-- Miniature -->
+<input
+type="hidden"
+name="video_url"
+id="video_url">
 
-        <label>
-            Miniature
-        </label>
 
 
-        <input
-            type="file"
-            name="thumbnail"
-            accept="image/*">
+<p id="upload_status">
+Aucune vidéo sélectionnée
+</p>
 
 
 
-        <button
-            type="submit">
 
-            🚀 Importer la vidéo
 
-        </button>
 
+<label>
+Miniature
+</label>
 
 
-    </form>
+<input
+type="file"
+name="thumbnail"
+accept="image/*">
+
+
+
+
+
+
+<button
+type="submit"
+id="submit_btn">
+
+🚀 Importer la vidéo
+
+</button>
+
+
+
+</form>
+
 
 
 </section>
@@ -177,18 +185,35 @@ Importer une vidéo - MY TV APP
 
 
 
+
+
+
 <script>
+
 
 const videoInput =
 document.getElementById("video");
+
+
+const videoUrl =
+document.getElementById("video_url");
 
 
 const status =
 document.getElementById("upload_status");
 
 
-const videoUrl =
-document.getElementById("video_url");
+const button =
+document.getElementById("submit_btn");
+
+
+
+let uploading = false;
+
+
+
+button.disabled = true;
+
 
 
 
@@ -197,125 +222,177 @@ videoInput.addEventListener(
 async function(){
 
 
-    const file =
-    videoInput.files[0];
 
-
-    if(!file)
-    return;
+const file =
+videoInput.files[0];
 
 
 
-    status.innerHTML =
-    "⏳ Envoi de la vidéo vers Cloudinary...";
+if(!file){
+
+return;
+
+}
 
 
 
-    let formData =
-    new FormData();
+uploading = true;
+
+button.disabled = true;
 
 
 
-    formData.append(
-        "file",
-        file
-    );
-
-
-    formData.append(
-        "upload_preset",
-        "novatv_video"
-    );
+status.innerHTML =
+"⏳ Envoi vers Cloudinary...";
 
 
 
-    try{
-
-
-        let response =
-        await fetch(
-
-        "https://api.cloudinary.com/v1_1/kvua1rmc/video/upload",
-
-        {
-
-            method:"POST",
-
-            body:formData
-
-        }
-
-        );
+let formData =
+new FormData();
 
 
 
-        let data =
-        await response.json();
+formData.append(
+"file",
+file
+);
 
 
 
-        console.log(data);
+formData.append(
+"upload_preset",
+"novatv_video"
+);
 
 
 
-        if(data.secure_url){
 
 
-            videoUrl.value =
-            data.secure_url;
+try{
 
 
+let response =
+await fetch(
 
-            status.innerHTML =
-            "✅ Vidéo envoyée avec succès";
+"https://api.cloudinary.com/v1_1/kvua1rmc/video/upload",
 
+{
 
-        }
+method:"POST",
 
-        else{
+body:formData
 
+}
 
-            status.innerHTML =
-            "❌ Erreur Cloudinary";
-
-
-        }
+);
 
 
 
-    }
+
+let data =
+await response.json();
 
 
-    catch(error){
 
 
-        console.log(error);
+console.log(data);
 
 
-        status.innerHTML =
-        "❌ Erreur connexion";
 
 
-    }
+
+if(data.secure_url){
+
+
+videoUrl.value =
+data.secure_url;
+
+
+
+status.innerHTML =
+"✅ Vidéo envoyée avec succès";
+
+
+
+button.disabled = false;
+
+
+
+}
+
+else{
+
+
+status.innerHTML =
+"❌ Erreur Cloudinary";
+
+
+
+}
+
+
+
+
+
+}
+
+
+catch(error){
+
+
+console.log(error);
+
+
+status.innerHTML =
+"❌ Erreur réseau";
+
+
+}
+
+
+
+uploading = false;
 
 
 
 });
 
 
+
+
+
+
+document.querySelector("form")
+.addEventListener(
+"submit",
+function(e){
+
+
+
+if(uploading || !videoUrl.value){
+
+
+e.preventDefault();
+
+
+
+alert(
+"Attendez la fin de l'envoi Cloudinary avant de continuer."
+);
+
+
+
+}
+
+
+
+});
+
+
+
 </script>
 
-    <button type="submit">
-        🚀 Importer la vidéo
-    </button>
-
-</form>
-
-</section>
 
 
-<script>
-    // colle ici tout ton script Cloudinary
-</script>
 
 {% endblock %}
