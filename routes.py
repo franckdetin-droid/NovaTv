@@ -486,85 +486,51 @@ def create_channel():
     # ==========================
 # UPLOAD VIDEO
 # ==========================
-
-@main.route(
-    "/upload-video",
-    methods=["GET", "POST"]
-)
+@main.route("/upload-video", methods=["POST"])
 def upload_video():
 
+    video_file = request.files.get("video")
+    title = request.form.get("title")
 
-    if "user_id" not in session:
+    video_url = None
 
-        return redirect(
-            url_for("main.login")
+    # ==========================
+    # UPLOAD CLOUDINARY
+    # ==========================
+    if video_file and video_file.filename:
+
+        try:
+            upload_result = cloudinary.uploader.upload_large(
+                video_file,
+                resource_type="video",
+                folder="novatv/videos",
+                chunk_size=6000000
+            )
+
+            video_url = upload_result.get("secure_url")
+
+        except Exception as e:
+            print("Erreur upload vidéo :", str(e))
+            return "Erreur upload", 500
+
+    # ==========================
+    # SAUVEGARDE EN BASE
+    # ==========================
+    if video_url:
+
+        new_video = Video(
+            title=title,
+            url=video_url,
+            created_at=datetime.utcnow()
         )
 
+        db.session.add(new_video)
+        db.session.commit()
 
-
-    channels = Channel.query.filter_by(
-        user_id=session["user_id"]
-    ).all()
-
-
-
-    if request.method == "POST":
-
-
-        channel_id = request.form["channel_id"]
-
-        title = request.form["title"]
-
-        description = request.form["description"]
-
-        category = request.form["category"]
-
-        content_type = request.form["content_type"]
-
-
-
-        video_file = request.files.get(
-            "video"
-        )
-
-        thumbnail = request.files.get(
-            "thumbnail"
-        )
-
-
-
-        video_url = None
-
-        thumbnail_url = None
-
-
-        # ==========================
-# UPLOAD VIDEO CLOUDINARY
-# ==========================
-
-video_url = None
-
-if video_file and video_file.filename:
-
-    try:
-        upload_video = cloudinary.uploader.upload_large(
-            video_file,
-            resource_type="video",
-            folder="novatv/videos",
-            chunk_size=6000000  # 6MB par chunk
-        )
-
-        video_url = upload_video.get("secure_url")
-
-    except Exception as e:
-        print("Erreur upload vidéo :", str(e))
-        video_url = None
-
-
-
-            
-
-
+    # ==========================
+    # REDIRECTION
+    # ==========================
+    return redirect(url_for("main.home"))
         # ==========================
         # UPLOAD MINIATURE CLOUDINARY
         # ==========================
