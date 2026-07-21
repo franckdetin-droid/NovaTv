@@ -486,20 +486,66 @@ def create_channel():
     # ==========================
 # UPLOAD VIDEO
 # ==========================
-@main.route("/upload-video", methods=["POST"])
+
+@main.route(
+    "/upload-video",
+    methods=["GET", "POST"]
+)
 def upload_video():
 
-    video_file = request.files.get("video")
-    title = request.form.get("title")
+    if "user_id" not in session:
+        return redirect(
+            url_for("main.login")
+        )
 
-    video_url = None
 
-    # ==========================
-    # UPLOAD CLOUDINARY
-    # ==========================
-    if video_file and video_file.filename:
+    channels = Channel.query.filter_by(
+        user_id=session["user_id"]
+    ).all()
 
-        try:
+
+    if request.method == "POST":
+
+        channel_id = request.form["channel_id"]
+
+        title = request.form["title"]
+
+        description = request.form.get(
+            "description",
+            ""
+        )
+
+        category = request.form.get(
+            "category",
+            ""
+        )
+
+        content_type = request.form.get(
+            "content_type",
+            "film"
+        )
+
+
+        video_file = request.files.get(
+            "video"
+        )
+
+        thumbnail = request.files.get(
+            "thumbnail"
+        )
+
+
+        video_url = None
+
+        thumbnail_url = None
+
+
+        # ==========================
+        # UPLOAD VIDEO CLOUDINARY
+        # ==========================
+
+        if video_file and video_file.filename:
+
             upload_result = cloudinary.uploader.upload_large(
                 video_file,
                 resource_type="video",
@@ -507,45 +553,25 @@ def upload_video():
                 chunk_size=6000000
             )
 
-            video_url = upload_result.get("secure_url")
-
-        except Exception as e:
-            print("Erreur upload vidéo :", str(e))
-            return "Erreur upload", 500
-
-    # ==========================
-    # SAUVEGARDE EN BASE
-    # ==========================
-    if video_url:
-
-        new_video = Video(
-            title=title,
-            url=video_url,
-            created_at=datetime.utcnow()
-        )
-
-        db.session.add(new_video)
-        db.session.commit()
-
-    # ==========================
-# UPLOAD MINIATURE CLOUDINARY
-# ==========================
-
-if thumbnail and thumbnail.filename:
-
-    upload_thumbnail = cloudinary.uploader.upload(
-        thumbnail,
-        folder="novatv/thumbnails"
-    )
-
-    thumbnail_url = upload_thumbnail.get("secure_url")
+            video_url = upload_result.get(
+                "secure_url"
+            )
 
 
-# ==========================
-# REDIRECTION (TOUJOURS À LA FIN)
-# ==========================
-return redirect(url_for("main.home"))
+        # ==========================
+        # UPLOAD MINIATURE
+        # ==========================
 
+        if thumbnail and thumbnail.filename:
+
+            upload_thumbnail = cloudinary.uploader.upload(
+                thumbnail,
+                folder="novatv/thumbnails"
+            )
+
+            thumbnail_url = upload_thumbnail.get(
+                "secure_url"
+            )
 
 
         # ==========================
@@ -571,11 +597,9 @@ return redirect(url_for("main.home"))
         )
 
 
-
         db.session.add(video)
 
         db.session.commit()
-
 
 
         return redirect(
@@ -583,16 +607,10 @@ return redirect(url_for("main.home"))
         )
 
 
-
     return render_template(
         "upload_video.html",
         channels=channels
     )
-            
-
-
-
-
     # ==========================
 # CREATOR STUDIO
 # ==========================
