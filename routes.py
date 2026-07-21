@@ -506,6 +506,7 @@ def upload_video():
 
     if request.method == "POST":
 
+
         channel_id = request.form["channel_id"]
 
         title = request.form["title"]
@@ -536,7 +537,6 @@ def upload_video():
 
 
         video_url = None
-
         thumbnail_url = None
 
 
@@ -546,16 +546,30 @@ def upload_video():
 
         if video_file and video_file.filename:
 
-            upload_result = cloudinary.uploader.upload_large(
-                video_file,
-                resource_type="video",
-                folder="novatv/videos",
-                chunk_size=6000000
-            )
+            try:
 
-            video_url = upload_result.get(
-                "secure_url"
-            )
+                upload_result = cloudinary.uploader.upload_large(
+                    video_file,
+                    resource_type="video",
+                    folder="novatv/videos",
+                    chunk_size=6000000
+                )
+
+
+                video_url = upload_result.get(
+                    "secure_url"
+                )
+
+
+            except Exception as e:
+
+                print(
+                    "Erreur upload vidéo :",
+                    e
+                )
+
+                return "Erreur pendant l'envoi de la vidéo", 500
+
 
 
         # ==========================
@@ -564,14 +578,26 @@ def upload_video():
 
         if thumbnail and thumbnail.filename:
 
-            upload_thumbnail = cloudinary.uploader.upload(
-                thumbnail,
-                folder="novatv/thumbnails"
-            )
+            try:
 
-            thumbnail_url = upload_thumbnail.get(
-                "secure_url"
-            )
+                upload_thumbnail = cloudinary.uploader.upload(
+                    thumbnail,
+                    folder="novatv/thumbnails"
+                )
+
+
+                thumbnail_url = upload_thumbnail.get(
+                    "secure_url"
+                )
+
+
+            except Exception as e:
+
+                print(
+                    "Erreur miniature :",
+                    e
+                )
+
 
 
         # ==========================
@@ -592,7 +618,9 @@ def upload_video():
 
             file_path=video_url,
 
-            thumbnail=thumbnail_url
+            thumbnail=thumbnail_url,
+
+            created_at=datetime.utcnow()
 
         )
 
@@ -602,15 +630,21 @@ def upload_video():
         db.session.commit()
 
 
+
         return redirect(
-            url_for("main.creator")
+            url_for(
+                "main.creator"
+            )
         )
 
 
     return render_template(
         "upload_video.html",
         channels=channels
-    )
+        )
+    
+    
+            
     # ==========================
 # CREATOR STUDIO
 # ==========================
