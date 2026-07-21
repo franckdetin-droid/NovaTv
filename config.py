@@ -3,51 +3,89 @@ import os
 
 class Config:
 
-    # Clé secrète Flask
+    # ==========================
+    # FLASK
+    # ==========================
+
     SECRET_KEY = os.environ.get(
         "SECRET_KEY",
         "change-moi-cette-cle-secrete"
     )
 
 
-    # Base de données Supabase PostgreSQL
+    # ==========================
+    # DATABASE SUPABASE
+    # ==========================
+
     SQLALCHEMY_DATABASE_URI = (
-        "postgresql+pg8000://postgres.mctfgwglsiwtogiwjxio:"
+        "postgresql://postgres.mctfgwglsiwtogiwjxio:"
         "n6em*QhKz8RSAHD"
         "@aws-0-eu-north-1.pooler.supabase.com:5432/postgres"
     )
 
 
-    # Vérification connexion avant utilisation
     SQLALCHEMY_ENGINE_OPTIONS = {
+
+        # Vérifie que la connexion existe encore
         "pool_pre_ping": True,
-        "pool_recycle": 300,
+
+        # Renouvelle les connexions régulièrement
+        "pool_recycle": 280,
+
+        # Nombre de connexions gardées
         "pool_size": 5,
+
+        # Connexions supplémentaires possibles
         "max_overflow": 10
+
     }
 
 
-    # Désactive les notifications SQLAlchemy
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
-    # Upload
+
+    # ==========================
+    # UPLOAD
+    # ==========================
+
     UPLOAD_FOLDER = "storage"
 
 
-    # Taille maximale upload 5 Go
-    MAX_CONTENT_LENGTH = 5 * 1024 * 1024 * 1024
+    # Taille maximale fichier : 5 Go
+
+    MAX_CONTENT_LENGTH = (
+        5 * 1024 * 1024 * 1024
+    )
 
 
-    # Cloudinary
+
+    # ==========================
+    # CLOUDINARY
+    # ==========================
+
     CLOUDINARY_CLOUD_NAME = os.environ.get(
         "CLOUDINARY_CLOUD_NAME"
     )
+
 
     CLOUDINARY_API_KEY = os.environ.get(
         "CLOUDINARY_API_KEY"
     )
 
+
     CLOUDINARY_API_SECRET = os.environ.get(
         "CLOUDINARY_API_SECRET"
     )
+
+
+
+    # ==========================
+    # SESSION
+    # ==========================
+
+    SESSION_COOKIE_SECURE = True
+
+    SESSION_COOKIE_HTTPONLY = True
+
+    SESSION_COOKIE_SAMESITE = "Lax"
