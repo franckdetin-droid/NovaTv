@@ -546,15 +546,19 @@ def upload_video():
         if video_file and video_file.filename:
 
 
-            upload_video = cloudinary.uploader.upload(
-                video_file,
-                resource_type="video",
-                folder="novatv/videos"
-            )
+            if video_file and video_file.filename:
+
+    upload_video = cloudinary.uploader.upload_large(
+        video_file,
+        resource_type="video",
+        folder="novatv/videos",
+        chunk_size=6000000  # 6MB par chunk
+    )
+
+    video_url = upload_video["secure_url"]
 
 
-            video_url = upload_video["secure_url"]
-
+            
 
 
         # ==========================
