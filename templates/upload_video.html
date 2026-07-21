@@ -21,14 +21,15 @@ Importer une vidéo - MY TV APP
 
 
 
-
-
 <form
 method="POST"
 action="{{ url_for('main.upload_video') }}"
-enctype="multipart/form-data">
+enctype="multipart/form-data"
+onsubmit="document.getElementById('uploadBtn').disabled=true;">
 
 
+
+{{ csrf_token() }}
 
 
 
@@ -37,8 +38,7 @@ Chaîne
 </label>
 
 
-<select name="channel_id"
-required>
+<select name="channel_id" required>
 
 
 {% for channel in channels %}
@@ -60,9 +60,6 @@ required>
 
 
 
-
-
-
 <label>
 Titre
 </label>
@@ -79,9 +76,6 @@ required>
 
 
 
-
-
-
 <label>
 Type de contenu
 </label>
@@ -90,11 +84,9 @@ Type de contenu
 <select name="content_type">
 
 
-
 <option value="film">
 Film
 </option>
-
 
 
 <option value="journal">
@@ -102,11 +94,9 @@ Journal
 </option>
 
 
-
 <option value="emission">
 Émission
 </option>
-
 
 
 <option value="clip">
@@ -114,11 +104,7 @@ Clip
 </option>
 
 
-
 </select>
-
-
-
 
 
 
@@ -138,20 +124,15 @@ placeholder="Catégorie">
 
 
 
-
-
-
 <label>
 Description
 </label>
 
 
 <textarea
-name="description">
+name="description"
+placeholder="Description de la vidéo">
 </textarea>
-
-
-
 
 
 
@@ -172,6 +153,198 @@ required>
 
 
 
+<label>
+Miniature
+</label>
+
+
+<input
+type="file"
+name="thumbnail"
+accept="image/*">
+
+
+
+
+<p>
+⚠️ Les vidéos volumineuses peuvent prendre plusieurs minutes selon votre connexion.
+</p>
+
+
+
+
+
+<button
+id="uploadBtn"
+type="submit">
+
+⏳ Importer la vidéo
+
+</button>
+
+
+
+
+</form>
+
+
+
+</section>
+
+
+
+{% endblock %}{% extends "base.html" %}
+
+
+{% block title %}
+Importer une vidéo - MY TV APP
+{% endblock %}
+
+
+
+{% block content %}
+
+
+
+<section class="form-page">
+
+
+
+<h1>
+🎬 Importer une vidéo
+</h1>
+
+
+
+<form
+method="POST"
+action="{{ url_for('main.upload_video') }}"
+enctype="multipart/form-data"
+onsubmit="document.getElementById('uploadBtn').disabled=true;">
+
+
+
+{{ csrf_token() }}
+
+
+
+<label>
+Chaîne
+</label>
+
+
+<select name="channel_id" required>
+
+
+{% for channel in channels %}
+
+
+<option value="{{ channel.id }}">
+
+{{ channel.name }}
+
+</option>
+
+
+{% endfor %}
+
+
+</select>
+
+
+
+
+
+<label>
+Titre
+</label>
+
+
+<input
+type="text"
+name="title"
+placeholder="Titre du programme"
+maxlength="200"
+required>
+
+
+
+
+
+<label>
+Type de contenu
+</label>
+
+
+<select name="content_type">
+
+
+<option value="film">
+Film
+</option>
+
+
+<option value="journal">
+Journal
+</option>
+
+
+<option value="emission">
+Émission
+</option>
+
+
+<option value="clip">
+Clip
+</option>
+
+
+</select>
+
+
+
+
+
+<label>
+Catégorie
+</label>
+
+
+<input
+type="text"
+name="category"
+placeholder="Catégorie">
+
+
+
+
+
+<label>
+Description
+</label>
+
+
+<textarea
+name="description"
+placeholder="Description de la vidéo">
+</textarea>
+
+
+
+
+
+<label>
+Fichier vidéo
+</label>
+
+
+<input
+type="file"
+name="video"
+accept="video/*"
+required>
+
+
 
 
 
@@ -183,23 +356,26 @@ Miniature
 <input
 type="file"
 name="thumbnail"
-accept="image/*"
-required>
+accept="image/*">
 
 
 
+
+<p>
+⚠️ Les vidéos volumineuses peuvent prendre plusieurs minutes selon votre connexion.
+</p>
 
 
 
 
 
 <button
+id="uploadBtn"
 type="submit">
 
-☁️ Envoyer sur Cloudinary
+⏳ Importer la vidéo
 
 </button>
-
 
 
 
