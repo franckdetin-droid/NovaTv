@@ -26,5 +26,5 @@ class Config:
     UPLOAD_FOLDER = "storage"
 
 
-    # Taille maximale des fichiers (100 Mo)
-    MAX_CONTENT_LENGTH = 100 * 1024 * 1024
+    # Taille maximale des fichiers (5 Go)
+    MAX_CONTENT_LENGTH = 5 * 1024 * 1024 * 1024
