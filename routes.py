@@ -538,24 +538,28 @@ def upload_video():
         thumbnail_url = None
 
 
-
         # ==========================
-        # UPLOAD VIDEO CLOUDINARY
-        # ==========================
+# UPLOAD VIDEO CLOUDINARY
+# ==========================
 
-        if video_file and video_file.filename:
+video_url = None
 
+if video_file and video_file.filename:
 
-            if video_file and video_file.filename:
+    try:
+        upload_video = cloudinary.uploader.upload_large(
+            video_file,
+            resource_type="video",
+            folder="novatv/videos",
+            chunk_size=6000000  # 6MB par chunk
+        )
 
-    upload_video = cloudinary.uploader.upload_large(
-        video_file,
-        resource_type="video",
-        folder="novatv/videos",
-        chunk_size=6000000  # 6MB par chunk
-    )
+        video_url = upload_video.get("secure_url")
 
-    video_url = upload_video["secure_url"]
+    except Exception as e:
+        print("Erreur upload vidéo :", str(e))
+        video_url = None
+
 
 
             
