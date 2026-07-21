@@ -30,7 +30,6 @@ enctype="multipart/form-data">
 
 
 
-
 <label>
 Chaîne
 </label>
@@ -53,8 +52,6 @@ Chaîne
 
 
 
-
-
 <label>
 Titre
 </label>
@@ -66,8 +63,6 @@ name="title"
 placeholder="Titre de la vidéo"
 maxlength="200"
 required>
-
-
 
 
 
@@ -114,8 +109,6 @@ Type de contenu
 
 
 
-
-
 <label>
 Catégorie
 </label>
@@ -125,8 +118,6 @@ Catégorie
 type="text"
 name="category"
 placeholder="Action, sport, musique...">
-
-
 
 
 
@@ -147,9 +138,6 @@ placeholder="Description"></textarea>
 
 
 
-
-
-
 <label>
 Vidéo
 </label>
@@ -163,12 +151,10 @@ required>
 
 
 
-
 <input
 type="hidden"
 name="video_url"
 id="video_url">
-
 
 
 
@@ -198,9 +184,6 @@ Aucune vidéo sélectionnée
 
 
 
-
-
-
 <label>
 Miniature
 </label>
@@ -210,7 +193,6 @@ Miniature
 type="file"
 name="thumbnail"
 accept="image/*">
-
 
 
 
@@ -231,9 +213,7 @@ disabled>
 
 
 
-
 </form>
-
 
 
 </section>
@@ -249,55 +229,32 @@ disabled>
 <script>
 
 
-
 const form =
-document.getElementById(
-"uploadForm"
-);
-
+document.getElementById("uploadForm");
 
 
 const videoInput =
-document.getElementById(
-"video"
-);
-
+document.getElementById("video");
 
 
 const videoUrl =
-document.getElementById(
-"video_url"
-);
-
+document.getElementById("video_url");
 
 
 const status =
-document.getElementById(
-"upload_status"
-);
-
+document.getElementById("upload_status");
 
 
 const progressBar =
-document.getElementById(
-"progressBar"
-);
-
+document.getElementById("progressBar");
 
 
 const button =
-document.getElementById(
-"submit_btn"
-);
-
+document.getElementById("submit_btn");
 
 
 
 let uploading = false;
-
-
-
-
 
 
 
@@ -307,10 +264,8 @@ videoInput.addEventListener(
 function(){
 
 
-
 const file =
 videoInput.files[0];
-
 
 
 if(!file)
@@ -318,11 +273,10 @@ return;
 
 
 
-
 uploading = true;
 
-button.disabled = true;
 
+button.disabled = true;
 
 
 progressBar.value = 0;
@@ -334,6 +288,45 @@ status.innerHTML =
 
 
 
+const chunkSize = 6000000;
+// 6 Mo par morceau
+
+
+
+let totalChunks =
+Math.ceil(
+file.size / chunkSize
+);
+
+
+
+let currentChunk = 0;
+
+
+
+
+function uploadChunk(){
+
+
+
+let start =
+currentChunk * chunkSize;
+
+
+
+let end =
+Math.min(
+start + chunkSize,
+file.size
+);
+
+
+
+let chunk =
+file.slice(
+start,
+end
+);
 
 
 
@@ -345,7 +338,7 @@ new FormData();
 
 formData.append(
 "file",
-file
+chunk
 );
 
 
@@ -359,41 +352,43 @@ formData.append(
 
 
 
-
-
 let xhr =
 new XMLHttpRequest();
 
 
 
 
-
-
-
-xhr.upload.addEventListener(
-"progress",
+xhr.upload.onprogress =
 function(event){
-
 
 
 if(event.lengthComputable){
 
 
+let chunkPercent =
+event.loaded / event.total;
 
-let percent =
-(event.loaded / event.total) * 100;
+
+
+let totalPercent =
+(
+(currentChunk + chunkPercent)
+/
+totalChunks
+)
+* 100;
 
 
 
 progressBar.value =
-percent;
+totalPercent;
 
 
 
 status.innerHTML =
 "⏳ Envoi : "
 +
-percent.toFixed(0)
+totalPercent.toFixed(0)
 +
 "%";
 
@@ -402,11 +397,7 @@ percent.toFixed(0)
 
 
 
-});
-
-
-
-
+};
 
 
 
@@ -417,9 +408,22 @@ xhr.onload =
 function(){
 
 
-
 if(xhr.status === 200){
 
+
+currentChunk++;
+
+
+
+if(currentChunk < totalChunks){
+
+
+uploadChunk();
+
+
+}
+
+else{
 
 
 let data =
@@ -429,10 +433,7 @@ xhr.responseText
 
 
 
-
-
 if(data.secure_url){
-
 
 
 videoUrl.value =
@@ -452,11 +453,6 @@ false;
 
 }
 
-else{
-
-
-status.innerHTML =
-"❌ Cloudinary n'a pas retourné d'URL";
 
 
 }
@@ -464,8 +460,6 @@ status.innerHTML =
 
 
 }
-
-
 
 else{
 
@@ -478,13 +472,7 @@ status.innerHTML =
 
 
 
-uploading = false;
-
-
-
 };
-
-
 
 
 
@@ -499,6 +487,7 @@ function(){
 uploading = false;
 
 
+
 status.innerHTML =
 "❌ Erreur réseau pendant l'envoi";
 
@@ -511,16 +500,10 @@ status.innerHTML =
 
 
 
-
-
 xhr.open(
-
 "POST",
-
 "https://api.cloudinary.com/v1_1/kvua1rmc/video/upload"
-
 );
-
 
 
 
@@ -531,10 +514,17 @@ formData
 
 
 
+}
+
+
+
+
+
+uploadChunk();
+
+
+
 });
-
-
-
 
 
 
@@ -548,7 +538,6 @@ function(e){
 
 
 if(uploading || !videoUrl.value){
-
 
 
 e.preventDefault();
@@ -569,11 +558,7 @@ alert(
 
 
 
-
-
 </script>
-
-
 
 
 
