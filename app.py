@@ -24,6 +24,13 @@ app.config.from_object(
     Config
 )
 # ==========================
+# UPLOAD GROS FICHIERS
+# ==========================
+
+app.config["MAX_CONTENT_LENGTH"] = (
+    5 * 1024 * 1024 * 1024
+)
+# ==========================
 # CLOUDINARY
 # ==========================
 
