@@ -250,6 +250,10 @@ class LiveStream(db.Model):
     stream_url = db.Column(
         db.String(500)
     )
+    live_source = db.Column(
+        db.String(50),
+        default="url"
+        )
 
 
     stream_type = db.Column(
