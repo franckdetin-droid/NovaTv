@@ -4,163 +4,130 @@
 Regarder live - MY TV APP
 {% endblock %}
 
-
 {% block content %}
-
 
 <section class="watch-camera">
 
-
-<h1>
-🔴 {{ live.title }}
-</h1>
-
-
+<h1>🔴 {{ live.title }}</h1>
 
 <div class="live-player">
 
-
 <video
 id="liveVideo"
-controls
 autoplay
 playsinline
+controls
 width="100%">
 </video>
 
-
 </div>
-
-
 
 <p id="status">
 Connexion au live...
 </p>
 
-
-
 </section>
 
 
-
-<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-
+<!-- SOCKET.IO -->
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
 
 <script>
+const socket = io();
+
+const video = document.getElementById("liveVideo");
+const status = document.getElementById("status");
+
+// ✅ ROOM UNIQUE
+const room = "camera_live_{{ live.id }}";
+
+let peer = new RTCPeerConnection();
 
 
-const video =
-document.getElementById("liveVideo");
+// ==========================
+// RECEVOIR VIDEO
+// ==========================
+peer.ontrack = (event) => {
+    video.srcObject = event.streams[0];
+    status.innerHTML = "🔴 Live en cours";
+};
 
 
-const status =
-document.getElementById("status");
+// ==========================
+// ICE (ENVOI)
+// ==========================
+peer.onicecandidate = (event) => {
+    if (event.candidate) {
+        socket.emit("camera_ice", {
+            room: room,
+            candidate: event.candidate
+        });
+    }
+};
 
 
-
-// URL du live générée par ton serveur
-
-const streamUrl =
-"{{ live.stream_url }}";
-
-
-
-
-if(Hls.isSupported()){
-
-
-const hls =
-new Hls();
-
-
-hls.loadSource(
-streamUrl
-);
-
-
-hls.attachMedia(
-video
-);
-
-
-
-hls.on(
-Hls.Events.MANIFEST_PARSED,
-()=>{
-
-
-video.play();
-
-
-status.innerHTML =
-"🔴 Live en cours";
-
-
+// ==========================
+// REJOINDRE SALLE
+// ==========================
+socket.emit("join_camera", {
+    room: room
 });
 
 
-hls.on(
-Hls.Events.ERROR,
-(event,data)=>{
+// ==========================
+// RECEVOIR OFFER
+// ==========================
+socket.on("camera_offer", async (data) => {
+    try {
+        await peer.setRemoteDescription(
+            new RTCSessionDescription(data.offer)
+        );
 
+        const answer = await peer.createAnswer();
 
-console.log(
-data
-);
+        await peer.setLocalDescription(answer);
 
+        socket.emit("camera_answer", {
+            room: room,
+            answer: answer
+        });
 
-status.innerHTML =
-"❌ Erreur de connexion";
-
-
+    } catch (e) {
+        console.log("Erreur offer:", e);
+    }
 });
 
 
-}
-
-
-
-
-else if(video.canPlayType(
-'application/vnd.apple.mpegurl'
-)){
-
-
-video.src =
-streamUrl;
-
-
-video.addEventListener(
-"loadedmetadata",
-()=>{
-
-
-video.play();
-
-
-status.innerHTML =
-"🔴 Live en cours";
-
-
+// ==========================
+// RECEVOIR ICE
+// ==========================
+socket.on("camera_ice", async (data) => {
+    try {
+        await peer.addIceCandidate(
+            new RTCIceCandidate(data.candidate)
+        );
+    } catch (e) {
+        console.log("Erreur ICE:", e);
+    }
 });
 
 
-}
+// ==========================
+// LIVE STOP
+// ==========================
+socket.on("camera_stopped", () => {
+    status.innerHTML = "⛔ Live arrêté";
+    video.srcObject = null;
+});
 
 
-
-else{
-
-
-status.innerHTML =
-"❌ Navigateur non compatible";
-
-
-}
-
-
+// ==========================
+// ROOM FULL
+// ==========================
+socket.on("room_full", () => {
+    alert("⚠️ Live plein");
+});
 
 </script>
-
 
 {% endblock %}
