@@ -1209,19 +1209,19 @@ def create_camera_stream():
 
     live = LiveStream(
 
-        channel_id=channel.id,
+    channel_id=channel.id,
 
-        title="🎥 Live caméra",
+    title="🎥 Live caméra",
 
-        stream_url="camera",
+    stream_url=None,
 
-        is_live=True,
+    live_source="camera",
 
-        started_at=datetime.utcnow()
+    is_live=True,
+
+    started_at=datetime.utcnow()
 
     )
-
-
 
     db.session.add(live)
 
