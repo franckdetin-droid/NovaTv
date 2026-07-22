@@ -633,6 +633,55 @@ def upload_video():
 
 
 
+
+
+
+# ==========================
+# SUPPRIMER VIDEO
+# ==========================
+
+@main.route(
+    "/delete-video/<int:video_id>",
+    methods=["POST"]
+)
+def delete_video(video_id):
+
+    if "user_id" not in session:
+        return redirect(
+            url_for("main.login")
+        )
+
+
+    video = Video.query.get_or_404(
+        video_id
+    )
+
+
+    # Vérifier que la vidéo appartient bien au créateur connecté
+
+    channel = Channel.query.get(
+        video.channel_id
+    )
+
+
+    if not channel or channel.user_id != session["user_id"]:
+        return "❌ Vous n'avez pas l'autorisation de supprimer cette vidéo"
+
+
+    # Supprimer la vidéo de la base
+
+    db.session.delete(video)
+
+    db.session.commit()
+
+
+    return redirect(
+        url_for("main.creator")
+    )
+
+
+
+
         
 
 
