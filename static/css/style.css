@@ -2944,3 +2944,307 @@ header,
 
 
     }
+/* ==========================
+   NAVBAR ALIGNEMENT PRO
+========================== */
+
+.navbar,
+header,
+.top-bar {
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+
+}
+
+
+/* Groupe des boutons */
+
+.nav-links,
+.nav-buttons {
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+}
+
+
+
+
+
+.nav-links a,
+.nav-buttons a,
+.nav-buttons button {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 8px 14px;
+
+    border-radius: 20px;
+
+    font-size: 14px;
+
+    white-space: nowrap;
+
+}
+
+
+
+
+
+/* Recherche */
+
+.search-bar {
+
+    flex: 1;
+
+    max-width: 400px;
+
+}
+
+
+
+
+
+
+/* Profil à droite */
+
+.profile-btn {
+
+    margin-left: auto;
+
+}
+
+
+
+
+
+
+/* Téléphone */
+
+@media(max-width:700px){
+
+
+.navbar,
+header,
+.top-bar {
+
+    gap: 8px;
+
+}
+
+
+
+.nav-links a,
+.nav-buttons a,
+.nav-buttons button {
+
+    padding: 7px 10px;
+
+    font-size: 12px;
+
+}
+
+
+
+.search-bar {
+
+    max-width: 180px;
+
+}
+
+
+
+}
+/* ==========================
+   CONTROLES VIDEO WATCH
+========================== */
+
+
+.video-player {
+    position: relative;
+    width: 100%;
+    background: #000;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+
+
+
+.video-player video {
+
+    width: 100%;
+    height: auto;
+    max-height: 75vh;
+    object-fit: contain;
+
+}
+
+
+
+
+
+
+/* Barre des boutons vidéo */
+
+.video-controls-custom {
+
+    position: absolute;
+
+    top: 12px;
+
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    display: flex;
+
+    flex-direction: row;
+
+    align-items: center;
+
+    gap: 8px;
+
+    z-index: 10;
+
+}
+
+
+
+
+
+
+
+/* Boutons */
+
+.rotate-btn {
+
+    background: rgba(0,0,0,0.65);
+
+    color: white;
+
+    border: 1px solid rgba(255,255,255,0.3);
+
+    padding: 7px 12px;
+
+    border-radius: 20px;
+
+    font-size: 13px;
+
+    cursor: pointer;
+
+    backdrop-filter: blur(5px);
+
+}
+
+
+
+
+
+.rotate-btn:hover {
+
+    background: rgba(255,255,255,0.2);
+
+}
+
+
+
+
+
+
+/* Filigrane chaîne */
+
+.tv-watermark {
+
+    position: absolute;
+
+    bottom: 15px;
+
+    left: 15px;
+
+    z-index: 5;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    background: rgba(0,0,0,0.55);
+
+    padding: 6px 12px;
+
+    border-radius: 20px;
+
+    color:white;
+
+}
+
+
+
+
+
+.tv-watermark img {
+
+    width:35px;
+
+    height:35px;
+
+    border-radius:50%;
+
+    object-fit:cover;
+
+}
+
+
+
+
+
+
+
+/* Mobile */
+
+@media(max-width:600px){
+
+
+.video-controls-custom {
+
+    top:10px;
+
+    gap:5px;
+
+}
+
+
+
+.rotate-btn {
+
+    padding:6px 9px;
+
+    font-size:11px;
+
+}
+
+
+
+.tv-watermark {
+
+    bottom:10px;
+
+    left:10px;
+
+    font-size:12px;
+
+}
+
+
+
+    }
