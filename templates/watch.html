@@ -1,23 +1,18 @@
 {% extends "base.html" %}
 
-
 {% block title %}
 {{ video.title }} - MY TV APP
 {% endblock %}
 
 
-
 {% block content %}
 
-
 <section class="player-page">
-
 
 
 <!-- ==========================
      LECTEUR VIDEO PRO
 ========================== -->
-
 
 <div class="video-player video-overlay" id="video-container">
 
@@ -26,9 +21,9 @@
 id="main-video"
 autoplay
 playsinline
+controls
 poster="{{ video.thumbnail }}"
 >
-
 
 {% if video.file_path %}
 
@@ -39,40 +34,25 @@ type="video/mp4"
 
 {% endif %}
 
-
 Votre navigateur ne supporte pas la vidéo.
-
 
 </video>
 
 
 
-<!-- ==========================
-     CONTROLES VIDEO STYLE YOUTUBE
-========================== -->
-
+<!-- CONTROLES VIDEO -->
 
 <div class="custom-video-controls">
 
 
-<button
-type="button"
-id="play-btn">
-
+<button id="play-btn">
 ▶️
-
 </button>
 
 
-
-<button
-type="button"
-id="mute-btn">
-
+<button id="mute-btn">
 🔊
-
 </button>
-
 
 
 <input
@@ -81,28 +61,18 @@ id="volume-control"
 min="0"
 max="1"
 step="0.1"
-value="1">
+value="1"
+>
 
 
-
-<button
-type="button"
-id="rotate-btn">
-
+<button id="rotate-btn">
 ↻
-
 </button>
 
 
-
-<button
-type="button"
-id="fullscreen-btn">
-
+<button id="fullscreen-btn">
 ⛶
-
 </button>
-
 
 
 </div>
@@ -110,31 +80,18 @@ id="fullscreen-btn">
 
 
 
-
-<!-- ==========================
-     ORIENTATION
-========================== -->
-
+<!-- ORIENTATION -->
 
 <div class="orientation-buttons">
 
 
-<button
-type="button"
-id="vertical-btn">
-
+<button id="vertical-btn">
 📱 Vertical
-
 </button>
 
 
-
-<button
-type="button"
-id="horizontal-btn">
-
+<button id="horizontal-btn">
 🖥️ Horizontal
-
 </button>
 
 
@@ -144,8 +101,9 @@ id="horizontal-btn">
 
 
 
-{% if video.channel %}
+<!-- LOGO CHAINE -->
 
+{% if video.channel %}
 
 <div class="tv-watermark">
 
@@ -160,28 +118,24 @@ alt="{{ video.channel.name }}"
 {% endif %}
 
 
-
 <span>
 {{ video.channel.name }}
 </span>
 
 
-
 </div>
-
 
 {% endif %}
 
 
 
-     </div>
-     <!-- ==========================
+</div>
+<!-- ==========================
      DETAILS VIDEO
 ========================== -->
 
 
 <section class="video-details">
-
 
 
 <h1>
@@ -193,21 +147,17 @@ alt="{{ video.channel.name }}"
 
 {% if video.channel %}
 
-
 <div class="watch-channel">
 
 
 {% if video.channel.logo %}
-
 
 <img
 src="{{ video.channel.logo }}"
 class="watch-channel-logo"
 >
 
-
 {% endif %}
-
 
 
 <h3>
@@ -215,9 +165,7 @@ class="watch-channel-logo"
 </h3>
 
 
-
 </div>
-
 
 {% endif %}
 
@@ -261,32 +209,63 @@ class="watch-channel-logo"
 
 
 
-
-
 <!-- ==========================
-     ACTIONS
+     ACTIONS STYLE YOUTUBE
 ========================== -->
 
 
-<div class="video-actions">
+<div class="youtube-actions">
 
 
 
-<form
-action="{{ url_for('main.like_video', video_id=video.id) }}"
-method="POST"
->
+<button
+class="yt-btn"
+id="likeBtn">
 
-
-<button class="btn-action">
-
-❤️ J'aime
+👍 
+<span id="likeCount">
+0
+</span>
 
 </button>
 
 
-</form>
 
+
+<button
+class="yt-btn"
+id="dislikeBtn">
+
+👎
+<span id="dislikeCount">
+0
+</span>
+
+</button>
+
+
+
+
+
+<button
+class="yt-btn"
+id="commentBtn">
+
+💬 Commentaires
+
+</button>
+
+
+
+
+
+<button
+class="yt-btn"
+id="shareBtn">
+
+🔗 Partager
+
+</button>
 
 
 
@@ -298,11 +277,14 @@ method="POST"
 
 <a
 href="{{ url_for('main.add_favorite', video_id=video.id) }}"
-class="btn-action">
+class="yt-btn">
 
-➕ Ma liste
+
+📌 Ma liste
+
 
 </a>
+
 
 
 {% else %}
@@ -310,9 +292,11 @@ class="btn-action">
 
 <a
 href="{{ url_for('main.login') }}"
-class="btn-action">
+class="yt-btn">
 
-➕ Ma liste
+
+📌 Ma liste
+
 
 </a>
 
@@ -326,17 +310,57 @@ class="btn-action">
 </div>
 
 
-</section>
-
-
-
-
 
 
 
 
 
 <!-- ==========================
+     COMMENTAIRES VISUELS
+     (sans base de données)
+========================== -->
+
+
+<div
+id="commentBox"
+class="comment-box"
+style="display:none;">
+
+
+
+<h3>
+💬 Commentaires
+</h3>
+
+
+
+
+<textarea
+id="commentText"
+placeholder="Ajouter un commentaire...">
+</textarea>
+
+
+
+<button
+id="sendComment"
+class="yt-submit">
+
+Envoyer
+
+</button>
+
+
+
+
+<div id="commentsList">
+
+</div>
+
+
+
+     </div>
+     <!-- ==========================
      VIDEOS SIMILAIRES
 ========================== -->
 
@@ -350,25 +374,16 @@ class="btn-action">
 
 
 
-
-
 <div class="netflix-grid">
-
 
 
 {% for item in related_videos %}
 
 
-
-
 <div class="netflix-card">
 
 
-
 <a href="{{ url_for('main.watch', video_id=item.id) }}">
-
-
-
 
 
 {% if item.thumbnail %}
@@ -389,8 +404,6 @@ alt="{{ item.title }}"
 
 
 {% endif %}
-
-
 
 
 
@@ -422,14 +435,10 @@ alt="{{ item.title }}"
 
 
 
-
-
 </a>
 
 
 </div>
-
-
 
 
 {% else %}
@@ -443,10 +452,11 @@ Aucune autre vidéo.
 {% endfor %}
 
 
-
-
-
 </div>
+
+
+</section>
+
 
 
 </section>
@@ -456,73 +466,38 @@ Aucune autre vidéo.
 
 
 
-<!-- ==========================
-     JAVASCRIPT VIDEO
-========================== -->
-
-
 <script>
 
 
+// ==========================
+// VIDEO CONTROLS
+// ==========================
+
+
 const video =
-document.getElementById(
-"main-video"
-);
+document.getElementById("main-video");
 
 
 const container =
-document.getElementById(
-"video-container"
-);
+document.getElementById("video-container");
 
 
 
-const playBtn =
-document.getElementById(
-"play-btn"
-);
-
-
-
-const muteBtn =
-document.getElementById(
-"mute-btn"
-);
-
-
-
-const volume =
-document.getElementById(
-"volume-control"
-);
-
-
-
-
-// PLAY / PAUSE
-
-playBtn.onclick = function(){
+document.getElementById("play-btn").onclick = ()=>{
 
 
 if(video.paused){
 
-
 video.play();
 
+document.getElementById("play-btn").innerHTML="⏸️";
 
-playBtn.innerHTML="⏸️";
 
-
-}
-
-else{
-
+}else{
 
 video.pause();
 
-
-playBtn.innerHTML="▶️";
-
+document.getElementById("play-btn").innerHTML="▶️";
 
 }
 
@@ -532,16 +507,14 @@ playBtn.innerHTML="▶️";
 
 
 
-// SON
 
-muteBtn.onclick=function(){
-
-
-video.muted =
-!video.muted;
+document.getElementById("mute-btn").onclick = ()=>{
 
 
-muteBtn.innerHTML =
+video.muted = !video.muted;
+
+
+document.getElementById("mute-btn").innerHTML =
 video.muted ? "🔇" : "🔊";
 
 
@@ -550,32 +523,26 @@ video.muted ? "🔇" : "🔊";
 
 
 
-// VOLUME
 
-volume.oninput=function(){
+document.getElementById("volume-control").oninput = (e)=>{
 
-
-video.volume =
-volume.value;
-
+video.volume = e.target.value;
 
 };
 
 
 
 
+
+
 // PLEIN ECRAN
 
-document
-.getElementById("fullscreen-btn")
-.onclick=function(){
+document.getElementById("fullscreen-btn").onclick = ()=>{
 
 
 if(container.requestFullscreen){
 
-
 container.requestFullscreen();
-
 
 }
 
@@ -585,11 +552,10 @@ container.requestFullscreen();
 
 
 
+
 // ROTATION
 
-document
-.getElementById("rotate-btn")
-.onclick=function(){
+document.getElementById("rotate-btn").onclick = ()=>{
 
 
 container.classList.toggle(
@@ -602,21 +568,16 @@ container.classList.toggle(
 
 
 
-// MODE VERTICAL
-
-document
-.getElementById("vertical-btn")
-.onclick=function(){
 
 
-container.classList.remove(
-"horizontal-video"
-);
+// ORIENTATION
+
+document.getElementById("vertical-btn").onclick = ()=>{
 
 
-container.classList.add(
-"vertical-video"
-);
+container.classList.add("vertical-video");
+
+container.classList.remove("horizontal-video");
 
 
 };
@@ -624,21 +585,167 @@ container.classList.add(
 
 
 
-// MODE HORIZONTAL
-
-document
-.getElementById("horizontal-btn")
-.onclick=function(){
+document.getElementById("horizontal-btn").onclick = ()=>{
 
 
-container.classList.remove(
-"vertical-video"
+container.classList.add("horizontal-video");
+
+container.classList.remove("vertical-video");
+
+
+};
+
+
+
+
+
+
+
+
+// ==========================
+// LIKE DISLIKE
+// ==========================
+
+
+let likes = 0;
+
+let dislikes = 0;
+
+
+
+document.getElementById("likeBtn").onclick = ()=>{
+
+
+likes++;
+
+
+document.getElementById("likeCount").innerHTML =
+likes;
+
+
+};
+
+
+
+
+
+document.getElementById("dislikeBtn").onclick = ()=>{
+
+
+dislikes++;
+
+
+document.getElementById("dislikeCount").innerHTML =
+dislikes;
+
+
+};
+
+
+
+
+
+
+
+
+// ==========================
+// COMMENTAIRES VISUELS
+// ==========================
+
+
+document.getElementById("commentBtn").onclick = ()=>{
+
+
+let box =
+document.getElementById("commentBox");
+
+
+box.style.display =
+box.style.display==="none"
+?
+"block"
+:
+"none";
+
+
+};
+
+
+
+
+
+
+document.getElementById("sendComment").onclick = ()=>{
+
+
+let text =
+document.getElementById("commentText").value;
+
+
+
+if(text.trim()){
+
+
+let p =
+document.createElement("p");
+
+
+p.innerHTML =
+"👤 " + text;
+
+
+
+document.getElementById("commentsList")
+.appendChild(p);
+
+
+
+document.getElementById("commentText")
+.value="";
+
+
+}
+
+
+
+};
+
+
+
+
+
+
+
+// ==========================
+// PARTAGE
+// ==========================
+
+
+document.getElementById("shareBtn").onclick = ()=>{
+
+
+if(navigator.share){
+
+
+navigator.share({
+
+title:"{{ video.title }}",
+
+url:window.location.href
+
+
+});
+
+
+}else{
+
+
+alert(
+"Lien : "+window.location.href
 );
 
 
-container.classList.add(
-"horizontal-video"
-);
+}
 
 
 };
