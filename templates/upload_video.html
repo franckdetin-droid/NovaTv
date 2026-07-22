@@ -15,6 +15,7 @@ rel="stylesheet"
 href="https://releases.transloadit.com/uppy/v3.3.1/uppy.min.css">
 
 
+
 <section class="form-page">
 
 
@@ -75,25 +76,15 @@ Type de contenu
 
 <select name="content_type">
 
-<option value="film">
-🎬 Film
-</option>
+<option value="film">🎬 Film</option>
 
-<option value="serie">
-📺 Série
-</option>
+<option value="serie">📺 Série</option>
 
-<option value="journal">
-📰 Journal
-</option>
+<option value="journal">📰 Journal</option>
 
-<option value="emission">
-🎤 Émission
-</option>
+<option value="emission">🎤 Émission</option>
 
-<option value="clip">
-🎵 Clip
-</option>
+<option value="clip">🎵 Clip</option>
 
 </select>
 
@@ -141,7 +132,7 @@ UPLOAD VIDEO PRO
 
 
 <button 
-type="button" 
+type="button"
 id="select-video">
 
 📁 Choisir une vidéo
@@ -207,7 +198,6 @@ disabled>
 
 
 
-
 <script src="https://releases.transloadit.com/uppy/v3.3.1/uppy.min.js"></script>
 
 
@@ -245,8 +235,7 @@ document.getElementById(
 // ==========================
 
 
-const uppy =
-new Uppy.Core({
+const uppy = new Uppy.Uppy({
 
     autoProceed:false,
 
@@ -265,10 +254,8 @@ new Uppy.Core({
 
 
 
-
-
 // ==========================
-// DASHBOARD UPPY
+// DASHBOARD
 // ==========================
 
 
@@ -285,12 +272,11 @@ Uppy.Dashboard,
     showProgressDetails:true,
 
     note:
-    "Vidéo maximum 5GB"
+    "Choisir une vidéo ou glisser-déposer (5GB maximum)"
 
 }
 
 );
-
 
 
 
@@ -301,14 +287,11 @@ Uppy.Dashboard,
 // ==========================
 
 
-const button =
-document.getElementById(
-"select-video"
-);
-
-
-
-button.onclick = function(){
+document
+.getElementById("select-video")
+.addEventListener(
+"click",
+function(){
 
 
 const dashboard =
@@ -320,15 +303,13 @@ uppy.getPlugin(
 
 if(dashboard){
 
-
-dashboard.openFileDialog();
-
+    dashboard.openFileDialog();
 
 }
 
 
 
-};
+});
 
 
 
@@ -337,7 +318,7 @@ dashboard.openFileDialog();
 
 
 // ==========================
-// CLOUDINARY UPLOAD
+// CLOUDINARY
 // ==========================
 
 
@@ -355,7 +336,6 @@ fieldName:"file",
 
 formData:true
 
-
 }
 
 );
@@ -365,15 +345,14 @@ formData:true
 
 
 
-
 // ==========================
-// PRESET CLOUDINARY
+// PRESET
 // ==========================
 
 
 uppy.on(
 "file-added",
-function(file){
+function(){
 
 
 uppy.setMeta({
@@ -385,7 +364,7 @@ upload_preset:
 
 
 uploadStatus.innerHTML =
-"⏳ Vidéo prête";
+"⏳ Vidéo prête pour l'envoi";
 
 
 }
@@ -409,26 +388,27 @@ function(result){
 
 
 
-if(result.successful.length){
+if(result.successful.length > 0){
 
 
-const file =
+const uploaded =
 result.successful[0];
 
 
 
-if(file.response.body.secure_url){
+const url =
+uploaded.response.body.secure_url;
 
 
 
-videoUrl.value =
-file.response.body.secure_url;
+if(url){
 
+
+videoUrl.value = url;
 
 
 uploadStatus.innerHTML =
 "✅ Vidéo envoyée avec succès";
-
 
 
 submitBtn.disabled =
@@ -454,14 +434,12 @@ false;
 
 
 // ==========================
-// PROTECTION PUBLICATION
+// SECURITE FORMULAIRE
 // ==========================
 
 
 document
-.getElementById(
-"uploadForm"
-)
+.getElementById("uploadForm")
 .addEventListener(
 "submit",
 function(e){
@@ -474,12 +452,11 @@ e.preventDefault();
 
 
 alert(
-"Veuillez attendre la fin de l'upload"
+"Attendez la fin de l'importation"
 );
 
 
 }
-
 
 
 }
@@ -492,4 +469,4 @@ alert(
 
 
 
-{% endblock %}
+{% endblock %}poo
