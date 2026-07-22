@@ -13,19 +13,19 @@
 <section class="player-page">
 
 
+
 <!-- ==========================
-     LECTEUR VIDEO
+     LECTEUR VIDEO PRO
 ========================== -->
 
 
-<div class="video-player video-overlay">
+<div class="video-player video-overlay" id="video-container">
 
 
 <video
-controls
+id="main-video"
 autoplay
 playsinline
-width="100%"
 poster="{{ video.thumbnail }}"
 >
 
@@ -44,6 +44,103 @@ Votre navigateur ne supporte pas la vidéo.
 
 
 </video>
+
+
+
+<!-- ==========================
+     CONTROLES VIDEO STYLE YOUTUBE
+========================== -->
+
+
+<div class="custom-video-controls">
+
+
+<button
+type="button"
+id="play-btn">
+
+▶️
+
+</button>
+
+
+
+<button
+type="button"
+id="mute-btn">
+
+🔊
+
+</button>
+
+
+
+<input
+type="range"
+id="volume-control"
+min="0"
+max="1"
+step="0.1"
+value="1">
+
+
+
+<button
+type="button"
+id="rotate-btn">
+
+↻
+
+</button>
+
+
+
+<button
+type="button"
+id="fullscreen-btn">
+
+⛶
+
+</button>
+
+
+
+</div>
+
+
+
+
+
+<!-- ==========================
+     ORIENTATION
+========================== -->
+
+
+<div class="orientation-buttons">
+
+
+<button
+type="button"
+id="vertical-btn">
+
+📱 Vertical
+
+</button>
+
+
+
+<button
+type="button"
+id="horizontal-btn">
+
+🖥️ Horizontal
+
+</button>
+
+
+</div>
+
+
 
 
 
@@ -77,15 +174,8 @@ alt="{{ video.channel.name }}"
 
 
 
-</div>
-
-
-
-
-
-
-
-<!-- ==========================
+     </div>
+     <!-- ==========================
      DETAILS VIDEO
 ========================== -->
 
@@ -136,7 +226,6 @@ class="watch-channel-logo"
 
 
 
-
 <p>
 {{ video.description }}
 </p>
@@ -166,6 +255,7 @@ class="watch-channel-logo"
 
 
 </div>
+
 
 
 
@@ -206,72 +296,25 @@ method="POST"
 {% if session.get("user_id") %}
 
 
-{% set already = false %}
-
-
-{% for fav in video.favorites %}
-
-{% if fav.user_id == session.get("user_id") %}
-
-{% set already = true %}
-
-{% endif %}
-
-{% endfor %}
-
-
-
-
-
-{% if already %}
-
-
-<a
-href="{{ url_for('main.remove_favorite', video_id=video.id) }}"
-class="btn-action"
->
-
-✅ Dans ma liste
-
-</a>
-
-
-
-
-{% else %}
-
-
-
 <a
 href="{{ url_for('main.add_favorite', video_id=video.id) }}"
-class="btn-action"
->
+class="btn-action">
 
 ➕ Ma liste
 
 </a>
 
 
-
-{% endif %}
-
-
-
-
-
 {% else %}
-
 
 
 <a
 href="{{ url_for('main.login') }}"
-class="btn-action"
->
+class="btn-action">
 
 ➕ Ma liste
 
 </a>
-
 
 
 {% endif %}
@@ -281,10 +324,6 @@ class="btn-action"
 
 
 </div>
-
-
-
-
 
 
 </section>
@@ -335,22 +374,18 @@ class="btn-action"
 {% if item.thumbnail %}
 
 
-
 <img
 src="{{ item.thumbnail }}"
 alt="{{ item.title }}"
 >
 
 
-
 {% else %}
-
 
 
 <div class="no-image">
 🎬
 </div>
-
 
 
 {% endif %}
@@ -360,9 +395,7 @@ alt="{{ item.title }}"
 
 
 
-
 <div class="card-info">
-
 
 
 <h3>
@@ -370,11 +403,9 @@ alt="{{ item.title }}"
 </h3>
 
 
-
 <p>
 {{ item.category }}
 </p>
-
 
 
 <span>
@@ -382,11 +413,9 @@ alt="{{ item.title }}"
 </span>
 
 
-
 <span>
 👁️ {{ item.views }}
 </span>
-
 
 
 </div>
@@ -396,7 +425,6 @@ alt="{{ item.title }}"
 
 
 </a>
-
 
 
 </div>
@@ -421,7 +449,6 @@ Aucune autre vidéo.
 </div>
 
 
-
 </section>
 
 
@@ -429,7 +456,195 @@ Aucune autre vidéo.
 
 
 
-</section>
+<!-- ==========================
+     JAVASCRIPT VIDEO
+========================== -->
+
+
+<script>
+
+
+const video =
+document.getElementById(
+"main-video"
+);
+
+
+const container =
+document.getElementById(
+"video-container"
+);
+
+
+
+const playBtn =
+document.getElementById(
+"play-btn"
+);
+
+
+
+const muteBtn =
+document.getElementById(
+"mute-btn"
+);
+
+
+
+const volume =
+document.getElementById(
+"volume-control"
+);
+
+
+
+
+// PLAY / PAUSE
+
+playBtn.onclick = function(){
+
+
+if(video.paused){
+
+
+video.play();
+
+
+playBtn.innerHTML="⏸️";
+
+
+}
+
+else{
+
+
+video.pause();
+
+
+playBtn.innerHTML="▶️";
+
+
+}
+
+
+};
+
+
+
+
+// SON
+
+muteBtn.onclick=function(){
+
+
+video.muted =
+!video.muted;
+
+
+muteBtn.innerHTML =
+video.muted ? "🔇" : "🔊";
+
+
+};
+
+
+
+
+// VOLUME
+
+volume.oninput=function(){
+
+
+video.volume =
+volume.value;
+
+
+};
+
+
+
+
+// PLEIN ECRAN
+
+document
+.getElementById("fullscreen-btn")
+.onclick=function(){
+
+
+if(container.requestFullscreen){
+
+
+container.requestFullscreen();
+
+
+}
+
+
+};
+
+
+
+
+// ROTATION
+
+document
+.getElementById("rotate-btn")
+.onclick=function(){
+
+
+container.classList.toggle(
+"rotate-video"
+);
+
+
+};
+
+
+
+
+// MODE VERTICAL
+
+document
+.getElementById("vertical-btn")
+.onclick=function(){
+
+
+container.classList.remove(
+"horizontal-video"
+);
+
+
+container.classList.add(
+"vertical-video"
+);
+
+
+};
+
+
+
+
+// MODE HORIZONTAL
+
+document
+.getElementById("horizontal-btn")
+.onclick=function(){
+
+
+container.classList.remove(
+"vertical-video"
+);
+
+
+container.classList.add(
+"horizontal-video"
+);
+
+
+};
+
+
+</script>
 
 
 
