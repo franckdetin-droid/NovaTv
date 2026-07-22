@@ -9,4 +9,8 @@ psycopg2-binary
 pg8000
 python-dotenv
 cloudinary
+flask-socketio
+gevent
+gevent-websocket
+gunicorn
 psycopg[binary]
