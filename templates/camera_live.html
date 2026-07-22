@@ -370,19 +370,17 @@ offer
 
 
 
-
 socket.emit(
 "camera_offer",
 {
+room: room,
 
-room:room,
+offer: offer,
 
-offer:offer
+target: data.viewer
 
 }
-
 );
-
 
 
 
