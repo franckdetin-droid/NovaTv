@@ -79,26 +79,21 @@ Type de contenu
 🎬 Film
 </option>
 
-
 <option value="serie">
 📺 Série
 </option>
-
 
 <option value="journal">
 📰 Journal
 </option>
 
-
 <option value="emission">
 🎤 Émission
 </option>
 
-
 <option value="clip">
 🎵 Clip
 </option>
-
 
 </select>
 
@@ -144,6 +139,7 @@ UPLOAD VIDEO PRO
 </label>
 
 
+
 <button 
 type="button" 
 id="select-video">
@@ -171,11 +167,6 @@ Aucune vidéo sélectionnée
 
 
 
-
-
-<!-- ==========================
-MINIATURE
-========================== -->
 
 
 <label>
@@ -224,18 +215,21 @@ disabled>
 <script>
 
 
+// ==========================
+// VARIABLES
+// ==========================
+
+
 const uploadStatus =
 document.getElementById(
 "upload_status"
 );
 
 
-
 const videoUrl =
 document.getElementById(
 "video_url"
 );
-
 
 
 const submitBtn =
@@ -251,7 +245,10 @@ document.getElementById(
 // ==========================
 
 
-const uppy = new Uppy.Core({
+const uppy =
+new Uppy.Core({
+
+    autoProceed:false,
 
     restrictions:{
 
@@ -260,60 +257,6 @@ const uppy = new Uppy.Core({
         allowedFileTypes:[
             "video/*"
         ]
-
-    },
-
-    autoProceed:false
-
-});
-
-
-
-
-
-// ==========================
-// INTERFACE UPLOAD
-// ==========================
-
-
-uppy.use(
-Uppy.Dashboard,
-{
-
-    inline:true,
-
-    target:"#drag-drop-area",
-
-    note:
-    "Choisir une vidéo ou glisser-déposer (5GB maximum)",
-
-    showProgressDetails:true,
-
-    proudlyDisplayPoweredByUppy:false
-
-}
-);
-
-
-
-
-// ==========================
-// BOUTON CHOISIR VIDEO
-// ==========================
-
-document
-.getElementById("select-video")
-.addEventListener(
-"click",
-function(){
-
-    const dashboard =
-    uppy.getPlugin("Dashboard");
-
-
-    if(dashboard){
-
-        dashboard.openFileDialog();
 
     }
 
@@ -325,14 +268,82 @@ function(){
 
 
 // ==========================
-// CLOUDINARY
+// DASHBOARD UPPY
+// ==========================
+
+
+uppy.use(
+Uppy.Dashboard,
+{
+
+    inline:true,
+
+    target:"#drag-drop-area",
+
+    proudlyDisplayPoweredByUppy:false,
+
+    showProgressDetails:true,
+
+    note:
+    "Vidéo maximum 5GB"
+
+}
+
+);
+
+
+
+
+
+
+// ==========================
+// BOUTON CHOISIR VIDEO
+// ==========================
+
+
+const button =
+document.getElementById(
+"select-video"
+);
+
+
+
+button.onclick = function(){
+
+
+const dashboard =
+uppy.getPlugin(
+"Dashboard"
+);
+
+
+
+if(dashboard){
+
+
+dashboard.openFileDialog();
+
+
+}
+
+
+
+};
+
+
+
+
+
+
+
+// ==========================
+// CLOUDINARY UPLOAD
 // ==========================
 
 
 uppy.use(
 Uppy.XHRUpload,
 {
-
 
 endpoint:
 
@@ -346,7 +357,9 @@ formData:true
 
 
 }
+
 );
+
 
 
 
@@ -360,7 +373,7 @@ formData:true
 
 uppy.on(
 "file-added",
-(file)=>{
+function(file){
 
 
 uppy.setMeta({
@@ -372,11 +385,13 @@ upload_preset:
 
 
 uploadStatus.innerHTML =
+"⏳ Vidéo prête";
 
-"⏳ Vidéo prête pour l'envoi";
 
+}
 
-});
+);
+
 
 
 
@@ -390,47 +405,34 @@ uploadStatus.innerHTML =
 
 uppy.on(
 "complete",
-(result)=>{
+function(result){
 
 
-if(result.successful.length > 0){
+
+if(result.successful.length){
 
 
-const uploaded =
+const file =
 result.successful[0];
 
 
 
-if(
-uploaded.response &&
-uploaded.response.body &&
-uploaded.response.body.secure_url
-){
+if(file.response.body.secure_url){
+
 
 
 videoUrl.value =
-
-uploaded.response.body.secure_url;
+file.response.body.secure_url;
 
 
 
 uploadStatus.innerHTML =
-
-"✅ Vidéo envoyée sur Cloudinary";
-
+"✅ Vidéo envoyée avec succès";
 
 
-submitBtn.disabled = false;
 
-
-}
-
-else{
-
-
-uploadStatus.innerHTML =
-
-"❌ URL Cloudinary introuvable";
+submitBtn.disabled =
+false;
 
 
 }
@@ -440,7 +442,11 @@ uploadStatus.innerHTML =
 }
 
 
-});
+
+}
+
+);
+
 
 
 
@@ -448,15 +454,17 @@ uploadStatus.innerHTML =
 
 
 // ==========================
-// PROTECTION FORMULAIRE
+// PROTECTION PUBLICATION
 // ==========================
 
 
 document
-.getElementById("uploadForm")
+.getElementById(
+"uploadForm"
+)
 .addEventListener(
 "submit",
-(e)=>{
+function(e){
 
 
 if(!videoUrl.value){
@@ -466,14 +474,17 @@ e.preventDefault();
 
 
 alert(
-"Veuillez attendre la fin de l'upload vidéo"
+"Veuillez attendre la fin de l'upload"
 );
 
 
 }
 
 
-});
+
+}
+
+);
 
 
 
