@@ -1429,29 +1429,7 @@ def my_list():
     )
     # ==========================
 # SUPPRIMER VIDEO CREATEUR
-# ==========================
-
-@main.route(
-    "/delete-video/<int:video_id>",
-    methods=["POST"]
-)
-def delete_video(video_id):
-
-    if "user_id" not in session:
-        return redirect(
-            url_for("main.login")
-        )
-
-
-    video = Video.query.get_or_404(
-        video_id
-    )
-
-
-    # Vérifier propriétaire de la chaîne
-
-    if video.channel.user_id != session["user_id"]:
-        return "Accès refusé"
+# =="
 
 
 
