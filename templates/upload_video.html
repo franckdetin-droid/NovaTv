@@ -144,6 +144,15 @@ UPLOAD VIDEO PRO
 </label>
 
 
+<button 
+type="button" 
+id="select-video">
+
+📁 Choisir une vidéo
+
+</button>
+
+
 
 <div id="drag-drop-area"></div>
 
@@ -192,9 +201,7 @@ type="submit"
 id="submit_btn"
 disabled>
 
-
 🚀 Publier la vidéo
-
 
 </button>
 
@@ -208,9 +215,6 @@ disabled>
 
 
 
-
-
-<!-- UPPY JS -->
 
 
 <script src="https://releases.transloadit.com/uppy/v3.3.1/uppy.min.js"></script>
@@ -249,25 +253,17 @@ document.getElementById(
 
 const uppy = new Uppy.Core({
 
+    restrictions:{
 
-restrictions:{
+        maxFileSize:5000000000,
 
+        allowedFileTypes:[
+            "video/*"
+        ]
 
-maxFileSize:5000000000,
+    },
 
-
-allowedFileTypes:[
-
-"video/*"
-
-]
-
-
-},
-
-
-autoProceed:false
-
+    autoProceed:false
 
 });
 
@@ -284,28 +280,41 @@ uppy.use(
 Uppy.Dashboard,
 {
 
+    inline:true,
 
-inline:true,
+    target:"#drag-drop-area",
 
+    note:
+    "Choisir une vidéo ou glisser-déposer (5GB maximum)",
 
-target:"#drag-drop-area",
+    showProgressDetails:true,
 
-
-note:
-"Choisir une vidéo ou glisser-déposer (5GB maximum)",
-
-
-showProgressDetails:true,
-
-
-hideUploadButton:false,
-
-
-proudlyDisplayPoweredByUppy:false
-
+    proudlyDisplayPoweredByUppy:false
 
 }
 );
+
+
+
+
+
+// ==========================
+// BOUTON CHOISIR VIDEO
+// ==========================
+
+
+document
+.getElementById("select-video")
+.onclick = function(){
+
+
+    uppy
+    .getPlugin("Dashboard")
+    .openModal();
+
+
+};
+
 
 
 
@@ -341,7 +350,7 @@ formData:true
 
 
 // ==========================
-// PRESET
+// PRESET CLOUDINARY
 // ==========================
 
 
@@ -359,6 +368,7 @@ upload_preset:
 
 
 uploadStatus.innerHTML =
+
 "⏳ Vidéo prête pour l'envoi";
 
 
@@ -382,24 +392,45 @@ uppy.on(
 if(result.successful.length > 0){
 
 
-
 const uploaded =
 result.successful[0];
 
 
 
+if(
+uploaded.response &&
+uploaded.response.body &&
+uploaded.response.body.secure_url
+){
+
+
 videoUrl.value =
+
 uploaded.response.body.secure_url;
 
 
 
 uploadStatus.innerHTML =
+
 "✅ Vidéo envoyée sur Cloudinary";
 
 
 
-submitBtn.disabled =
-false;
+submitBtn.disabled = false;
+
+
+}
+
+else{
+
+
+uploadStatus.innerHTML =
+
+"❌ URL Cloudinary introuvable";
+
+
+}
+
 
 
 }
