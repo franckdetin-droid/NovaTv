@@ -10,7 +10,9 @@ Importer une vidéo - MY TV APP
 {% block content %}
 
 
-<link href="https://releases.transloadit.com/uppy/v3.3.1/uppy.min.css" rel="stylesheet">
+<link 
+rel="stylesheet" 
+href="https://releases.transloadit.com/uppy/v3.3.1/uppy.min.css">
 
 
 <section class="form-page">
@@ -59,7 +61,9 @@ Titre
 type="text"
 name="title"
 maxlength="200"
+placeholder="Titre de la vidéo"
 required>
+
 
 
 
@@ -71,17 +75,33 @@ Type de contenu
 
 <select name="content_type">
 
-<option value="film">🎬 Film</option>
+<option value="film">
+🎬 Film
+</option>
 
-<option value="serie">📺 Série</option>
 
-<option value="journal">📰 Journal</option>
+<option value="serie">
+📺 Série
+</option>
 
-<option value="emission">🎤 Émission</option>
 
-<option value="clip">🎵 Clip</option>
+<option value="journal">
+📰 Journal
+</option>
+
+
+<option value="emission">
+🎤 Émission
+</option>
+
+
+<option value="clip">
+🎵 Clip
+</option>
+
 
 </select>
+
 
 
 
@@ -106,14 +126,16 @@ Description
 
 
 <textarea
-name="description"></textarea>
+name="description"
+placeholder="Description de la vidéo">
+</textarea>
 
 
 
 
 
 <!-- ==========================
-UPLOAD VIDEO YOUTUBE STYLE
+UPLOAD VIDEO PRO
 ========================== -->
 
 
@@ -122,7 +144,9 @@ UPLOAD VIDEO YOUTUBE STYLE
 </label>
 
 
+
 <div id="drag-drop-area"></div>
+
 
 
 <input
@@ -140,9 +164,13 @@ Aucune vidéo sélectionnée
 
 
 
+<!-- ==========================
+MINIATURE
+========================== -->
+
 
 <label>
-Miniature
+🖼️ Miniature
 </label>
 
 
@@ -155,16 +183,20 @@ accept="image/*">
 
 
 
+<br>
+
+
 
 <button
 type="submit"
 id="submit_btn"
 disabled>
 
+
 🚀 Publier la vidéo
 
-</button>
 
+</button>
 
 
 
@@ -175,6 +207,10 @@ disabled>
 
 
 
+
+
+
+<!-- UPPY JS -->
 
 
 <script src="https://releases.transloadit.com/uppy/v3.3.1/uppy.min.js"></script>
@@ -207,7 +243,7 @@ document.getElementById(
 
 
 // ==========================
-// UPPY CONFIGURATION
+// CREATION UPPY
 // ==========================
 
 
@@ -221,7 +257,9 @@ maxFileSize:5000000000,
 
 
 allowedFileTypes:[
+
 "video/*"
+
 ]
 
 
@@ -237,6 +275,11 @@ autoProceed:false
 
 
 
+// ==========================
+// INTERFACE UPLOAD
+// ==========================
+
+
 uppy.use(
 Uppy.Dashboard,
 {
@@ -249,7 +292,13 @@ target:"#drag-drop-area",
 
 
 note:
-"Glisse ta vidéo ici ou clique (5GB max)",
+"Choisir une vidéo ou glisser-déposer (5GB maximum)",
+
+
+showProgressDetails:true,
+
+
+hideUploadButton:false,
 
 
 proudlyDisplayPoweredByUppy:false
@@ -257,7 +306,6 @@ proudlyDisplayPoweredByUppy:false
 
 }
 );
-
 
 
 
@@ -274,6 +322,7 @@ Uppy.XHRUpload,
 
 
 endpoint:
+
 "https://api.cloudinary.com/v1_1/kvua1rmc/video/upload",
 
 
@@ -292,27 +341,25 @@ formData:true
 
 
 // ==========================
-// PRESET CLOUDINARY
+// PRESET
 // ==========================
 
 
 uppy.on(
 "file-added",
-function(){
+(file)=>{
 
 
 uppy.setMeta({
 
-
 upload_preset:
 "novatv_video"
-
 
 });
 
 
 uploadStatus.innerHTML =
-"⏳ Prêt pour l'envoi";
+"⏳ Vidéo prête pour l'envoi";
 
 
 });
@@ -329,27 +376,25 @@ uploadStatus.innerHTML =
 
 uppy.on(
 "complete",
-function(result){
-
+(result)=>{
 
 
 if(result.successful.length > 0){
 
 
 
-const file =
+const uploaded =
 result.successful[0];
 
 
 
 videoUrl.value =
-file.response.body.secure_url;
-
+uploaded.response.body.secure_url;
 
 
 
 uploadStatus.innerHTML =
-"✅ Vidéo envoyée avec succès";
+"✅ Vidéo envoyée sur Cloudinary";
 
 
 
@@ -357,9 +402,40 @@ submitBtn.disabled =
 false;
 
 
-
 }
 
+
+});
+
+
+
+
+
+
+// ==========================
+// PROTECTION FORMULAIRE
+// ==========================
+
+
+document
+.getElementById("uploadForm")
+.addEventListener(
+"submit",
+(e)=>{
+
+
+if(!videoUrl.value){
+
+
+e.preventDefault();
+
+
+alert(
+"Veuillez attendre la fin de l'upload vidéo"
+);
+
+
+}
 
 
 });
