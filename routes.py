@@ -1037,6 +1037,7 @@ def create_live():
             title=title,
 
             stream_url=stream_url,
+            live_source="url",
 
             is_live=True,
 
