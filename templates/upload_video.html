@@ -297,23 +297,27 @@ Uppy.Dashboard,
 
 
 
-
 // ==========================
 // BOUTON CHOISIR VIDEO
 // ==========================
 
-
 document
 .getElementById("select-video")
-.onclick = function(){
+.addEventListener(
+"click",
+function(){
+
+    const dashboard =
+    uppy.getPlugin("Dashboard");
 
 
-    uppy
-    .getPlugin("Dashboard")
-    .openModal();
+    if(dashboard){
 
+        dashboard.openFileDialog();
 
-};
+    }
+
+});
 
 
 
