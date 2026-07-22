@@ -68,7 +68,6 @@ required>
 
 
 
-
 <label>
 Type de contenu
 </label>
@@ -77,17 +76,12 @@ Type de contenu
 <select name="content_type">
 
 <option value="film">🎬 Film</option>
-
 <option value="serie">📺 Série</option>
-
 <option value="journal">📰 Journal</option>
-
 <option value="emission">🎤 Émission</option>
-
 <option value="clip">🎵 Clip</option>
 
 </select>
-
 
 
 
@@ -130,8 +124,7 @@ UPLOAD VIDEO PRO
 </label>
 
 
-
-<button 
+<button
 type="button"
 id="select-video">
 
@@ -205,11 +198,6 @@ disabled>
 <script>
 
 
-// ==========================
-// VARIABLES
-// ==========================
-
-
 const uploadStatus =
 document.getElementById(
 "upload_status"
@@ -230,6 +218,7 @@ document.getElementById(
 
 
 
+
 // ==========================
 // CREATION UPPY
 // ==========================
@@ -237,19 +226,24 @@ document.getElementById(
 
 const uppy = new Uppy.Uppy({
 
-    autoProceed:false,
+autoProceed:false,
 
-    restrictions:{
 
-        maxFileSize:5000000000,
+restrictions:{
 
-        allowedFileTypes:[
-            "video/*"
-        ]
 
-    }
+maxFileSize:5000000000,
+
+
+allowedFileTypes:[
+"video/*"
+]
+
+
+}
 
 });
+
 
 
 
@@ -263,20 +257,20 @@ uppy.use(
 Uppy.Dashboard,
 {
 
-    inline:true,
 
-    target:"#drag-drop-area",
+inline:true,
 
-    proudlyDisplayPoweredByUppy:false,
+target:"#drag-drop-area",
 
-    showProgressDetails:true,
+showProgressDetails:true,
 
-    note:
-    "Choisir une vidéo ou glisser-déposer (5GB maximum)"
+proudlyDisplayPoweredByUppy:false,
 
-}
+note:
+"Vidéo jusqu'à 5GB"
 
-);
+
+});
 
 
 
@@ -289,9 +283,7 @@ Uppy.Dashboard,
 
 document
 .getElementById("select-video")
-.addEventListener(
-"click",
-function(){
+.onclick=function(){
 
 
 const dashboard =
@@ -300,17 +292,14 @@ uppy.getPlugin(
 );
 
 
-
 if(dashboard){
 
-    dashboard.openFileDialog();
+dashboard.openFileDialog();
 
 }
 
 
-
-});
-
+};
 
 
 
@@ -326,6 +315,7 @@ uppy.use(
 Uppy.XHRUpload,
 {
 
+
 endpoint:
 
 "https://api.cloudinary.com/v1_1/kvua1rmc/video/upload",
@@ -334,11 +324,14 @@ endpoint:
 fieldName:"file",
 
 
-formData:true
+formData:true,
 
-}
 
-);
+limit:1
+
+
+});
+
 
 
 
@@ -346,30 +339,32 @@ formData:true
 
 
 // ==========================
-// PRESET
+// AJOUT PRESET
 // ==========================
 
 
 uppy.on(
 "file-added",
-function(){
+function(file){
 
 
-uppy.setMeta({
+uppy.setFileMeta(
+file.id,
+{
+
 
 upload_preset:
 "novatv_video"
+
 
 });
 
 
 uploadStatus.innerHTML =
-"⏳ Vidéo prête pour l'envoi";
+"⏳ Vidéo prête";
 
 
-}
-
-);
+});
 
 
 
@@ -378,37 +373,59 @@ uploadStatus.innerHTML =
 
 
 // ==========================
-// FIN UPLOAD
+// PROGRESSION
 // ==========================
 
 
 uppy.on(
-"complete",
-function(result){
+"upload-progress",
+function(file,progress){
 
 
-
-if(result.successful.length > 0){
-
-
-const uploaded =
-result.successful[0];
-
-
-
-const url =
-uploaded.response.body.secure_url;
-
-
-
-if(url){
-
-
-videoUrl.value = url;
+let percent =
+Math.round(
+(progress.bytesUploaded /
+progress.bytesTotal) * 100
+);
 
 
 uploadStatus.innerHTML =
-"✅ Vidéo envoyée avec succès";
+"⏳ Upload : "
++
+percent
++
+"%";
+
+
+});
+
+
+
+
+
+
+
+// ==========================
+// SUCCÈS CLOUDINARY
+// ==========================
+
+
+uppy.on(
+"upload-success",
+function(file,response){
+
+
+
+if(response.body.secure_url){
+
+
+videoUrl.value =
+response.body.secure_url;
+
+
+
+uploadStatus.innerHTML =
+"✅ Vidéo envoyée";
 
 
 submitBtn.disabled =
@@ -419,154 +436,28 @@ false;
 
 
 
-}
-
-
-
-}
-
-);
-
-
-
-
-
-
-
-// ==========================
-// SECURITE FORMULAIRE
-<script src="https://releases.transloadit.com/uppy/v3.3.1/uppy.min.js"></script>
-
-<script>
-
-// ==========================
-// VARIABLES
-// ==========================
-
-const uploadStatus = document.getElementById("upload_status");
-
-const videoUrl = document.getElementById("video_url");
-
-const submitBtn = document.getElementById("submit_btn");
-
-
-
-// ==========================
-// CREATION UPPY
-// ==========================
-
-const uppy = new Uppy.Uppy({
-
-    autoProceed:false,
-
-    restrictions:{
-
-        maxFileSize:5000000000,
-
-        allowedFileTypes:[
-            "video/*"
-        ]
-
-    }
-
 });
 
 
 
 
-// ==========================
-// DASHBOARD
-// ==========================
-
-uppy.use(
-    Uppy.Dashboard,
-    {
-
-        inline:true,
-
-        target:"#drag-drop-area",
-
-        proudlyDisplayPoweredByUppy:false,
-
-        showProgressDetails:true,
-
-        note:
-        "Choisir une vidéo ou glisser-déposer (5GB maximum)"
-
-    }
-);
-
 
 
 
 // ==========================
-// BOUTON CHOISIR VIDEO
+// ERREUR
 // ==========================
 
-document
-.getElementById("select-video")
-.onclick = function(){
-
-
-    const dashboard =
-    uppy.getPlugin("Dashboard");
-
-
-    if(dashboard){
-
-        dashboard.openFileDialog();
-
-    }
-
-
-};
-
-
-
-
-// ==========================
-// CLOUDINARY UPLOAD
-// ==========================
-
-uppy.use(
-    Uppy.XHRUpload,
-    {
-
-        endpoint:
-        "https://api.cloudinary.com/v1_1/kvua1rmc/video/upload",
-
-        fieldName:"file",
-
-        formData:true
-
-    }
-);
-
-
-
-
-// ==========================
-// AJOUT PRESET
-// ==========================
 
 uppy.on(
-"file-added",
-(file)=>{
+"upload-error",
+function(file,error){
 
 
-    uppy.setFileMeta(
-        file.id,
-        {
-
-            upload_preset:
-            "novatv_video"
-
-        }
-    );
-
-
-    uploadStatus.innerHTML =
-    "⏳ Vidéo prête pour l'envoi";
+uploadStatus.innerHTML =
+"❌ Erreur upload : "
++
+error.message;
 
 
 });
@@ -575,96 +466,39 @@ uppy.on(
 
 
 
-// ==========================
-// REPONSE CLOUDINARY
-// ==========================
-
-uppy.on(
-"upload-success",
-(file,response)=>{
-
-
-    console.log(
-        "Réponse Cloudinary:",
-        response
-    );
-
-
-    if(response.body.secure_url){
-
-
-        videoUrl.value =
-        response.body.secure_url;
-
-
-        uploadStatus.innerHTML =
-        "✅ Vidéo envoyée avec succès";
-
-
-        submitBtn.disabled =
-        false;
-
-
-    }
-
-
-});
-
-
-
-
 
 // ==========================
-// FIN UPLOAD
+// PROTECTION
 // ==========================
 
-uppy.on(
-"complete",
-(result)=>{
-
-
-    if(result.successful.length > 0){
-
-
-        uploadStatus.innerHTML =
-        "✅ Import terminé";
-
-
-    }
-
-
-});
-
-
-
-
-
-// ==========================
-// PROTECTION FORMULAIRE
-// ==========================
 
 document
 .getElementById("uploadForm")
 .addEventListener(
 "submit",
-(e)=>{
+function(e){
 
 
-    if(!videoUrl.value){
+if(!videoUrl.value){
 
 
-        e.preventDefault();
+e.preventDefault();
 
 
-        alert(
-        "La vidéo n'est pas encore prête"
-        );
+alert(
+"Attendez la fin de l'envoi vidéo"
+);
 
 
-    }
+}
 
 
 });
 
 
+
 </script>
+
+
+
+{% endblock %}
