@@ -2808,4 +2808,139 @@ header,
 
 
 }
+/* ==========================
+   WATCH CAMERA DESIGN
+========================== */
 
+
+.watch-camera {
+    width: 100%;
+    max-width: 900px;
+    margin: auto;
+    padding: 15px;
+}
+
+
+
+
+.live-player {
+    position: relative;
+    width: 100%;
+    background: #000;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+
+
+
+
+.live-player video {
+
+    width: 100%;
+    height: auto;
+    max-height: 75vh;
+    object-fit: contain;
+    display: block;
+
+}
+
+
+
+
+
+
+/* Bouton plein écran */
+
+#fullscreenBtn {
+
+    margin-top: 12px;
+
+    background: #111;
+
+    color: white;
+
+    border: none;
+
+    padding: 8px 15px;
+
+    border-radius: 20px;
+
+    font-size: 14px;
+
+    cursor: pointer;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 5px;
+
+}
+
+
+
+
+
+#fullscreenBtn:hover {
+
+    background: #333;
+
+}
+
+
+
+
+
+
+
+/* Statut live */
+
+#status {
+
+    margin-top: 15px;
+
+    font-size: 15px;
+
+    color: #555;
+
+}
+
+
+
+
+
+
+
+/* Mobile */
+
+@media(max-width:600px){
+
+
+.watch-camera h1{
+
+    font-size:22px;
+
+}
+
+
+
+.live-player video{
+
+    max-height:60vh;
+
+}
+
+
+
+#fullscreenBtn{
+
+    font-size:13px;
+
+    padding:7px 12px;
+
+}
+
+
+
+    }
