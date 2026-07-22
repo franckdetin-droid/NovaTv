@@ -484,7 +484,7 @@ def create_channel():
         "create_channel.html"
     )
     # ==========================
-# UPLOAD VIDEO
+# UPLOAD VIDEO PRO UPPY + CLOUDINARY
 # ==========================
 
 @main.route(
@@ -493,11 +493,13 @@ def create_channel():
 )
 def upload_video():
 
+
     if "user_id" not in session:
 
         return redirect(
             url_for("main.login")
         )
+
 
 
     channels = Channel.query.filter_by(
@@ -537,86 +539,13 @@ def upload_video():
         )
 
 
-
         # ==========================
-        # VERIFICATION FICHIER VIDEO
+        # URL VIDEO CLOUDINARY
         # ==========================
 
-        video_file = request.files.get(
-            "video"
+        video_url = request.form.get(
+            "video_url"
         )
-
-
-        if not video_file:
-
-            return "Aucune vidéo sélectionnée", 400
-
-
-
-        if video_file.filename == "":
-
-            return "Fichier vidéo invalide", 400
-
-
-
-        if not is_video(video_file.filename):
-
-            return "Format vidéo non accepté", 400
-
-
-
-
-        video_url = None
-
-
-
-        # ==========================
-        # UPLOAD LARGE CLOUDINARY
-        # ==========================
-
-        try:
-
-
-            upload_result = cloudinary.uploader.upload_large(
-
-                video_file,
-
-                resource_type="video",
-
-                folder="novatv/videos",
-
-                chunk_size=6000000
-
-            )
-
-
-
-            video_url = upload_result.get(
-                "secure_url"
-            )
-
-
-
-        except Exception as e:
-
-
-            print(
-                "Erreur upload vidéo :",
-                e
-            )
-
-
-            return "Erreur pendant l'envoi de la vidéo", 500
-
-
-
-
-        if not video_url:
-
-            return "Cloudinary n'a pas retourné l'URL", 500
-
-
-
 
 
         # ==========================
@@ -634,39 +563,32 @@ def upload_video():
         if thumbnail and thumbnail.filename:
 
 
-            try:
+            upload_thumbnail = cloudinary.uploader.upload(
+                thumbnail,
+                folder="novatv/thumbnails"
+            )
 
 
-                upload_thumbnail = cloudinary.uploader.upload(
-
-                    thumbnail,
-
-                    folder="novatv/thumbnails"
-
-                )
-
-
-                thumbnail_url = upload_thumbnail.get(
-                    "secure_url"
-                )
-
-
-            except Exception as e:
-
-
-                print(
-                    "Erreur miniature :",
-                    e
-                )
-
-
-
+            thumbnail_url = upload_thumbnail.get(
+                "secure_url"
+            )
 
 
 
         # ==========================
-        # CREATION VIDEO DATABASE
+        # VERIFICATION VIDEO
         # ==========================
+
+        if not video_url:
+
+            return "❌ Veuillez terminer l'envoi de la vidéo"
+
+
+
+        # ==========================
+        # ENREGISTREMENT DATABASE
+        # ==========================
+
 
         video = Video(
 
@@ -689,7 +611,6 @@ def upload_video():
         )
 
 
-
         db.session.add(video)
 
         db.session.commit()
@@ -697,9 +618,10 @@ def upload_video():
 
 
         return redirect(
-            url_for("main.creator")
+            url_for(
+                "main.creator"
+            )
         )
-
 
 
 
@@ -709,8 +631,12 @@ def upload_video():
         )
 
 
-    
+
+
         
+
+
+
         
     
     
