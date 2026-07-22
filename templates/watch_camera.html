@@ -4,13 +4,21 @@
 Regarder live - MY TV APP
 {% endblock %}
 
+
 {% block content %}
+
 
 <section class="watch-camera">
 
-<h1>🔴 {{ live.title }}</h1>
+
+<h1>
+🔴 {{ live.title }}
+</h1>
+
+
 
 <div class="live-player">
+
 
 <video
 id="liveVideo"
@@ -20,114 +28,492 @@ controls
 width="100%">
 </video>
 
+
 </div>
 
+
+
+
+<button id="fullscreenBtn">
+⛶ Plein écran
+</button>
+
+
+
 <p id="status">
-Connexion au live...
+🟡 Connexion au live...
 </p>
+
+
 
 </section>
 
 
-<!-- SOCKET.IO -->
+
+
+
 <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
 
+
+
 <script>
-const socket = io();
-
-const video = document.getElementById("liveVideo");
-const status = document.getElementById("status");
-
-// ✅ ROOM UNIQUE
-const room = "camera_live_{{ live.id }}";
-
-let peer = new RTCPeerConnection();
 
 
 // ==========================
-// RECEVOIR VIDEO
+// SOCKET
 // ==========================
-peer.ontrack = (event) => {
-    video.srcObject = event.streams[0];
-    status.innerHTML = "🔴 Live en cours";
-};
 
 
-// ==========================
-// ICE (ENVOI)
-// ==========================
-peer.onicecandidate = (event) => {
-    if (event.candidate) {
-        socket.emit("camera_ice", {
-            room: room,
-            candidate: event.candidate
-        });
-    }
-};
+const socket = io({
 
+reconnection:true,
 
-// ==========================
-// REJOINDRE SALLE
-// ==========================
-socket.emit("join_camera", {
-    room: room
+reconnectionAttempts:10
+
 });
 
 
+
+
+
+const video =
+document.getElementById(
+"liveVideo"
+);
+
+
+
+const status =
+document.getElementById(
+"status"
+);
+
+
+
+
+
 // ==========================
-// RECEVOIR OFFER
+// SALLE DU LIVE
 // ==========================
-socket.on("camera_offer", async (data) => {
-    try {
-        await peer.setRemoteDescription(
-            new RTCSessionDescription(data.offer)
-        );
 
-        const answer = await peer.createAnswer();
 
-        await peer.setLocalDescription(answer);
+const room =
+"camera_live_{{ live.id }}";
 
-        socket.emit("camera_answer", {
-            room: room,
-            answer: answer
-        });
 
-    } catch (e) {
-        console.log("Erreur offer:", e);
-    }
+
+
+
+let peer = null;
+
+
+
+
+
+
+
+
+
+// ==========================
+// CREER WEBRTC
+// ==========================
+
+
+function createPeer(){
+
+
+
+peer = new RTCPeerConnection({
+
+iceServers:[
+
+{
+
+urls:
+"stun:stun.l.google.com:19302"
+
+}
+
+]
+
 });
+
+
+
+
+
+
+// recevoir vidéo
+
+
+peer.ontrack = (event)=>{
+
+
+video.srcObject =
+event.streams[0];
+
+
+status.innerHTML =
+"🔴 Live en cours";
+
+
+};
+
+
+
+
+
+
+
+// ICE
+
+
+peer.onicecandidate =
+(event)=>{
+
+
+if(event.candidate){
+
+
+socket.emit(
+"camera_ice",
+{
+
+room:room,
+
+candidate:event.candidate
+
+}
+
+);
+
+
+}
+
+
+};
+
+
+
+
+return peer;
+
+
+}
+
+
+
+
+
+
+
+
+
+// ==========================
+// CONNEXION SERVEUR
+// ==========================
+
+
+socket.on(
+"connect",
+()=>{
+
+
+status.innerHTML =
+"🟢 Serveur connecté";
+
+
+socket.emit(
+"join_camera",
+{
+
+room:room
+
+}
+
+);
+
+
+
+}
+
+);
+
+
+
+
+
+
+
+
+
+// ==========================
+// RECEVOIR OFFER CREATEUR
+// ==========================
+
+
+socket.on(
+"camera_offer",
+async(data)=>{
+
+
+try{
+
+
+if(!peer){
+
+createPeer();
+
+}
+
+
+
+
+await peer.setRemoteDescription(
+
+new RTCSessionDescription(
+data.offer
+)
+
+);
+
+
+
+
+
+const answer =
+await peer.createAnswer();
+
+
+
+
+
+await peer.setLocalDescription(
+answer
+);
+
+
+
+
+
+
+
+socket.emit(
+"camera_answer",
+{
+
+room:room,
+
+answer:answer,
+
+target:data.sender
+
+}
+
+);
+
+
+
+
+}
+
+catch(error){
+
+
+console.log(
+"Erreur offer:",
+error
+);
+
+
+status.innerHTML =
+"❌ Erreur connexion";
+
+
+}
+
+
+});
+
+
+
+
+
+
+
 
 
 // ==========================
 // RECEVOIR ICE
 // ==========================
-socket.on("camera_ice", async (data) => {
-    try {
-        await peer.addIceCandidate(
-            new RTCIceCandidate(data.candidate)
-        );
-    } catch (e) {
-        console.log("Erreur ICE:", e);
-    }
+
+
+socket.on(
+"camera_ice",
+async(data)=>{
+
+
+try{
+
+
+if(peer){
+
+
+await peer.addIceCandidate(
+
+new RTCIceCandidate(
+data.candidate
+)
+
+);
+
+
+}
+
+
+}
+
+catch(error){
+
+
+console.log(
+"ICE erreur:",
+error
+);
+
+
+}
+
+
 });
 
 
-// ==========================
-// LIVE STOP
-// ==========================
-socket.on("camera_stopped", () => {
-    status.innerHTML = "⛔ Live arrêté";
-    video.srcObject = null;
-});
+
+
+
+
+
 
 
 // ==========================
-// ROOM FULL
+// LIVE ARRETE
 // ==========================
-socket.on("room_full", () => {
-    alert("⚠️ Live plein");
+
+
+socket.on(
+"camera_stopped",
+()=>{
+
+
+status.innerHTML =
+"⛔ Live terminé";
+
+
+video.srcObject =
+null;
+
+
+
+if(peer){
+
+
+peer.close();
+
+
+peer=null;
+
+
+}
+
+
+
 });
+
+
+
+
+
+
+
+
+
+// ==========================
+// ERREUR SALLE
+// ==========================
+
+
+socket.on(
+"room_full",
+()=>{
+
+
+status.innerHTML =
+"⚠️ Nombre maximum de spectateurs atteint";
+
+
+});
+
+
+
+
+
+
+
+
+
+// ==========================
+// DECONNEXION
+// ==========================
+
+
+socket.on(
+"disconnect",
+()=>{
+
+
+status.innerHTML =
+"🔴 Connexion perdue";
+
+
+});
+
+
+
+
+
+
+
+
+
+// ==========================
+// PLEIN ECRAN
+// ==========================
+
+
+document
+.getElementById(
+"fullscreenBtn"
+)
+.onclick=()=>{
+
+
+if(video.requestFullscreen){
+
+
+video.requestFullscreen();
+
+
+}
+
+
+};
+
+
+
+
 
 </script>
+
+
 
 {% endblock %}
