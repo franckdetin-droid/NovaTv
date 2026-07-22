@@ -1,203 +1,284 @@
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+/* ==================================
+   MY TV APP - PREMIUM THEME
+   PARTIE 1/10
+   ================================== */
+
+
+/* RESET */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
 }
 
 
-body {
 
-    font-family: Arial, sans-serif;
+:root{
 
-    background: #0b0b0b;
+    --background:#080808;
 
-    color: white;
+    --surface:#121212;
+
+    --surface-light:#1c1c1c;
+
+    --primary:#00c6ff;
+
+    --secondary:#0072ff;
+
+    --accent:#ff0055;
+
+    --success:#00e676;
+
+    --danger:#ff1744;
+
+    --text:#ffffff;
+
+    --text-muted:#b3b3b3;
+
+    --border:#2b2b2b;
 
 }
+
+
+
+/* BODY */
+
+body{
+
+    background:
+    linear-gradient(
+        180deg,
+        #050505,
+        #101010
+    );
+
+    color:var(--text);
+
+    font-family:
+    "Segoe UI",
+    Arial,
+    sans-serif;
+
+    min-height:100vh;
+
+}
+
+
+
+/* LIENS */
+
+a{
+
+    color:inherit;
+
+    text-decoration:none;
+
+}
+
 
 
 
 /* HEADER */
 
-.header {
+.header{
 
-    width: 100%;
+    width:100%;
 
-    display: flex;
+    height:70px;
 
-    justify-content: space-between;
+    display:flex;
 
-    align-items: center;
+    align-items:center;
 
-    padding: 15px 30px;
-
-    background: #111;
-
-}
+    justify-content:space-between;
 
 
-
-.logo {
-
-    font-size: 24px;
-
-    font-weight: bold;
-
-}
+    padding:0 35px;
 
 
+    background:
+    rgba(10,10,10,0.95);
 
-nav a {
 
-    color: white;
+    border-bottom:
+    1px solid var(--border);
 
-    text-decoration: none;
 
-    margin: 0 10px;
+    position:sticky;
+
+    top:0;
+
+    z-index:1000;
+
+    backdrop-filter:blur(10px);
 
 }
 
 
 
 
-nav a:hover {
 
-    color: #00aaff;
+/* LOGO */
+
+.logo{
+
+    font-size:28px;
+
+    font-weight:900;
+
+
+    color:var(--primary);
+
+
+    text-shadow:
+    0 0 15px
+    rgba(0,198,255,.6);
 
 }
 
 
 
 
-/* CONTENU */
+/* NAVIGATION */
 
-main {
+nav{
 
-    padding: 25px;
+    display:flex;
+
+    align-items:center;
+
+    gap:20px;
 
 }
 
 
 
-.hero {
+nav a{
 
-    padding: 50px;
+    color:#ddd;
 
-    background: linear-gradient(
-        120deg,
-        #111,
-        #222
+    font-size:15px;
+
+    font-weight:500;
+
+    transition:.3s;
+
+}
+
+
+
+nav a:hover{
+
+    color:var(--primary);
+
+}
+
+
+
+
+/* CONTENU PRINCIPAL */
+
+main{
+
+    width:100%;
+
+    padding:25px;
+
+}
+
+
+
+
+/* TITRES */
+
+h1,h2,h3{
+
+    font-weight:800;
+
+    letter-spacing:.3px;
+
+}
+
+
+
+h2{
+
+    margin-bottom:20px;
+
+}
+
+
+
+
+/* SECTIONS */
+
+.content-section{
+
+    margin-bottom:45px;
+
+}
+
+
+
+/* SCROLLBAR */
+
+::-webkit-scrollbar{
+
+    width:8px;
+
+}
+
+
+::-webkit-scrollbar-track{
+
+    background:#050505;
+
+}
+
+
+::-webkit-scrollbar-thumb{
+
+    background:
+    linear-gradient(
+        var(--primary),
+        var(--secondary)
     );
 
-    border-radius: 15px;
-
-    margin-bottom: 30px;
+    border-radius:20px;
 
 }
+/* ==================================
+   PARTIE 2/10
+   HERO ACCUEIL + BOUTONS
+   ================================== */
 
 
+/* HERO */
+
+.hero{
+
+    width:100%;
+
+    min-height:450px;
+
+    border-radius:20px;
+
+    overflow:hidden;
+
+    position:relative;
 
 
-.content-section {
+    background:
 
-    margin-bottom: 40px;
-
-}
-
-
-
-.content-section h2 {
-
-    margin-bottom: 20px;
-
-}
+    linear-gradient(
+        135deg,
+        #00111f,
+        #101010
+    );
 
 
-
-
-
-/* CARTES */
-
-.card-grid {
-
-    display: grid;
-
-    grid-template-columns:
-    repeat(auto-fit,minmax(180px,1fr));
-
-    gap: 20px;
-
-}
-
-
-
-
-.media-card {
-
-    background: #171717;
-
-    border-radius: 12px;
-
-    padding: 15px;
-
-    overflow: hidden;
-
-}
-
-
-
-
-.media-card img {
-
-    width: 100%;
-
-    height: 160px;
-
-    object-fit: cover;
-
-    border-radius: 10px;
-
-}
-
-
-
-.channel-logo {
-
-    object-fit: contain !important;
-
-    height: 100px !important;
-
-}
-
-
-
-.thumbnail {
-
-    height: 180px;
-
-}
-
-
-
-
-.media-card a,
-button {
-
-    display: inline-block;
-
-    margin-top: 10px;
-
-    padding: 10px 15px;
-
-    background: #007bff;
-
-    color:white;
-
-    border-radius:8px;
-
-    text-decoration:none;
-
-    border:none;
+    margin-bottom:40px;
 
 }
 
@@ -205,192 +286,83 @@ button {
 
 
 
-/* FORMULAIRES */
+.hero-background{
 
-.form-page {
+    position:absolute;
+
+    inset:0;
+
+
+    background-size:cover;
+
+    background-position:center;
+
+
+    filter:
+    brightness(.55);
+
+}
+
+
+
+
+.hero-dark{
+
+    position:relative;
+
+    min-height:450px;
+
+
+    display:flex;
+
+    align-items:center;
+
+
+    background:
+
+    linear-gradient(
+        90deg,
+        rgba(0,0,0,.9),
+        rgba(0,0,0,.2)
+    );
+
+}
+
+
+
+
+.hero-content{
 
     max-width:600px;
 
-    margin:auto;
-
-}
-
-
-
-form {
-
-    background:#161616;
-
-    padding:25px;
-
-    border-radius:15px;
+    padding:40px;
 
 }
 
 
 
 
-input,
-textarea,
-select {
 
-    width:100%;
+.hero-content h1{
 
-    padding:12px;
+    font-size:55px;
 
-    margin:10px 0;
+    line-height:1.1;
 
-    background:#222;
+    margin-bottom:20px;
 
-    border:none;
 
-    color:white;
+    background:
 
-    border-radius:8px;
-
-}
-
-
-
-textarea {
-
-    height:120px;
-
-}
-
-
-
-/* VIDEO */
-
-.video-player video,
-.live-player video {
-
-    width:100%;
-
-    max-height:600px;
-
-    background:black;
-
-}
-
-
-
-
-/* DIRECT */
-
-.live-card {
-
-    background:#151515;
-
-    padding:20px;
-
-    border-radius:15px;
-
-    margin-bottom:25px;
-
-}
-
-
-
-.live-logo {
-
-    width:60px;
-
-    height:60px;
-
-    object-fit:contain;
-
-}
-
-
-
-.live-badge {
-
-    color:red;
-
-    font-weight:bold;
-
-}
-
-
-
-/* FOOTER */
-
-footer {
-
-    text-align:center;
-
-    padding:25px;
-
-    background:#111;
-
-    margin-top:40px;
-
-}
-/* ==========================
-   WATCH PAGE - STYLE TV / NETFLIX
-   ========================== */
-
-
-.player-page{
-    background:#0b0b0b;
-    color:white;
-    padding:25px;
-}
-
-
-
-/* Lecteur vidéo */
-
-.video-player{
-    background:#000;
-    border-radius:20px;
-    overflow:hidden;
-    box-shadow:0 10px 30px rgba(0,0,0,0.7);
-}
-
-
-.video-player video{
-    width:100%;
-    display:block;
-}
-
-
-
-
-
-
-/* Informations vidéo */
-
-.video-details{
-
-    margin-top:25px;
-    background:linear-gradient(
-        135deg,
-        #141414,
-        #222
-    );
-
-    padding:25px;
-    border-radius:20px;
-
-}
-
-
-
-
-.video-details h1{
-
-    font-size:32px;
-    margin-bottom:15px;
-
-    background:linear-gradient(
+    linear-gradient(
         90deg,
-        #e50914,
-        #ff9800
+        #00c6ff,
+        #0072ff
     );
+
 
     -webkit-background-clip:text;
+
     color:transparent;
 
 }
@@ -399,78 +371,30 @@ footer {
 
 
 
-/* CHAINE TV */
+.hero-content p{
+
+    color:#ddd;
+
+    font-size:18px;
+
+    line-height:1.6;
+
+    margin-bottom:25px;
+
+}
 
 
-.watch-channel{
+
+
+
+
+/* BOUTONS HERO */
+
+.hero-buttons{
 
     display:flex;
-    align-items:center;
+
     gap:15px;
-
-    background:linear-gradient(
-        90deg,
-        #111,
-        #292929
-    );
-
-    padding:15px;
-
-    border-radius:15px;
-
-    margin:20px 0;
-
-    border:1px solid #333;
-
-}
-
-
-
-
-
-
-.watch-channel-logo{
-
-    width:65px;
-    height:65px;
-
-    border-radius:50%;
-
-    object-fit:contain;
-
-    background:white;
-
-    padding:5px;
-
-    box-shadow:
-    0 0 15px #e50914;
-
-}
-
-
-
-
-.watch-channel h3{
-
-    font-size:24px;
-
-    color:#fff;
-
-}
-
-
-
-
-
-
-/* Catégorie durée */
-
-
-.video-meta{
-
-    display:flex;
-
-    gap:20px;
 
     flex-wrap:wrap;
 
@@ -478,1005 +402,35 @@ footer {
 
 
 
-.video-meta span{
-
-    background:#e50914;
-
-    padding:8px 15px;
-
-    border-radius:20px;
-
-    font-size:14px;
-
-}
-
-
-
-
-
-
-/* LIKE */
-
-
-.video-actions{
-
-    display:flex;
-
-    align-items:center;
-
-    gap:20px;
-
-    margin-top:20px;
-
-}
-
-
-
-
-.video-actions button{
-
-    background:linear-gradient(
-        45deg,
-        #e50914,
-        #ff5722
-    );
-
-
-    border:none;
-
-    color:white;
-
-    padding:12px 25px;
-
-    border-radius:30px;
-
-    font-size:18px;
-
-    cursor:pointer;
-
-}
-
-
-
-.video-actions button:hover{
-
-    transform:scale(1.05);
-
-}
-
-
-
-
-
-
-
-/* AUTRES VIDEOS */
-
-
-.related{
-
-    margin-top:40px;
-
-}
-
-
-
-.related h2{
-
-    font-size:28px;
-
-}
-
-
-
-
-
-.card-grid{
-
-    display:grid;
-
-    grid-template-columns:
-    repeat(auto-fill,minmax(220px,1fr));
-
-    gap:20px;
-
-}
-
-
-
-
-
-.media-card{
-
-    background:#171717;
-
-    border-radius:18px;
-
-    overflow:hidden;
-
-    padding-bottom:15px;
-
-    transition:.3s;
-
-}
-
-
-
-
-.media-card:hover{
-
-    transform:scale(1.05);
-
-    box-shadow:
-    0 0 20px rgba(229,9,20,.5);
-
-}
-
-
-
-
-
-.thumbnail{
-
-    width:100%;
-
-    height:140px;
-
-    object-fit:cover;
-
-}
-
-
-
-
-
-.media-card h3,
-.media-card p{
-
-    padding:0 15px;
-
-}
-
-
-
-
-
-.media-card a{
-
-    display:inline-block;
-
-    margin:10px 15px;
-
-    background:#e50914;
-
-    color:white;
-
-    padding:10px 20px;
-
-    border-radius:25px;
-
-    text-decoration:none;
-
-}
-.video-overlay{
-    position:relative;
-}
-
-
-.tv-watermark{
-
-    position:absolute;
-
-    top:20px;
-    left:20px;
-
-    display:flex;
-
-    align-items:center;
-
-    gap:10px;
-
-    background:rgba(0,0,0,0.5);
-
-    padding:8px 15px;
-
-    border-radius:20px;
-
-    color:white;
-
-    font-size:20px;
-
-    font-weight:bold;
-
-    z-index:5;
-
-}
-
-
-
-.tv-watermark img{
-
-    width:45px;
-
-    height:45px;
-
-    object-fit:contain;
-
-    border-radius:50%;
-
-}
-/* ==========================
-   LOGO CHAINE SUR LA VIDEO
-   ========================== */
-
-
-.video-overlay{
-    position:relative;
-}
-
-
-
-.tv-watermark{
-
-    position:absolute;
-
-    top:20px;
-
-    left:20px;
-
-    display:flex;
-
-    align-items:center;
-
-    gap:10px;
-
-    background:rgba(0,0,0,0.55);
-
-    padding:8px 15px;
-
-    border-radius:20px;
-
-    color:white;
-
-    font-size:20px;
-
-    font-weight:bold;
-
-    z-index:10;
-
-}
-
-
-
-.tv-watermark img{
-
-    width:45px;
-
-    height:45px;
-
-    border-radius:50%;
-
-    object-fit:contain;
-
-    background:white;
-
-}
-/* ==============================
-   WATERMARK MY TV APP PREMIUM
-   ============================== */
-
-
-.video-overlay{
-    position:relative;
-    overflow:hidden;
-}
-
-
-
-/* Logo + nom application */
-
-.tv-watermark{
-
-    position:absolute;
-
-    top:25px;
-
-    left:25px;
-
-    display:flex;
-
-    align-items:center;
-
-    gap:12px;
-
-
-    background:
-    linear-gradient(
-        135deg,
-        rgba(229,9,20,0.95),
-        rgba(255,152,0,0.85)
-    );
-
-
-    padding:10px 18px;
-
-    border-radius:30px;
-
-
-    color:white;
-
-    font-size:22px;
-
-    font-weight:800;
-
-
-    box-shadow:
-
-    0 0 20px rgba(255,0,0,0.7);
-
-
-    z-index:20;
-
-
-    animation:tvGlow 2s infinite;
-
-}
-
-
-
-
-.tv-watermark img{
-
-
-    width:50px;
-
-    height:50px;
-
-
-    border-radius:50%;
-
-
-    background:white;
-
-
-    padding:5px;
-
-
-    object-fit:contain;
-
-
-}
-
-
-
-
-.tv-watermark span::before{
-
-
-    content:"📺 ";
-
-}
-
-
-
-
-/* Badge direct */
-
-.tv-watermark span::after{
-
-
-    content:"  🔴 LIVE";
-
-    font-size:13px;
-
-    background:#000;
-
-    padding:5px 10px;
-
-    border-radius:15px;
-
-    margin-left:10px;
-
-}
-
-
-
-
-
-@keyframes tvGlow{
-
-
-    0%{
-
-        box-shadow:
-        0 0 10px red;
-
-    }
-
-
-    50%{
-
-        box-shadow:
-        0 0 30px orange;
-
-    }
-
-
-    100%{
-
-        box-shadow:
-        0 0 10px red;
-
-    }
-
-}
-.tv-watermark{
-
-    position:absolute;
-
-    top:20px;
-
-    left:20px;
-
-
-    background:linear-gradient(
-        45deg,
-        #e50914,
-        #ff9800
-    );
-
-
-    color:white;
-
-
-    padding:10px 25px;
-
-
-    border-radius:30px;
-
-
-    font-size:26px;
-
-
-    font-weight:900;
-
-
-    letter-spacing:2px;
-
-
-    text-transform:uppercase;
-
-
-    box-shadow:
-    0 0 20px rgba(255,0,0,0.8);
-
-
-    z-index:10;
-
-}
-
-
-
-.tv-watermark span::before{
-
-    content:"📺 ";
-
-}
-/* ==========================
-   WATCH PAGE STYLE
-========================== */
-
-
-.player-page{
-
-    background:#0b0b0b;
-    color:white;
-    padding:20px;
-
-}
-
-
-
-.video-player{
-
-    position:relative;
-    border-radius:20px;
-    overflow:hidden;
-    box-shadow:0 10px 40px rgba(0,0,0,.8);
-
-}
-
-
-
-.video-player video{
-
-    width:100%;
-    max-height:600px;
-    background:black;
-
-}
-
-
-
-
-
-/* NOM CHAINE SUR LA VIDEO */
-
-.tv-watermark{
-
-    position:absolute;
-
-    top:20px;
-    left:20px;
-
-    display:flex;
-    align-items:center;
-
-    gap:10px;
-
-    background:rgba(0,0,0,.65);
-
-    padding:8px 15px;
-
-    border-radius:30px;
-
-    backdrop-filter:blur(5px);
-
-}
-
-
-
-.tv-watermark img{
-
-    width:35px;
-    height:35px;
-
-    border-radius:50%;
-
-    object-fit:cover;
-
-}
-
-
-
-.tv-watermark span{
-
-    font-size:18px;
-    font-weight:bold;
-
-    color:white;
-
-}
-
-
-
-
-
-/* DETAILS VIDEO */
-
-.video-details{
-
-    margin-top:25px;
-
-    background:#151515;
-
-    padding:25px;
-
-    border-radius:20px;
-
-}
-
-
-
-.video-details h1{
-
-    font-size:32px;
-
-    color:white;
-
-}
-
-
-
-
-
-/* CHAINE */
-
-.watch-channel{
-
-    display:flex;
-
-    align-items:center;
-
-    gap:15px;
-
-    margin:20px 0;
-
-}
-
-
-
-.watch-channel-logo{
-
-    width:60px;
-
-    height:60px;
-
-    border-radius:50%;
-
-    object-fit:cover;
-
-}
-
-
-
-.watch-channel h3{
-
-    color:#ffcc00;
-
-}
-
-
-
-
-
-/* META */
-
-.video-meta{
-
-    display:flex;
-
-    gap:20px;
-
-    color:#bbb;
-
-}
-
-
-
-
-
-/* LIKE */
-
-.video-actions{
-
-    display:flex;
-
-    align-items:center;
-
-    gap:20px;
-
-    margin-top:25px;
-
-}
-
-
-
-.video-actions button{
-
-    background:#e50914;
-
-    color:white;
-
-    border:none;
-
-    padding:12px 25px;
-
-    border-radius:30px;
-
-    font-size:16px;
-
-    cursor:pointer;
-
-}
-
-
-
-.video-actions button:hover{
-
-    background:#ff3340;
-
-}
-
-
-
-
-
-/* VIDEOS SIMILAIRES */
-
-.related{
-
-    margin-top:40px;
-
-}
-
-
-
-.related h2{
-
-    font-size:28px;
-
-}
-
-
-
-.card-grid{
-
-    display:grid;
-
-    grid-template-columns:
-    repeat(auto-fit,minmax(220px,1fr));
-
-    gap:20px;
-
-}
-
-
-
-
-
-.media-card{
-
-    background:#181818;
-
-    padding:15px;
-
-    border-radius:18px;
-
-    transition:.3s;
-
-}
-
-
-
-.media-card:hover{
-
-    transform:scale(1.05);
-
-}
-
-
-
-.thumbnail{
-
-    width:100%;
-
-    height:150px;
-
-    object-fit:cover;
-
-    border-radius:15px;
-
-}
-
-
-
-.media-card h3{
-
-    color:white;
-
-}
-
-
-
-.media-card a{
-
-    display:inline-block;
-
-    background:#1976ff;
-
-    color:white;
-
-    padding:8px 18px;
-
-    border-radius:20px;
-
-    text-decoration:none;
-
-}
-
-
-
-.media-card a:hover{
-
-    background:#0055cc;
-
-}
-/* ======================
-   HERO
-====================== */
-
-.hero{
-    background:linear-gradient(120deg,#000,#111);
-    color:white;
-    padding:40px;
-    text-align:center;
-}
-
-
-/* ======================
-   NETFLIX ROW
-====================== */
-
-.movie-row{
-
-    display:flex;
-    gap:15px;
-    overflow-x:auto;
-    padding:20px;
-
-}
-
-
-.movie-card{
-
-    min-width:180px;
-    transition:.3s;
-
-}
-
-
-.movie-card img{
-
-    width:100%;
-    height:260px;
-
-    object-fit:cover;
-
-    border-radius:12px;
-
-    box-shadow:0 5px 20px rgba(0,0,0,.7);
-
-}
-
-
-.movie-card:hover{
-
-    transform:scale(1.1);
-
-}
-
-
-.movie-card h4{
-
-    color:white;
-    margin-top:8px;
-    font-size:14px;
-
-}
-.netflix-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
-    gap:20px;
-}
-
-
-.netflix-card{
-    background:#111;
-    border-radius:15px;
-    overflow:hidden;
-    transition:0.3s;
-}
-
-
-.netflix-card:hover{
-    transform:scale(1.05);
-}
-
-
-.netflix-card img{
-    width:100%;
-    height:260px;
-    object-fit:cover;
-}
-
-
-.card-info{
-    padding:12px;
-    color:white;
-}
-
-
-.card-info h3{
-    margin:0;
-    font-size:18px;
-}
-
-
-.card-info p{
-    color:#aaa;
-}
-
-
-.card-info span{
-    color:#f5c518;
-}
-
-
-.no-image{
-    height:260px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    background:#222;
-    font-size:60px;
-}
-.hero-netflix{
-    margin-bottom:40px;
-}
-
-
-.hero-background{
-
-    height:500px;
-
-    background-size:cover;
-
-    background-position:center;
-
-    border-radius:20px;
-
-    overflow:hidden;
-
-}
-
-
-.hero-dark{
-
-    height:100%;
-
-    display:flex;
-
-    align-items:center;
-
-    background:
-    linear-gradient(
-    90deg,
-    rgba(0,0,0,0.9),
-    rgba(0,0,0,0.2)
-    );
-
-}
-
-
-.hero-content{
-
-    color:white;
-
-    padding:40px;
-
-    max-width:600px;
-
-}
-
-
-.hero-content h1{
-
-    font-size:48px;
-
-}
-
-
-.hero-content p{
-
-    font-size:18px;
-
-}
 
 
 .hero-buttons a{
 
-    padding:12px 25px;
+    display:flex;
 
-    border-radius:8px;
+    align-items:center;
 
-    text-decoration:none;
+    justify-content:center;
 
-    margin-right:15px;
 
-    font-weight:bold;
+    min-width:150px;
+
+
+    padding:13px 25px;
+
+
+    border-radius:30px;
+
+
+    font-weight:700;
+
+
+    transition:.3s;
+
 
 }
+
+
 
 
 .btn-watch{
@@ -1488,60 +442,303 @@ footer {
 }
 
 
+
+.btn-watch:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:
+    0 10px 25px
+    rgba(255,255,255,.25);
+
+}
+
+
+
+
 .btn-list{
 
-    background:#333;
+    background:
+
+    linear-gradient(
+        45deg,
+        var(--primary),
+        var(--secondary)
+    );
+
 
     color:white;
 
 }
-/* ==========================
-   CARTES FILMS STYLE NETFLIX
-========================== */
-
-.netflix-grid{
-
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
-    gap:25px;
-
-}
 
 
 
-.netflix-card{
+.btn-list:hover{
 
-    background:#111;
+    transform:translateY(-3px);
 
-    border-radius:15px;
 
-    overflow:hidden;
+    box-shadow:
 
-    position:relative;
-
-    transition:0.3s;
+    0 10px 25px
+    rgba(0,198,255,.35);
 
 }
 
 
 
-.netflix-card:hover{
 
-    transform:scale(1.06);
 
-    z-index:5;
+
+
+/* BOUTONS GENERAUX */
+
+.btn,
+button{
+
+
+    border:none;
+
+
+    cursor:pointer;
+
+
+    font-weight:600;
+
+
+    transition:.3s;
+
 
 }
 
 
 
-.netflix-card img{
+
+button:hover,
+.btn:hover{
+
+    transform:scale(1.03);
+
+}
+
+
+
+
+
+
+
+/* BOUTON PRINCIPAL */
+
+.btn-primary{
+
+
+    background:
+
+    linear-gradient(
+        45deg,
+        var(--primary),
+        var(--secondary)
+    );
+
+
+    color:white;
+
+
+    padding:10px 20px;
+
+
+    border-radius:25px;
+
+}
+
+
+
+
+
+/* BOUTON DANGER */
+
+.btn-danger{
+
+    background:var(--danger);
+
+    color:white;
+
+}
+
+
+
+
+
+
+
+
+/* MOBILE HERO */
+
+@media(max-width:700px){
+
+
+.hero{
+
+    min-height:350px;
+
+}
+
+
+
+
+.hero-dark{
+
+    min-height:350px;
+
+}
+
+
+
+
+.hero-content{
+
+    padding:25px;
+
+}
+
+
+
+
+.hero-content h1{
+
+    font-size:35px;
+
+}
+
+
+
+
+.hero-content p{
+
+    font-size:15px;
+
+}
+
+
+
+
+.hero-buttons{
+
+    flex-direction:column;
+
+}
+
+
+
+
+.hero-buttons a{
 
     width:100%;
 
-    height:270px;
+}
+
+
+
+}
+/* ==================================
+   PARTIE 3/10
+   CARTES FILMS / CHAÎNES
+   ================================== */
+
+
+/* GRILLE PRINCIPALE */
+
+.card-grid,
+.netflix-grid{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(
+        auto-fill,
+        minmax(180px,1fr)
+    );
+
+
+    gap:22px;
+
+}
+
+
+
+
+
+/* CARTE GENERALE */
+
+.media-card,
+.netflix-card,
+.movie-card{
+
+    background:
+    var(--surface);
+
+
+    border-radius:18px;
+
+
+    overflow:hidden;
+
+
+    border:
+    1px solid var(--border);
+
+
+    transition:.3s;
+
+
+    position:relative;
+
+}
+
+
+
+
+
+.media-card:hover,
+.netflix-card:hover,
+.movie-card:hover{
+
+    transform:
+    translateY(-8px);
+
+
+    border-color:
+    var(--primary);
+
+
+    box-shadow:
+
+    0 15px 35px
+    rgba(0,198,255,.18);
+
+}
+
+
+
+
+
+
+
+/* IMAGES */
+
+.media-card img,
+.netflix-card img,
+.movie-card img{
+
+
+    width:100%;
+
+
+    height:250px;
+
 
     object-fit:cover;
+
 
     display:block;
 
@@ -1549,61 +746,79 @@ footer {
 
 
 
-.netflix-card a{
-
-    text-decoration:none;
-
-    color:white;
-
-}
 
 
 
-.card-info{
 
-    position:absolute;
+/* IMAGE CHAINE */
 
-    bottom:0;
+.channel-logo{
 
-    left:0;
+    height:130px !important;
 
-    right:0;
+
+    object-fit:contain !important;
+
+
+    background:white;
+
 
     padding:15px;
 
-    background:
-    linear-gradient(
-    transparent,
-    rgba(0,0,0,0.95)
-    );
+}
+
+
+
+
+
+
+/* INFORMATIONS CARTE */
+
+.card-info{
+
+    padding:15px;
 
 }
 
 
 
-.card-info h3{
 
-    margin:0;
+.card-info h3,
+.media-card h3,
+.movie-card h4{
 
-    font-size:18px;
+
+    color:white;
+
+
+    font-size:17px;
+
+
+    margin-bottom:8px;
+
+
+    overflow:hidden;
+
+
+    white-space:nowrap;
+
+
+    text-overflow:ellipsis;
 
 }
 
 
 
-.card-info p{
-
-    color:#ddd;
-
-    margin:5px 0;
-
-}
 
 
+.card-info p,
+.media-card p{
 
-.card-info span{
 
-    color:#f5c518;
+    color:
+
+    var(--text-muted);
+
 
     font-size:14px;
 
@@ -1611,38 +826,106 @@ footer {
 
 
 
-/* Image absente */
 
-.no-image{
 
-    height:270px;
 
-    display:flex;
+/* INFOS VUES LIKE */
+
+.card-info span{
+
+
+    display:inline-block;
+
+
+    margin-right:10px;
+
+
+    margin-top:8px;
+
+
+    color:#ffd600;
+
+
+    font-size:13px;
+
+}
+
+
+
+
+
+
+
+
+/* BOUTON DANS LES CARTES */
+
+.media-card a,
+.card-actions .btn{
+
+
+    display:inline-flex;
+
 
     justify-content:center;
 
+
     align-items:center;
 
-    background:#222;
 
-    font-size:60px;
+    margin:12px;
+
+
+    padding:9px 18px;
+
+
+    border-radius:25px;
+
+
+    background:
+
+    linear-gradient(
+        45deg,
+        var(--primary),
+        var(--secondary)
+    );
+
+
+    color:white;
+
+
+    font-size:13px;
+
 
 }
-/* ==========================
-   CARTES CHAÎNES TV
-========================== */
+
+
+
+
+
+
+
+
+/* CARTES HORIZONTALES TV */
 
 .movie-row{
 
+
     display:flex;
+
 
     gap:20px;
 
+
     overflow-x:auto;
 
-    padding:10px 0;
+
+    padding:10px 5px;
+
 
 }
+
+
+
 
 
 .movie-row::-webkit-scrollbar{
@@ -1653,87 +936,68 @@ footer {
 
 
 
+
+
 .movie-card{
+
 
     min-width:180px;
 
-    background:#111;
-
-    border-radius:15px;
-
-    overflow:hidden;
-
-    transition:0.3s;
 
 }
 
 
-
-.movie-card:hover{
-
-    transform:scale(1.08);
-
-}
-
-
-
-.movie-card img{
-
-    width:100%;
-
-    height:180px;
-
-    object-fit:cover;
-
-    background:#222;
-
-}
 
 
 
 .movie-card h4{
 
-    color:white;
 
-    text-align:center;
+    padding:12px;
 
-    padding:10px;
-
-    margin:0;
-
-    font-size:17px;
-
-}
-/* ==========================
-   BADGE LIVE TV
-========================== */
-
-
-.channel-title{
 
     text-align:center;
 
 }
 
 
+
+
+
+
+
+
+/* BADGE LIVE */
 
 .live-badge{
 
-    display:inline-block;
 
-    background:red;
+    position:absolute;
+
+
+    top:10px;
+
+
+    right:10px;
+
+
+    background:#ff1744;
+
 
     color:white;
 
-    padding:5px 10px;
+
+    padding:5px 12px;
+
 
     border-radius:20px;
 
+
     font-size:12px;
+
 
     font-weight:bold;
 
-    margin-bottom:10px;
 
     animation:pulse 1.5s infinite;
 
@@ -1741,51 +1005,37 @@ footer {
 
 
 
+
+
 @keyframes pulse{
 
+
     0%{
+
         opacity:1;
+
     }
+
 
     50%{
-        opacity:0.5;
+
+        opacity:.5;
+
     }
+
 
     100%{
+
         opacity:1;
+
     }
 
 }
-/* ==========================
-   BOUTONS HERO MOBILE
-========================== */
-
-.hero-buttons{
-
-    display:flex;
-    gap:15px;
-    flex-wrap:wrap;
-
-}
 
 
-.hero-buttons a{
 
-    display:inline-flex;
 
-    align-items:center;
 
-    justify-content:center;
-
-    min-width:140px;
-
-    padding:12px 20px;
-
-    border-radius:10px;
-
-    font-size:16px;
-
-}
 
 
 
@@ -1794,631 +1044,91 @@ footer {
 @media(max-width:600px){
 
 
-    .hero-content{
-
-        padding:25px;
-
-    }
+.card-grid,
+.netflix-grid{
 
 
-    .hero-content h1{
+    grid-template-columns:
 
-        font-size:30px;
-
-    }
-
-
-    .hero-content p{
-
-        font-size:15px;
-
-    }
-
-
-
-    .hero-buttons{
-
-        flex-direction:column;
-
-        width:100%;
-
-    }
-
-
-
-    .hero-buttons a{
-
-        width:100%;
-
-        box-sizing:border-box;
-
-    }
-
-}
-.card-actions {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 10px;
-}
-
-.btn {
-    background: red;
-    color: white;
-    padding: 6px 10px;
-    text-decoration: none;
-    border-radius: 5px;
-    font-size: 12px;
-}
-
-.btn-danger {
-    background: black;
-}
-
-.empty-state {()
-    text-align: center;
-    color: gray;
-    margin-top: 40px;
-}
-/* ==========================
-   MY TV PREMIUM COLOR THEME
-========================== */
-
-:root{
-    --bg-main:#050505;
-    --bg-card:#111111;
-    --primary:#ff0055;
-    --secondary:#ff9900;
-    --text:white;
-    --muted:#aaaaaa;
-}
-
-
-/* Fond général */
-
-body{
-    background:
-    radial-gradient(circle at top,#1a1a1a,#050505);
-    color:var(--text);
-}
-
-
-
-/* Header premium */
-
-.header{
-
-    background:
-    linear-gradient(
-        90deg,
-        #000,
-        #151515
+    repeat(
+        2,
+        1fr
     );
 
-    border-bottom:1px solid #333;
 
-}
-
-
-.logo{
-
-    color:var(--primary);
-
-    text-shadow:
-    0 0 15px var(--primary);
-
-}
-
-
-/* Liens */
-
-nav a:hover{
-
-    color:var(--secondary);
+    gap:12px;
 
 }
 
 
 
-/* Cartes */
+.media-card img,
+.netflix-card img,
+.movie-card img{
 
-.media-card,
-.netflix-card,
-.movie-card{
 
-    background:
-    linear-gradient(
-        145deg,
-        #111,
-        #1c1c1c
-    );
+    height:180px;
 
-    border:1px solid #222;
+}
+
+
+    }
+/* ==================================
+   PARTIE 4/10
+   WATCH PAGE + VIDEO PLAYER
+   ================================== */
+
+
+/* PAGE LECTURE */
+
+.player-page{
+
+    width:100%;
+
+    padding:20px;
+
+    background:#080808;
 
 }
 
 
 
-/* Effet premium */
 
-.media-card:hover,
-.netflix-card:hover,
-.movie-card:hover{
+
+
+
+/* CONTENEUR VIDEO */
+
+.video-player,
+.video-overlay{
+
+
+    position:relative;
+
+
+    width:100%;
+
+
+    max-width:1200px;
+
+
+    margin:auto;
+
+
+    background:#000;
+
+
+    border-radius:18px;
+
+
+    overflow:hidden;
+
 
     box-shadow:
-    0 0 25px rgba(255,0,85,.5);
 
-}
+    0 15px 50px
+    rgba(0,0,0,.8);
 
-
-
-/* Boutons */
-
-button,
-.btn,
-.media-card a{
-
-    background:
-    linear-gradient(
-        45deg,
-        #ff0055,
-        #ff9900
-    );
-
-    color:white;
-
-}
-
-
-
-/* Hero */
-
-.hero{
-
-    background:
-    linear-gradient(
-        120deg,
-        #000,
-        #300015
-    );
-
-}
-
-
-
-/* Titres */
-
-h1,h2,h3{
-
-    letter-spacing:1px;
-
-}
-
-
-
-/* Formulaires */
-
-form,
-.video-details{
-
-    background:#101010;
-
-    border:
-    1px solid #222;
-
-}
-
-
-
-/* Input */
-
-input,
-textarea,
-select{
-
-    background:#050505;
-
-    border:
-    1px solid #333;
-
-}
-
-
-input:focus,
-textarea:focus,
-select:focus{
-
-    border-color:#ff0055;
-
-    outline:none;
-
-}
-
-
-
-/* Footer */
-
-footer{
-
-    background:#000;
-
-    border-top:
-    1px solid #222;
-
-}
-:root{
-    --bg:#0f0f0f;
-    --bg-soft:#181818;
-    --primary:#e50914;
-    --text:#ffffff;
-    --text-soft:#b3b3b3;
-}
-.main-header{
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:70px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:0 40px;
-    background:linear-gradient(
-        to bottom,
-        rgba(0,0,0,0.9),
-        rgba(0,0,0,0)
-    );
-    z-index:999;
-}
-
-.logo a{
-    color:var(--primary);
-    font-size:28px;
-    font-weight:bold;
-    text-decoration:none;
-}
-
-.nav-menu{
-    display:flex;
-    gap:25px;
-}
-
-.nav-menu a{
-    color:white;
-    text-decoration:none;
-    font-size:15px;
-    transition:.3s;
-}
-
-.nav-menu a:hover{
-    color:var(--primary);
-}
-
-.nav-right{
-    display:flex;
-    align-items:center;
-}
-
-.btn-login{
-    background:var(--primary);
-    padding:8px 15px;
-    border-radius:5px;
-    color:white;
-    text-decoration:none;
-    font-size:14px;
-    transition:.3s;
-}
-
-.btn-login:hover{
-    background:#b20710;
-    }
-
-body{
-    background:var(--bg);
-    color:var(--text);
-    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    padding-top:70px;
-}
-.hero-background{
-    height:600px;
-    background-size:cover;
-    background-position:center;
-    position:relative;
-}
-
-.hero-dark{
-    height:100%;
-    display:flex;
-    align-items:center;
-    background:linear-gradient(
-        90deg,
-        rgba(0,0,0,0.95),
-        rgba(0,0,0,0.3)
-    );
-}
-
-.hero-content{
-    max-width:600px;
-    margin-left:60px;
-}
-
-.hero-content h1{
-    font-size:60px;
-    font-weight:900;
-    margin-bottom:20px;
-}
-.btn-watch{
-    background:white;
-    color:black;
-    padding:12px 25px;
-    border-radius:5px;
-    font-weight:bold;
-    text-decoration:none;
-    transition:.3s;
-}
-
-.btn-watch:hover{
-    transform:scale(1.05);
-}
-
-.btn-list{
-    background:rgba(255,255,255,0.2);
-    color:white;
-    padding:12px 25px;
-    border-radius:5px;
-    margin-left:10px;
-    text-decoration:none;
-    transition:.3s;
-}
-
-.btn-list:hover{
-    background:rgba(255,255,255,0.4);
-}
-.netflix-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
-    gap:20px;
-}
-
-.netflix-card{
-    background:var(--bg-soft);
-    border-radius:10px;
-    overflow:hidden;
-    transition:.3s;
-}
-
-.netflix-card:hover{
-    transform:scale(1.05);
-}
-
-.netflix-card img{
-    width:100%;
-    height:300px;
-    object-fit:cover;
-}
-
-.card-info{
-    padding:10px;
-}
-
-.card-info h3{
-    font-size:16px;
-}
-
-.card-info p{
-    color:var(--text-soft);
-    font-size:13px;
-}
-
-
-.hero-content p{
-    color:var(--text-soft);
-    font-size:18px;
-    line-height:1.6;
-    }
-.movie-row{
-    display:flex;
-    overflow-x:auto;
-    gap:15px;
-    padding-bottom:10px;
-}
-
-.movie-card{
-    min-width:150px;
-    transition:.3s;
-}
-
-.movie-card:hover{
-    transform:scale(1.1);
-}
-
-.movie-card img{
-    width:150px;
-    height:220px;
-    object-fit:cover;
-    border-radius:8px;
-}
-.live-badge{
-    background:red;
-    padding:3px 8px;
-    border-radius:5px;
-    font-size:12px;
-    margin-left:5px;
-}
-
-.content-section{
-    padding:30px;
-}
-
-.content-section h2{
-    margin-bottom:15px;
-}
-
-@media(max-width:768px){
-
-    .nav-menu{
-        display:none;
-    }
-
-    .hero-content{
-        margin-left:20px;
-    }
-
-    .hero-content h1{
-        font-size:35px;
-    }
-
-}
-/* ==========================
-   FOOTER PRO
-========================== */
-
-.main-footer{
-    background:#000;
-    color:#aaa;
-    padding:40px 20px 20px;
-    margin-top:50px;
-}
-
-.footer-container{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-    gap:30px;
-    max-width:1200px;
-    margin:auto;
-}
-
-.footer-col h3,
-.footer-col h4{
-    color:white;
-    margin-bottom:15px;
-}
-
-.footer-col p{
-    font-size:14px;
-    line-height:1.6;
-}
-
-.footer-col a{
-    display:block;
-    color:#aaa;
-    text-decoration:none;
-    margin-bottom:8px;
-    font-size:14px;
-    transition:.3s;
-}
-
-.footer-col a:hover{
-    color:var(--primary);
-}
-
-.socials a{
-    display:inline-block;
-    margin-right:10px;
-}
-
-.footer-bottom{
-    text-align:center;
-    margin-top:30px;
-    font-size:13px;
-    color:#666;
-}
-
-
-/* ==============================
-   HEADER ALIGNEMENT PREMIUM
-   MY TV APP
-============================== */
-
-
-/* Conteneur principal du haut */
-header,
-.navbar,
-.top-bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 15px;
-    padding: 10px 18px;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-
-/* Groupe des boutons du haut */
-.nav-links,
-.nav-buttons,
-.header-buttons {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    flex-wrap: nowrap;
-}
-
-
-/* Boutons navigation */
-.nav-links a,
-.nav-buttons a,
-.header-buttons a,
-.nav-links button,
-.nav-buttons button {
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    padding: 8px 14px;
-
-    border-radius: 20px;
-
-    text-decoration: none;
-
-    font-size: 14px;
-
-    white-space: nowrap;
-
-    transition: 0.3s ease;
-
-}
-
-
-/* Effet au passage */
-.nav-links a:hover,
-.nav-buttons a:hover,
-.header-buttons a:hover {
-
-    transform: translateY(-2px);
-
-}
-
-
-/* Barre de recherche */
-.search-bar,
-.search-container {
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-}
-
-
-.search-bar input,
-.search-container input {
-
-    height: 38px;
-
-    border-radius: 20px;
-
-    padding: 0 18px;
-
-    border: none;
-
-    outline: none;
-
-    width: 220px;
 
 }
 
@@ -2426,251 +1136,86 @@ header,
 
 
 
-/* Profil en haut à droite */
-
-.profile,
-.profile-btn,
-.user-profile {
-
-    margin-left: auto;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-}
 
 
+/* VIDEO */
 
+.video-player video,
+#main-video,
+#liveVideo{
 
-
-/* Version téléphone */
-
-@media(max-width:768px){
-
-
-header,
-.navbar,
-.top-bar {
-
-    padding: 8px 10px;
-
-    gap: 8px;
-
-}
-
-
-
-.nav-links,
-.nav-buttons,
-.header-buttons {
-
-    gap: 6px;
-
-}
-
-
-
-.nav-links a,
-.nav-buttons a,
-.header-buttons a {
-
-    padding: 7px 10px;
-
-    font-size: 12px;
-
-}
-
-
-
-.search-bar input,
-.search-container input {
-
-    width: 140px;
-
-}
-
-
-
-    }
-
-/* =====================================
-   VIDEO PLAYER PRO - MY TV APP
-===================================== */
-
-
-.video-player {
-
-    position: relative;
 
     width:100%;
 
-    background:#000;
 
-    border-radius:15px;
+    max-height:650px;
 
-    overflow:hidden;
-
-}
-
-
-
-.video-player video {
-
-    width:100%;
-
-    max-height:80vh;
 
     display:block;
+
+
+    background:black;
+
 
     object-fit:contain;
 
+
 }
 
 
 
 
 
-/* =====================================
-   CONTROLES VIDEO
-===================================== */
 
 
-.custom-video-controls {
+
+
+/* ==========================
+   NOM CHAINE SUR VIDEO
+   PETIT EN HAUT
+   ========================== */
+
+
+.tv-watermark{
+
 
     position:absolute;
 
-    bottom:15px;
 
-    left:50%;
+    top:12px;
 
-    transform:translateX(-50%);
+
+    left:12px;
+
 
     display:flex;
+
 
     align-items:center;
 
-    gap:10px;
 
-    background:rgba(0,0,0,0.65);
-
-    padding:10px 15px;
-
-    border-radius:30px;
-
-    z-index:20;
-
-}
+    gap:7px;
 
 
-
-.custom-video-controls button {
-
-    background:#111;
-
-    color:white;
-
-    border:none;
-
-    width:40px;
-
-    height:40px;
-
-    border-radius:50%;
-
-    cursor:pointer;
-
-    font-size:18px;
-
-}
+    padding:5px 10px;
 
 
+    background:
 
-.custom-video-controls button:hover {
+    rgba(0,0,0,.45);
 
-    background:#e50914;
-
-}
-
-
-
-
-
-/* Volume */
-
-#volume-control {
-
-    width:100px;
-
-}
-
-
-
-
-
-/* =====================================
-   BOUTONS ORIENTATION
-===================================== */
-
-
-.orientation-buttons {
-
-    position:absolute;
-
-    top:15px;
-
-    right:15px;
-
-    display:flex;
-
-    gap:8px;
-
-    z-index:20;
-
-}
-
-
-
-.orientation-buttons button {
-
-    background:rgba(0,0,0,0.7);
-
-    color:white;
-
-    border:none;
-
-    padding:8px 12px;
 
     border-radius:20px;
 
-    cursor:pointer;
 
-}
-
+    backdrop-filter:blur(5px);
 
 
-.orientation-buttons button:hover {
-
-    background:#e50914;
-
-}
+    z-index:20;
 
 
+    max-width:180px;
 
-
-
-/* =====================================
-   MODE VERTICAL (TIKTOK)
-===================================== */
-
-
-.vertical-video video {
-
-    width:45%;
-
-    margin:auto;
 
 }
 
@@ -2678,68 +1223,24 @@ header,
 
 
 
-/* =====================================
-   MODE HORIZONTAL (YOUTUBE)
-===================================== */
+
+.tv-watermark img{
 
 
-.horizontal-video video {
-
-    width:100%;
-
-}
+    width:24px;
 
 
+    height:24px;
 
 
+    border-radius:50%;
 
-/* =====================================
-   ROTATION
-===================================== */
-
-
-.rotate-video video {
-
-    transform:rotate(90deg);
-
-    width:100vh;
-
-    height:100vw;
 
     object-fit:contain;
 
-}
 
+    background:white;
 
-
-
-
-/* =====================================
-   PLEIN ECRAN
-===================================== */
-
-
-.video-player:fullscreen {
-
-    width:100vw;
-
-    height:100vh;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    background:#000;
-
-}
-
-
-
-.video-player:fullscreen video {
-
-    max-height:100vh;
 
 }
 
@@ -2747,101 +1248,64 @@ header,
 
 
 
-/* =====================================
-   MOBILE
-===================================== */
+
+.tv-watermark span{
 
 
-@media(max-width:768px){
+    color:white;
 
-
-.custom-video-controls {
-
-    bottom:10px;
-
-    padding:8px;
-
-    gap:6px;
-
-}
-
-
-
-.custom-video-controls button {
-
-    width:35px;
-
-    height:35px;
-
-    font-size:15px;
-
-}
-
-
-
-#volume-control {
-
-    width:70px;
-
-}
-
-
-
-.orientation-buttons {
-
-    top:10px;
-
-    right:10px;
-
-}
-
-
-
-.orientation-buttons button {
 
     font-size:12px;
 
-    padding:6px 10px;
+
+    font-weight:600;
+
+
+    overflow:hidden;
+
+
+    white-space:nowrap;
+
+
+    text-overflow:ellipsis;
+
 
 }
 
 
 
-}
+
+
+
+
 /* ==========================
-   WATCH CAMERA DESIGN
-========================== */
+   DETAILS VIDEO
+   ========================== */
 
 
-.watch-camera {
-    width: 100%;
-    max-width: 900px;
-    margin: auto;
-    padding: 15px;
-}
+.video-details{
 
 
+    max-width:1200px;
 
 
-.live-player {
-    position: relative;
-    width: 100%;
-    background: #000;
-    border-radius: 15px;
-    overflow: hidden;
-}
+    margin:25px auto;
 
 
+    padding:22px;
 
 
+    background:
 
-.live-player video {
+    var(--surface);
 
-    width: 100%;
-    height: auto;
-    max-height: 75vh;
-    object-fit: contain;
-    display: block;
+
+    border-radius:18px;
+
+
+    border:
+
+    1px solid var(--border);
 
 }
 
@@ -2850,31 +1314,14 @@ header,
 
 
 
-/* Bouton plein écran */
+.video-details h1{
 
-#fullscreenBtn {
 
-    margin-top: 12px;
+    font-size:30px;
 
-    background: #111;
 
-    color: white;
+    margin-bottom:15px;
 
-    border: none;
-
-    padding: 8px 15px;
-
-    border-radius: 20px;
-
-    font-size: 14px;
-
-    cursor: pointer;
-
-    display: inline-flex;
-
-    align-items: center;
-
-    gap: 5px;
 
 }
 
@@ -2882,9 +1329,14 @@ header,
 
 
 
-#fullscreenBtn:hover {
+.video-details p{
 
-    background: #333;
+
+    color:#ccc;
+
+
+    line-height:1.6;
+
 
 }
 
@@ -2894,15 +1346,49 @@ header,
 
 
 
-/* Statut live */
+/* CHAINE */
 
-#status {
+.watch-channel{
 
-    margin-top: 15px;
 
-    font-size: 15px;
+    display:flex;
 
-    color: #555;
+
+    align-items:center;
+
+
+    gap:12px;
+
+
+    margin:15px 0;
+
+
+}
+
+
+
+
+
+.watch-channel-logo{
+
+
+    width:55px;
+
+
+    height:55px;
+
+
+    border-radius:50%;
+
+
+    background:white;
+
+
+    padding:5px;
+
+
+    object-fit:contain;
+
 
 }
 
@@ -2912,12 +1398,105 @@ header,
 
 
 
-/* Mobile */
-
-@media(max-width:600px){
+.watch-channel h3{
 
 
-.watch-camera h1{
+    font-size:18px;
+
+
+    color:white;
+
+
+}
+
+
+
+
+
+
+
+/* INFORMATIONS */
+
+.video-meta{
+
+
+    display:flex;
+
+
+    flex-wrap:wrap;
+
+
+    gap:10px;
+
+
+    margin-top:15px;
+
+
+}
+
+
+
+.video-meta span{
+
+
+    background:#222;
+
+
+    padding:7px 14px;
+
+
+    border-radius:20px;
+
+
+    color:#ddd;
+
+
+    font-size:13px;
+
+
+}
+
+
+
+
+
+
+
+/* MOBILE */
+
+@media(max-width:700px){
+
+
+.player-page{
+
+
+    padding:10px;
+
+}
+
+
+
+.video-player,
+.video-overlay{
+
+
+    border-radius:10px;
+
+}
+
+
+
+.video-details{
+
+
+    padding:15px;
+
+}
+
+
+
+.video-details h1{
+
 
     font-size:22px;
 
@@ -2925,87 +1504,61 @@ header,
 
 
 
-.live-player video{
-
-    max-height:60vh;
-
-}
-
-
-
-#fullscreenBtn{
-
-    font-size:13px;
-
-    padding:7px 12px;
-
-}
-
-
-
     }
-/* ==========================
-   NAVBAR ALIGNEMENT PRO
-========================== */
-
-.navbar,
-header,
-.top-bar {
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 15px;
-
-}
+/* ==================================
+   PARTIE 5/10
+   CONTROLES VIDEO + ACTIONS
+   ================================== */
 
 
-/* Groupe des boutons */
+/* CONTROLES VIDEO */
 
-.nav-links,
-.nav-buttons {
-
-    display: flex;
-    align-items: center;
-    gap: 10px;
-
-}
+.custom-video-controls{
 
 
+    position:absolute;
 
 
-
-.nav-links a,
-.nav-buttons a,
-.nav-buttons button {
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    padding: 8px 14px;
-
-    border-radius: 20px;
-
-    font-size: 14px;
-
-    white-space: nowrap;
-
-}
+    bottom:15px;
 
 
+    left:50%;
 
 
+    transform:translateX(-50%);
 
-/* Recherche */
 
-.search-bar {
+    width:95%;
 
-    flex: 1;
 
-    max-width: 400px;
+    display:flex;
+
+
+    align-items:center;
+
+
+    justify-content:center;
+
+
+    gap:10px;
+
+
+    padding:8px 12px;
+
+
+    background:
+
+    rgba(0,0,0,.65);
+
+
+    border-radius:30px;
+
+
+    backdrop-filter:blur(8px);
+
+
+    z-index:30;
+
 
 }
 
@@ -3013,12 +1566,60 @@ header,
 
 
 
+.custom-video-controls button{
 
-/* Profil à droite */
 
-.profile-btn {
+    width:38px;
 
-    margin-left: auto;
+
+    height:38px;
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    justify-content:center;
+
+
+    border-radius:50%;
+
+
+    border:none;
+
+
+    background:#222;
+
+
+    color:white;
+
+
+    font-size:17px;
+
+
+    cursor:pointer;
+
+
+    transition:.3s;
+
+
+}
+
+
+
+
+.custom-video-controls button:hover{
+
+
+    background:
+
+    var(--primary);
+
+
+    transform:scale(1.1);
+
 
 }
 
@@ -3027,605 +1628,2919 @@ header,
 
 
 
-/* Téléphone */
+/* BARRE VOLUME */
+
+#volume-control{
+
+
+    width:90px;
+
+
+    cursor:pointer;
+
+
+}
+
+
+
+
+
+
+
+/* BOUTONS ORIENTATION */
+
+.orientation-buttons{
+
+
+    display:flex;
+
+
+    justify-content:center;
+
+
+    align-items:center;
+
+
+    gap:12px;
+
+
+    margin-top:15px;
+
+
+}
+
+
+
+
+
+.orientation-buttons button{
+
+
+    padding:8px 18px;
+
+
+    border-radius:25px;
+
+
+    border:none;
+
+
+    background:#222;
+
+
+    color:white;
+
+
+    font-size:14px;
+
+
+    cursor:pointer;
+
+
+}
+
+
+
+
+
+.orientation-buttons button:hover{
+
+
+    background:
+
+    linear-gradient(
+        45deg,
+        var(--primary),
+        var(--secondary)
+    );
+
+
+}
+
+
+
+
+
+
+
+
+/* ACTIONS VIDEO */
+
+.video-actions{
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    gap:12px;
+
+
+    margin-top:20px;
+
+
+    flex-wrap:wrap;
+
+
+}
+
+
+
+
+
+.btn-action,
+.video-actions button{
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    justify-content:center;
+
+
+    gap:6px;
+
+
+    padding:10px 20px;
+
+
+    border-radius:25px;
+
+
+    border:none;
+
+
+    background:#222;
+
+
+    color:white;
+
+
+    font-size:15px;
+
+
+    cursor:pointer;
+
+
+}
+
+
+
+
+
+.btn-action:hover,
+.video-actions button:hover{
+
+
+    background:
+
+    var(--primary);
+
+
+}
+
+
+
+
+
+
+
+
+/* BOUTONS YOUTUBE LIKE */
+
+
+.like-button{
+
+
+    background:#065fd4 !important;
+
+
+}
+
+
+
+.dislike-button{
+
+
+    background:#333 !important;
+
+
+}
+
+
+
+.comment-button{
+
+
+    background:#222 !important;
+
+
+}
+
+
+
+
+
+
+
+/* COMMENTAIRES */
+
+.comments-section{
+
+
+    margin-top:30px;
+
+
+    padding:20px;
+
+
+    background:
+
+    var(--surface);
+
+
+    border-radius:18px;
+
+
+}
+
+
+
+
+
+.comment-box{
+
+
+    display:flex;
+
+
+    gap:10px;
+
+
+}
+
+
+
+.comment-box textarea{
+
+
+    flex:1;
+
+
+    resize:none;
+
+
+    min-height:45px;
+
+
+    background:#222;
+
+
+    border:none;
+
+
+    border-radius:20px;
+
+
+    padding:12px;
+
+
+    color:white;
+
+
+}
+
+
+
+
+
+.comment-box button{
+
+
+    padding:10px 20px;
+
+
+    border-radius:25px;
+
+
+    background:
+
+    linear-gradient(
+        45deg,
+        var(--primary),
+        var(--secondary)
+    );
+
+
+    color:white;
+
+
+}
+
+
+
+
+
+
+
+/* MOBILE */
 
 @media(max-width:700px){
 
 
-.navbar,
-header,
-.top-bar {
+.custom-video-controls{
 
-    gap: 8px;
 
-}
+    bottom:8px;
 
-
-
-.nav-links a,
-.nav-buttons a,
-.nav-buttons button {
-
-    padding: 7px 10px;
-
-    font-size: 12px;
-
-}
-
-
-
-.search-bar {
-
-    max-width: 180px;
-
-}
-
-
-
-}
-/* ==========================
-   CONTROLES VIDEO WATCH
-========================== */
-
-
-.video-player {
-    position: relative;
-    width: 100%;
-    background: #000;
-    border-radius: 15px;
-    overflow: hidden;
-}
-
-
-
-
-.video-player video {
-
-    width: 100%;
-    height: auto;
-    max-height: 75vh;
-    object-fit: contain;
-
-}
-
-
-
-
-
-
-/* Barre des boutons vidéo */
-
-.video-controls-custom {
-
-    position: absolute;
-
-    top: 12px;
-
-    left: 50%;
-
-    transform: translateX(-50%);
-
-    display: flex;
-
-    flex-direction: row;
-
-    align-items: center;
-
-    gap: 8px;
-
-    z-index: 10;
-
-}
-
-
-
-
-
-
-
-/* Boutons */
-
-.rotate-btn {
-
-    background: rgba(0,0,0,0.65);
-
-    color: white;
-
-    border: 1px solid rgba(255,255,255,0.3);
-
-    padding: 7px 12px;
-
-    border-radius: 20px;
-
-    font-size: 13px;
-
-    cursor: pointer;
-
-    backdrop-filter: blur(5px);
-
-}
-
-
-
-
-
-.rotate-btn:hover {
-
-    background: rgba(255,255,255,0.2);
-
-}
-
-
-
-
-
-
-/* Filigrane chaîne */
-
-.tv-watermark {
-
-    position: absolute;
-
-    bottom: 15px;
-
-    left: 15px;
-
-    z-index: 5;
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 8px;
-
-    background: rgba(0,0,0,0.55);
-
-    padding: 6px 12px;
-
-    border-radius: 20px;
-
-    color:white;
-
-}
-
-
-
-
-
-.tv-watermark img {
-
-    width:35px;
-
-    height:35px;
-
-    border-radius:50%;
-
-    object-fit:cover;
-
-}
-
-
-
-
-
-
-
-/* Mobile */
-
-@media(max-width:600px){
-
-
-.video-controls-custom {
-
-    top:10px;
 
     gap:5px;
 
-}
-
-
-
-.rotate-btn {
-
-    padding:6px 9px;
-
-    font-size:11px;
 
 }
 
 
 
-.tv-watermark {
+.custom-video-controls button{
 
-    bottom:10px;
 
-    left:10px;
+    width:32px;
+
+
+    height:32px;
+
+
+    font-size:14px;
+
+
+}
+
+
+
+.orientation-buttons{
+
+
+    flex-direction:column;
+
+
+}
+
+
+
+.video-actions{
+
+
+    justify-content:center;
+
+
+}
+
+
+
+       
+
+
+}
+
+
+
+/* ==================================
+   PARTIE 6/10
+   COMMENTAIRES + FORMULAIRES
+   ================================== */
+
+
+/* SECTION COMMENTAIRES */
+
+.comments-section{
+
+
+    width:100%;
+
+
+    max-width:1200px;
+
+
+    margin:35px auto;
+
+
+    padding:25px;
+
+
+    background:
+
+    var(--surface);
+
+
+    border-radius:20px;
+
+
+    border:
+
+    1px solid var(--border);
+
+
+}
+
+
+
+
+.comments-section h2{
+
+
+    margin-bottom:20px;
+
+
+    font-size:24px;
+
+
+}
+
+
+
+
+
+
+/* LISTE COMMENTAIRES */
+
+.comment-list{
+
+
+    display:flex;
+
+
+    flex-direction:column;
+
+
+    gap:15px;
+
+
+}
+
+
+
+
+
+
+
+.comment-item{
+
+
+    background:#1a1a1a;
+
+
+    padding:15px;
+
+
+    border-radius:15px;
+
+
+    border:
+
+    1px solid #2a2a2a;
+
+
+}
+
+
+
+
+
+
+.comment-user{
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    gap:10px;
+
+
+    margin-bottom:8px;
+
+
+}
+
+
+
+
+.comment-user img{
+
+
+    width:35px;
+
+
+    height:35px;
+
+
+    border-radius:50%;
+
+
+    object-fit:cover;
+
+
+}
+
+
+
+
+
+
+.comment-user strong{
+
+
+    color:white;
+
+
+    font-size:15px;
+
+
+}
+
+
+
+
+
+
+.comment-text{
+
+
+    color:#ddd;
+
+
+    line-height:1.5;
+
+
+}
+
+
+
+
+
+
+
+
+/* ZONE ECRITURE COMMENTAIRE */
+
+.comment-box{
+
+
+    display:flex;
+
+
+    gap:10px;
+
+
+    margin-top:20px;
+
+
+}
+
+
+
+
+
+
+.comment-box textarea{
+
+
+    flex:1;
+
+
+    height:45px;
+
+
+    resize:none;
+
+
+    background:#222;
+
+
+    color:white;
+
+
+    border:
+
+    1px solid #333;
+
+
+    border-radius:25px;
+
+
+    padding:12px 18px;
+
+
+}
+
+
+
+
+
+.comment-box textarea:focus{
+
+
+    border-color:
+
+    var(--primary);
+
+
+    outline:none;
+
+
+}
+
+
+
+
+
+.comment-box button{
+
+
+    padding:0 25px;
+
+
+    border-radius:25px;
+
+
+    border:none;
+
+
+    background:
+
+    linear-gradient(
+        45deg,
+        var(--primary),
+        var(--secondary)
+    );
+
+
+    color:white;
+
+
+}
+
+
+
+
+
+
+
+
+
+/* ==========================
+   FORMULAIRES
+   ========================== */
+
+
+.form-page{
+
+
+    max-width:600px;
+
+
+    margin:40px auto;
+
+
+}
+
+
+
+
+
+
+.form-page form{
+
+
+    background:
+
+    var(--surface);
+
+
+    padding:30px;
+
+
+    border-radius:20px;
+
+
+    border:
+
+    1px solid var(--border);
+
+
+}
+
+
+
+
+
+
+
+.form-page h1{
+
+
+    text-align:center;
+
+
+    margin-bottom:25px;
+
+
+}
+
+
+
+
+
+
+
+
+input,
+textarea,
+select{
+
+
+    width:100%;
+
+
+    padding:13px 15px;
+
+
+    margin-bottom:15px;
+
+
+    background:#181818;
+
+
+    border:
+
+    1px solid #333;
+
+
+    color:white;
+
+
+    border-radius:12px;
+
+
+}
+
+
+
+
+
+input:focus,
+textarea:focus,
+select:focus{
+
+
+    border-color:
+
+    var(--primary);
+
+
+    outline:none;
+
+
+}
+
+
+
+
+
+
+
+
+.form-page button{
+
+
+    width:100%;
+
+
+    padding:13px;
+
+
+    border-radius:25px;
+
+
+    border:none;
+
+
+    background:
+
+    linear-gradient(
+        45deg,
+        var(--primary),
+        var(--secondary)
+    );
+
+
+    color:white;
+
+
+    font-weight:bold;
+
+
+}
+
+
+
+
+
+
+
+
+/* ==========================
+   PROFIL UTILISATEUR
+   ========================== */
+
+
+.profile-card{
+
+
+    max-width:500px;
+
+
+    margin:30px auto;
+
+
+    padding:25px;
+
+
+    text-align:center;
+
+
+    background:
+
+    var(--surface);
+
+
+    border-radius:20px;
+
+
+}
+
+
+
+
+
+
+.profile-card img{
+
+
+    width:90px;
+
+
+    height:90px;
+
+
+    border-radius:50%;
+
+
+    object-fit:cover;
+
+
+    border:3px solid var(--primary);
+
+
+}
+
+
+
+
+
+.profile-card h2{
+
+
+    margin-top:15px;
+
+
+}
+
+
+
+
+
+.profile-card p{
+
+
+    color:
+
+    var(--text-muted);
+
+
+}
+
+
+
+
+
+
+
+
+
+/* MOBILE */
+
+@media(max-width:700px){
+
+
+.comments-section{
+
+
+    padding:15px;
+
+
+}
+
+
+
+.comment-box{
+
+
+    flex-direction:column;
+
+
+}
+
+
+
+.comment-box button{
+
+
+    height:45px;
+
+
+}
+
+
+
+.form-page form{
+
+
+    padding:20px;
+
+
+}
+
+
+
+}
+/* ==================================
+   PARTIE 7/10
+   LIVE CAMERA WEBRTC
+   ================================== */
+
+
+/* PAGE LIVE */
+
+.camera-live,
+.watch-camera{
+
+
+    width:100%;
+
+
+    max-width:1200px;
+
+
+    margin:30px auto;
+
+
+    padding:20px;
+
+
+}
+
+
+
+
+
+
+
+.camera-live h1,
+.watch-camera h1{
+
+
+    font-size:30px;
+
+
+    margin-bottom:25px;
+
+
+}
+
+
+
+
+
+
+
+
+/* STATUT LIVE */
+
+.live-status{
+
+
+    display:flex;
+
+
+    justify-content:space-between;
+
+
+    align-items:center;
+
+
+    gap:15px;
+
+
+    background:#151515;
+
+
+    padding:15px 20px;
+
+
+    border-radius:18px;
+
+
+    margin-bottom:20px;
+
+
+    border:1px solid var(--border);
+
+
+}
+
+
+
+
+
+#serverStatus{
+
+
+    color:var(--success);
+
+
+    font-weight:bold;
+
+
+}
+
+
+
+
+
+#liveStatus{
+
+
+    color:#ff1744;
+
+
+    font-weight:bold;
+
+
+}
+
+
+
+
+
+
+
+
+
+/* BOITE CAMERA */
+
+.camera-box{
+
+
+    position:relative;
+
+
+    background:black;
+
+
+    border-radius:20px;
+
+
+    overflow:hidden;
+
+
+    box-shadow:
+
+    0 15px 40px rgba(0,0,0,.7);
+
+
+}
+
+
+
+
+
+
+.camera-box video{
+
+
+    width:100%;
+
+
+    max-height:600px;
+
+
+    background:black;
+
+
+    object-fit:cover;
+
+
+}
+
+
+
+
+
+
+
+
+/* PLEIN ECRAN CAMERA */
+
+#fullscreenBtn{
+
+
+    position:absolute;
+
+
+    right:15px;
+
+
+    bottom:15px;
+
+
+    width:45px;
+
+
+    height:45px;
+
+
+    border-radius:50%;
+
+
+    background:rgba(0,0,0,.6);
+
+
+    color:white;
+
+
+    border:none;
+
+
+    cursor:pointer;
+
+
+}
+
+
+
+
+
+
+
+#fullscreenBtn:hover{
+
+
+    background:var(--primary);
+
+
+}
+
+
+
+
+
+
+
+
+
+/* BOUTONS LIVE */
+
+.live-buttons{
+
+
+    display:flex;
+
+
+    justify-content:center;
+
+
+    gap:15px;
+
+
+    margin-top:25px;
+
+
+}
+
+
+
+
+
+.live-buttons button{
+
+
+    padding:13px 30px;
+
+
+    border-radius:30px;
+
+
+    border:none;
+
+
+    color:white;
+
+
+    font-size:16px;
+
+
+    font-weight:bold;
+
+
+}
+
+
+
+
+
+
+
+#startBtn{
+
+
+    background:
+
+    linear-gradient(
+        45deg,
+        #ff1744,
+        #ff5722
+    );
+
+
+}
+
+
+
+
+
+
+
+#stopBtn{
+
+
+    background:#222;
+
+
+    border:1px solid #444;
+
+
+}
+
+
+
+
+
+
+
+#stopBtn:hover{
+
+
+    background:#ff1744;
+
+
+}
+
+
+
+
+
+
+
+
+/* MESSAGE LIVE */
+
+#message{
+
+
+    text-align:center;
+
+
+    margin-top:20px;
+
+
+    color:#ccc;
+
+
+}
+
+
+
+
+
+
+
+
+/* PLAYER LIVE SPECTATEUR */
+
+.live-player{
+
+
+    background:black;
+
+
+    border-radius:20px;
+
+
+    overflow:hidden;
+
+
+    box-shadow:
+
+    0 15px 40px rgba(0,0,0,.8);
+
+
+}
+
+
+
+.live-player video{
+
+
+    width:100%;
+
+
+    max-height:650px;
+
+
+    object-fit:contain;
+
+
+}
+
+
+
+
+
+
+
+
+
+/* BADGE DIRECT */
+
+.live-online{
+
+
+    display:inline-flex;
+
+
+    align-items:center;
+
+
+    gap:5px;
+
+
+    background:red;
+
+
+    padding:5px 12px;
+
+
+    border-radius:20px;
+
 
     font-size:12px;
 
+
+    font-weight:bold;
+
+
 }
 
+
+
+
+
+
+
+
+
+/* MOBILE */
+
+@media(max-width:700px){
+
+
+.camera-live,
+.watch-camera{
+
+
+    padding:10px;
+
+
+}
+
+
+
+.live-status{
+
+
+    flex-direction:column;
+
+
+    align-items:flex-start;
+
+
+}
+
+
+
+.live-buttons{
+
+
+    flex-direction:column;
+
+
+}
+
+
+
+.live-buttons button{
+
+
+    width:100%;
+
+
+}
+
+
+
+.camera-live h1,
+.watch-camera h1{
+
+
+    font-size:23px;
+
+
+}
+
+
+
+}
+/* ==================================
+   PARTIE 8/10
+   CREATOR DASHBOARD
+   ================================== */
+
+
+/* PAGE DASHBOARD */
+
+.dashboard-page{
+
+
+    width:100%;
+
+
+    max-width:1400px;
+
+
+    margin:auto;
+
+
+    padding:25px;
+
+
+}
+
+
+
+
+
+
+
+
+.dashboard-title{
+
+
+    font-size:32px;
+
+
+    margin-bottom:30px;
+
+
+}
+
+
+
+
+
+
+
+
+/* LAYOUT DASHBOARD */
+
+.dashboard-container{
+
+
+    display:flex;
+
+
+    gap:25px;
+
+
+}
+
+
+
+
+
+
+
+/* SIDEBAR */
+
+.dashboard-sidebar{
+
+
+    width:250px;
+
+
+    background:
+
+    var(--surface);
+
+
+    border-radius:20px;
+
+
+    padding:20px;
+
+
+    border:
+
+    1px solid var(--border);
+
+
+}
+
+
+
+
+
+.dashboard-sidebar a{
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    gap:10px;
+
+
+    padding:12px;
+
+
+    margin-bottom:10px;
+
+
+    color:white;
+
+
+    text-decoration:none;
+
+
+    border-radius:12px;
+
+
+    transition:.3s;
+
+
+}
+
+
+
+
+
+
+
+.dashboard-sidebar a:hover{
+
+
+    background:
+
+    linear-gradient(
+        45deg,
+        var(--primary),
+        var(--secondary)
+    );
+
+
+}
+
+
+
+
+
+
+
+/* CONTENU DASHBOARD */
+
+.dashboard-content{
+
+
+    flex:1;
+
+
+}
+
+
+
+
+
+
+
+
+
+/* CARTES STATISTIQUES */
+
+.stats-grid{
+
+
+    display:grid;
+
+
+    grid-template-columns:
+
+    repeat(
+        auto-fit,
+        minmax(200px,1fr)
+    );
+
+
+    gap:20px;
+
+
+}
+
+
+
+
+
+
+
+.stat-card{
+
+
+    background:
+
+    linear-gradient(
+        145deg,
+        #161616,
+        #222
+    );
+
+
+    padding:25px;
+
+
+    border-radius:20px;
+
+
+    border:
+
+    1px solid #333;
+
+
+    transition:.3s;
+
+
+}
+
+
+
+
+
+
+
+.stat-card:hover{
+
+
+    transform:translateY(-5px);
+
+
+    box-shadow:
+
+    0 10px 30px
+    rgba(255,0,85,.25);
+
+
+}
+
+
+
+
+
+
+
+.stat-card h3{
+
+
+    color:#aaa;
+
+
+    font-size:15px;
+
+
+}
+
+
+
+
+
+
+
+.stat-card strong{
+
+
+    display:block;
+
+
+    font-size:35px;
+
+
+    margin-top:10px;
+
+
+    color:white;
+
+
+}
+
+
+
+
+
+
+
+
+/* GESTION CHAINE */
+
+.channel-manager{
+
+
+    margin-top:30px;
+
+
+    background:
+
+    var(--surface);
+
+
+    padding:25px;
+
+
+    border-radius:20px;
+
+
+}
+
+
+
+
+
+
+
+
+.channel-item{
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    justify-content:space-between;
+
+
+    gap:15px;
+
+
+    padding:15px;
+
+
+    margin-bottom:12px;
+
+
+    background:#181818;
+
+
+    border-radius:15px;
+
+
+}
+
+
+
+
+
+
+
+.channel-item img{
+
+
+    width:55px;
+
+
+    height:55px;
+
+
+    border-radius:50%;
+
+
+    object-fit:contain;
+
+
+    background:white;
+
+
+}
+
+
+
+
+
+
+
+
+.channel-info{
+
+
+    flex:1;
+
+
+}
+
+
+
+
+
+
+
+.channel-info h3{
+
+
+    margin:0;
+
+
+}
+
+
+
+
+
+
+
+.channel-info p{
+
+
+    color:#aaa;
+
+
+    font-size:14px;
+
+
+}
+
+
+
+
+
+
+
+
+
+/* BOUTONS DASHBOARD */
+
+.dashboard-btn{
+
+
+    padding:10px 20px;
+
+
+    border-radius:25px;
+
+
+    border:none;
+
+
+    background:
+
+    linear-gradient(
+        45deg,
+        var(--primary),
+        var(--secondary)
+    );
+
+
+    color:white;
+
+
+    text-decoration:none;
+
+
+    cursor:pointer;
+
+
+}
+
+
+
+
+
+
+
+
+/* TABLE */
+
+.dashboard-table{
+
+
+    width:100%;
+
+
+    border-collapse:collapse;
+
+
+    margin-top:25px;
+
+
+}
+
+
+
+
+
+.dashboard-table th{
+
+
+    background:#222;
+
+
+    padding:15px;
+
+
+    text-align:left;
+
+
+}
+
+
+
+
+
+.dashboard-table td{
+
+
+    padding:15px;
+
+
+    border-bottom:
+
+    1px solid #333;
+
+
+    color:#ddd;
+
+
+}
+
+
+
+
+
+
+
+
+/* MOBILE */
+
+@media(max-width:900px){
+
+
+.dashboard-container{
+
+
+    flex-direction:column;
+
+
+}
+
+
+
+.dashboard-sidebar{
+
+
+    width:100%;
+
+
+}
+
+
+
+.channel-item{
+
+
+    flex-direction:column;
+
+
+    align-items:flex-start;
+
+
+}
+
+
+
+}
+/* ==================================
+   PARTIE 9/10
+   HEADER + HOME PAGE
+   ================================== */
+
+
+/* VARIABLES COULEURS */
+
+:root{
+
+
+    --bg-main:#080808;
+
+    --surface:#141414;
+
+    --card:#1c1c1c;
+
+    --primary:#ff0055;
+
+    --secondary:#ff9900;
+
+    --text:white;
+
+    --muted:#aaa;
+
+    --border:#2b2b2b;
+
+    --success:#00c853;
+
+
+}
+
+
+
+
+
+
+
+
+/* BODY */
+
+body{
+
+
+    background:
+
+    radial-gradient(
+        circle at top,
+        #1b0010,
+        #080808 60%
+    );
+
+
+    color:white;
+
+
+}
+
+
+
+
+
+
+
+
+/* HEADER PRINCIPAL */
+
+.header,
+.main-header{
+
+
+    position:sticky;
+
+
+    top:0;
+
+
+    z-index:1000;
+
+
+    width:100%;
+
+
+    height:70px;
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    justify-content:space-between;
+
+
+    padding:0 30px;
+
+
+    background:
+
+    rgba(0,0,0,.85);
+
+
+    backdrop-filter:blur(10px);
+
+
+    border-bottom:
+
+    1px solid #222;
+
+
+}
+
+
+
+
+
+
+
+
+/* LOGO */
+
+.logo,
+.logo a{
+
+
+    color:white;
+
+
+    font-size:28px;
+
+
+    font-weight:900;
+
+
+    text-decoration:none;
+
+
+}
+
+
+
+.logo span{
+
+
+    color:var(--primary);
+
+
+}
+
+
+
+
+
+
+
+
+/* NAVIGATION */
+
+nav{
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    gap:20px;
+
+
+}
+
+
+
+
+
+nav a{
+
+
+    color:#ddd;
+
+
+    text-decoration:none;
+
+
+    font-size:15px;
+
+
+    transition:.3s;
+
+
+}
+
+
+
+
+
+
+
+nav a:hover{
+
+
+    color:var(--primary);
+
+
+}
+
+
+
+
+
+
+
+
+/* BOUTON CONNEXION */
+
+.btn-login{
+
+
+    background:
+
+    linear-gradient(
+        45deg,
+        var(--primary),
+        var(--secondary)
+    );
+
+
+    color:white;
+
+
+    padding:9px 20px;
+
+
+    border-radius:25px;
+
+
+    text-decoration:none;
+
+
+    font-weight:bold;
+
+
+}
+
+
+
+
+
+
+
+
+
+/* HERO ACCUEIL */
+
+.hero{
+
+
+    min-height:500px;
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    padding:50px;
+
+
+    border-radius:25px;
+
+
+    margin:25px;
+
+
+    background:
+
+    linear-gradient(
+        120deg,
+        #000,
+        #300020
+    );
+
+
+}
+
+
+
+
+
+
+
+
+.hero-content{
+
+
+    max-width:600px;
+
+
+}
+
+
+
+
+
+.hero-content h1{
+
+
+    font-size:55px;
+
+
+    font-weight:900;
+
+
+    margin-bottom:20px;
+
+
+}
+
+
+
+
+
+.hero-content p{
+
+
+    color:#ddd;
+
+
+    font-size:18px;
+
+
+    line-height:1.6;
+
+
+}
+
+
+
+
+
+
+
+
+/* BOUTONS HERO */
+
+.hero-buttons{
+
+
+    display:flex;
+
+
+    gap:15px;
+
+
+    margin-top:25px;
+
+
+}
+
+
+
+
+
+
+
+.hero-buttons a{
+
+
+    padding:12px 25px;
+
+
+    border-radius:25px;
+
+
+    text-decoration:none;
+
+
+    font-weight:bold;
+
+
+}
+
+
+
+
+
+.btn-watch{
+
+
+    background:white;
+
+
+    color:black;
+
+
+}
+
+
+
+
+
+
+.btn-list{
+
+
+    background:#333;
+
+
+    color:white;
+
+
+}
+
+
+
+
+
+
+
+
+/* SECTIONS */
+
+.content-section{
+
+
+    padding:25px;
+
+
+}
+
+
+
+.content-section h2{
+
+
+    font-size:28px;
+
+
+    margin-bottom:20px;
+
+
+}
+
+
+
+
+
+
+
+
+/* GRILLE FILMS */
+
+.netflix-grid{
+
+
+    display:grid;
+
+
+    grid-template-columns:
+
+    repeat(
+        auto-fill,
+        minmax(180px,1fr)
+    );
+
+
+    gap:20px;
+
+
+}
+
+
+
+
+
+
+
+
+.netflix-card{
+
+
+    background:
+
+    var(--card);
+
+
+    border-radius:15px;
+
+
+    overflow:hidden;
+
+
+    transition:.3s;
+
+
+}
+
+
+
+
+
+
+
+.netflix-card:hover{
+
+
+    transform:scale(1.06);
+
+
+    z-index:5;
+
+
+}
+
+
+
+
+
+
+
+.netflix-card img{
+
+
+    width:100%;
+
+
+    height:260px;
+
+
+    object-fit:cover;
+
+
+}
+
+
+
+
+
+
+
+
+.card-info{
+
+
+    padding:12px;
+
+
+}
+
+
+
+
+
+
+
+.card-info h3{
+
+
+    font-size:17px;
+
+
+}
+
+
+
+
+
+.card-info p{
+
+
+    color:var(--muted);
+
+
+}
+
+
+
+
+
+.card-info span{
+
+
+    color:#ffc107;
+
+
+    font-size:13px;
+
+
+}
+
+
+
+
+
+
+
+
+/* MOBILE */
+
+@media(max-width:700px){
+
+
+.header,
+.main-header{
+
+
+    padding:0 15px;
+
+
+}
+
+
+
+nav{
+
+
+    display:none;
+
+
+}
+
+
+
+.hero{
+
+
+    margin:10px;
+
+
+    padding:25px;
+
+
+    min-height:400px;
+
+
+}
+
+
+
+.hero-content h1{
+
+
+    font-size:32px;
+
+
+}
+
+
+
+.hero-content p{
+
+
+    font-size:15px;
+
+
+}
+
+
+
+.hero-buttons{
+
+
+    flex-direction:column;
+
+
+}
+
+
+
+.hero-buttons a{
+
+
+    text-align:center;
+
+
+    width:100%;
+
+
+}
+
+
+
+}
+/* ==================================
+   PARTIE 10/10
+   RESPONSIVE + FINITIONS
+   ================================== */
+
+
+/* TRANSITIONS GENERALES */
+
+*{
+
+    transition:
+    background .25s,
+    color .25s,
+    transform .25s;
+
+}
+
+
+
+
+
+a,
+button{
+
+
+    -webkit-tap-highlight-color:transparent;
+
+
+}
+
+
+
+
+
+
+
+/* BOUTONS GENERAUX */
+
+button,
+.btn,
+.btn-action{
+
+
+    cursor:pointer;
+
+
+    user-select:none;
+
+
+}
+
+
+
+
+
+button:active,
+.btn:active{
+
+
+    transform:scale(.95);
+
+
+}
+
+
+
+
+
+
+
+
+/* ETAT VIDE */
+
+.empty-state{
+
+
+    text-align:center;
+
+
+    padding:50px;
+
+
+    color:#888;
+
+
+    font-size:18px;
+
+
+}
+
+
+
+
+
+
+
+/* SCROLL HORIZONTAL MOBILE */
+
+.movie-row{
+
+
+    scrollbar-width:thin;
+
+
+    scrollbar-color:
+
+    var(--primary) transparent;
+
+
+}
+
+
+
+.movie-row::-webkit-scrollbar{
+
+
+    height:5px;
+
+
+}
+
+
+.movie-row::-webkit-scrollbar-thumb{
+
+
+    background:
+
+    var(--primary);
+
+
+    border-radius:20px;
+
+
+}
+
+
+
+
+
+
+
+
+/* ANIMATION APPARITION */
+
+.fade-in{
+
+
+    animation:
+
+    fadeIn .5s ease;
+
+
+}
+
+
+
+@keyframes fadeIn{
+
+
+    from{
+
+
+        opacity:0;
+
+
+        transform:translateY(20px);
 
 
     }
-/* ==========================
-   WATERMARK CHAINE VIDEO
-========================== */
-
-.video-overlay {
-    position: relative;
-}
-
-
-.tv-watermark {
-
-    position: absolute;
-
-    bottom: 15px;
-    left: 15px;
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 8px;
-
-    width: auto;
-    height: auto;
-
-    padding: 6px 12px;
-
-    background: rgba(0,0,0,0.55);
-
-    border-radius: 20px;
-
-    color: white;
-
-    font-size: 14px;
-
-    z-index: 5;
-
-}
 
 
 
-.tv-watermark img {
-
-    width: 35px !important;
-
-    height: 35px !important;
-
-    object-fit: cover;
-
-    border-radius: 50%;
-
-}
+    to{
 
 
+        opacity:1;
 
 
-.tv-watermark span {
+        transform:translateY(0);
 
-    width: auto;
-
-    height: auto;
-
-    font-size: 14px;
-
-    color: white;
-
-}
-
-
-
-
-.video-player video {
-
-    position: relative;
-
-    z-index: 1;
 
     }
-/* ==========================
-   WATCH VIDEO - STYLE PRO
-========================== */
-
-
-.video-player {
-
-    position: relative;
-
-    width: 100%;
-
-    background: #000;
-
-    border-radius: 12px;
-
-    overflow: hidden;
-
-}
-
-
-
-.video-player video {
-
-    width: 100%;
-
-    max-height: 75vh;
-
-    object-fit: contain;
-
-    display: block;
-
-}
-
-
-
-
-
-/* ==========================
-   CONTROLES VIDEO
-========================== */
-
-
-.custom-video-controls {
-
-    position: absolute;
-
-    bottom: 10px;
-
-    left: 50%;
-
-    transform: translateX(-50%);
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 8px;
-
-    background: rgba(0,0,0,0.55);
-
-    padding: 6px 10px;
-
-    border-radius: 30px;
-
-    z-index: 10;
-
-}
-
-
-
-.custom-video-controls button {
-
-    width: 38px;
-
-    height: 38px;
-
-    border: none;
-
-    border-radius: 50%;
-
-    background: rgba(255,255,255,0.15);
-
-    color: white;
-
-    font-size: 18px;
-
-    cursor: pointer;
-
-}
-
-
-
-
-#volume-control {
-
-    width: 80px;
-
-}
-
-
-
-
-
-
-
-/* ==========================
-   BOUTONS VERTICAL HORIZONTAL
-========================== */
-
-
-.orientation-buttons {
-
-    position: absolute;
-
-    top: 15px;
-
-    right: 15px;
-
-    display: flex;
-
-    gap: 8px;
-
-    z-index: 10;
-
-}
-
-
-
-.orientation-buttons button {
-
-
-background: rgba(0,0,0,0.55);
-
-color:white;
-
-border:none;
-
-padding:7px 12px;
-
-border-radius:20px;
-
-font-size:13px;
-
-}
-
-
-
-
-
-/* ==========================
-   WATERMARK CHAINE
-========================== */
-
-
-.tv-watermark {
-
-
-position:absolute;
-
-
-bottom:15px;
-
-
-left:15px;
-
-
-display:flex;
-
-
-align-items:center;
-
-
-gap:8px;
-
-
-background:rgba(0,0,0,0.55);
-
-
-padding:6px 12px;
-
-
-border-radius:20px;
-
-
-color:white;
-
-
-z-index:5;
-
-
-}
-
-
-
-.tv-watermark img {
-
-
-width:35px !important;
-
-
-height:35px !important;
-
-
-border-radius:50%;
-
-
-object-fit:cover;
-
-
-}
-
-
-
-.tv-watermark span {
-
-
-font-size:14px;
-
-
-font-weight:500;
-
-
-}
-
-
-
-
-
-
-/* ==========================
-   ACTIONS YOUTUBE
-========================== */
-
-
-.youtube-actions {
-
-
-display:flex;
-
-
-align-items:center;
-
-
-gap:10px;
-
-
-flex-wrap:wrap;
-
-
-margin:20px 0;
-
-
-}
-
-
-
-.yt-btn {
-
-
-display:flex;
-
-
-align-items:center;
-
-
-gap:6px;
-
-
-background:#f1f1f1;
-
-
-color:#111;
-
-
-border:none;
-
-
-padding:9px 16px;
-
-
-border-radius:25px;
-
-
-font-size:14px;
-
-
-text-decoration:none;
-
-
-cursor:pointer;
-
-
-}
-
-
-
-.yt-btn:hover {
-
-
-background:#ddd;
 
 
 }
@@ -3636,74 +4551,22 @@ background:#ddd;
 
 
 
-/* ==========================
-   COMMENTAIRES
-========================== */
+
+/* LOADER VIDEO */
+
+.video-loading{
 
 
-.comment-box {
+    display:flex;
 
 
-margin-top:20px;
+    justify-content:center;
 
 
-background:#f5f5f5;
+    align-items:center;
 
 
-padding:15px;
-
-
-border-radius:12px;
-
-
-}
-
-
-
-.comment-box textarea {
-
-
-width:100%;
-
-
-height:90px;
-
-
-resize:none;
-
-
-padding:10px;
-
-
-border-radius:10px;
-
-
-border:1px solid #ccc;
-
-
-}
-
-
-
-.yt-submit {
-
-
-margin-top:10px;
-
-
-background:#065fd4;
-
-
-color:white;
-
-
-border:none;
-
-
-padding:10px 20px;
-
-
-border-radius:20px;
+    height:200px;
 
 
 }
@@ -3712,45 +4575,113 @@ border-radius:20px;
 
 
 
-
-/* ==========================
-   MODE VERTICAL / HORIZONTAL
-========================== */
+.video-loading::after{
 
 
-.vertical-video video {
+    content:"";
 
 
-aspect-ratio:9/16;
+    width:45px;
 
 
-object-fit:contain;
+    height:45px;
+
+
+    border-radius:50%;
+
+
+    border:
+
+    5px solid #333;
+
+
+    border-top-color:
+
+    var(--primary);
+
+
+    animation:
+
+    spin 1s linear infinite;
+
+
+}
+
+
+
+
+
+@keyframes spin{
+
+
+    to{
+
+
+        transform:rotate(360deg);
+
+
+    }
 
 
 }
 
 
 
-.horizontal-video video {
 
 
-aspect-ratio:16/9;
 
 
-object-fit:contain;
+
+/* TABLET */
+
+@media(max-width:1000px){
+
+
+main{
+
+
+    padding:15px;
+
+
+}
+
+
+
+.video-details{
+
+
+    padding:20px;
 
 
 }
 
 
 
-.rotate-video video {
+.video-details h1{
 
 
-transform:rotate(90deg);
+    font-size:26px;
 
 
 }
+
+
+
+.stats-grid{
+
+
+    grid-template-columns:
+
+    repeat(2,1fr);
+
+
+}
+
+
+
+}
+
+
 
 
 
@@ -3762,81 +4693,376 @@ transform:rotate(90deg);
 @media(max-width:600px){
 
 
-.custom-video-controls {
+body{
 
 
-bottom:8px;
-
-
-gap:5px;
+    overflow-x:hidden;
 
 
 }
 
 
 
-.custom-video-controls button {
 
 
-width:32px;
+main{
 
 
-height:32px;
-
-
-font-size:15px;
+    padding:10px;
 
 
 }
 
 
 
-.orientation-buttons {
 
 
-top:10px;
+.logo,
+.logo a{
 
 
-right:10px;
-
-
-}
-
-
-
-.orientation-buttons button {
-
-
-font-size:11px;
-
-
-padding:6px 8px;
+    font-size:22px;
 
 
 }
 
 
 
-.youtube-actions {
 
 
-gap:7px;
+
+
+.content-section h2{
+
+
+    font-size:22px;
+
+
+}
+
+
+
+
+
+
+
+
+.netflix-grid{
+
+
+    grid-template-columns:
+
+    repeat(
+        2,
+        1fr
+    );
+
+
+    gap:12px;
 
 
 }
 
 
 
-.yt-btn {
 
 
-font-size:13px;
 
 
-padding:8px 12px;
+
+.netflix-card img{
+
+
+    height:190px;
 
 
 }
 
 
-    }
+
+
+
+
+
+
+.video-player,
+.live-player{
+
+
+    border-radius:12px;
+
+
+}
+
+
+
+
+
+
+
+
+.video-details{
+
+
+    border-radius:15px;
+
+
+}
+
+
+
+
+
+.video-meta{
+
+
+    flex-direction:column;
+
+
+    gap:10px;
+
+
+}
+
+
+
+
+
+
+
+
+.video-actions{
+
+
+    flex-direction:column;
+
+
+    width:100%;
+
+
+}
+
+
+
+
+
+.video-actions button,
+.btn-action{
+
+
+    width:100%;
+
+
+}
+
+
+
+
+
+.comments-section{
+
+
+    border-radius:15px;
+
+
+}
+
+
+
+
+
+
+
+
+.dashboard-page{
+
+
+    padding:10px;
+
+
+}
+
+
+
+
+
+.stat-card strong{
+
+
+    font-size:28px;
+
+
+}
+
+
+
+}
+
+
+
+
+
+
+
+
+/* PETITS ECRANS */
+
+@media(max-width:380px){
+
+
+.netflix-grid{
+
+
+    grid-template-columns:
+
+    1fr;
+
+
+}
+
+
+
+.hero-content h1{
+
+
+    font-size:27px;
+
+
+}
+
+
+}
+
+
+
+
+/* MODE PAYSAGE VIDEO */
+
+.horizontal-video video{
+
+
+    width:100%;
+
+
+    height:auto;
+
+
+}
+
+
+
+
+
+
+
+/* MODE PORTRAIT VIDEO */
+
+.vertical-video video{
+
+
+    width:auto;
+
+
+    max-height:90vh;
+
+
+    margin:auto;
+
+
+    display:block;
+
+
+}
+
+
+
+
+
+
+
+
+/* PROTECTION WATERMARK */
+
+.tv-watermark{
+
+
+    max-width:180px;
+
+
+    overflow:hidden;
+
+
+    white-space:nowrap;
+
+
+    text-overflow:ellipsis;
+
+
+}
+
+
+
+
+
+.tv-watermark img{
+
+
+    flex-shrink:0;
+
+
+}
+
+
+
+
+
+.tv-watermark span{
+
+
+    font-size:14px;
+
+
+}
+
+
+
+
+
+
+
+/* FINITIONS CARTE */
+
+.card-info{
+
+
+    min-height:90px;
+
+
+}
+
+
+
+
+
+.card-info h3{
+
+
+    overflow:hidden;
+
+
+    text-overflow:ellipsis;
+
+
+    white-space:nowrap;
+
+
+}
+
+
+
+
+
+
+
+
+/* FIN */
