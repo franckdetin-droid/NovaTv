@@ -1,27 +1,36 @@
 {% extends "base.html" %}
 
 {% block title %}
-Regarder caméra - MY TV APP
+Regarder live - MY TV APP
 {% endblock %}
 
 
 {% block content %}
 
+
 <section class="watch-camera">
 
 
 <h1>
-🎥 {{ live.title }}
+🔴 {{ live.title }}
 </h1>
 
 
+
+<div class="live-player">
+
+
 <video
-id="remoteVideo"
+id="liveVideo"
+controls
 autoplay
 playsinline
-controls
 width="100%">
 </video>
+
+
+</div>
+
 
 
 <p id="status">
@@ -29,21 +38,19 @@ Connexion au live...
 </p>
 
 
+
 </section>
 
 
 
-<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 
 
 <script>
 
 
-const socket = io();
-
-
 const video =
-document.getElementById("remoteVideo");
+document.getElementById("liveVideo");
 
 
 const status =
@@ -51,165 +58,105 @@ document.getElementById("status");
 
 
 
-// Même salle que le créateur
+// URL du live générée par ton serveur
 
-const room =
-"camera_live_{{ live.channel.owner.id }}";
-
-
-
-let peer =
-new RTCPeerConnection();
+const streamUrl =
+"{{ live.stream_url }}";
 
 
 
 
-// recevoir le flux distant
-
-peer.ontrack = (event)=>{
+if(Hls.isSupported()){
 
 
-video.srcObject =
-event.streams[0];
+const hls =
+new Hls();
+
+
+hls.loadSource(
+streamUrl
+);
+
+
+hls.attachMedia(
+video
+);
+
+
+
+hls.on(
+Hls.Events.MANIFEST_PARSED,
+()=>{
+
+
+video.play();
 
 
 status.innerHTML =
 "🔴 Live en cours";
 
 
-};
-
-
-
-
-
-peer.onicecandidate = (event)=>{
-
-
-if(event.candidate){
-
-
-socket.emit(
-"camera_ice",
-{
-room:room,
-candidate:event.candidate
-}
-);
-
-
-}
-
-
-};
-
-
-
-
-
-// rejoindre la salle
-
-socket.emit(
-"join_camera",
-{
-room:room
-}
-);
-
-
-
-
-
-// recevoir l'offre du créateur
-
-socket.on(
-"camera_offer",
-async data=>{
-
-
-await peer.setRemoteDescription(
-data.offer
-);
-
-
-
-let answer =
-await peer.createAnswer();
-
-
-
-await peer.setLocalDescription(
-answer
-);
-
-
-
-socket.emit(
-"camera_answer",
-{
-room:room,
-answer:answer
-}
-);
-
-
-
 });
 
 
+hls.on(
+Hls.Events.ERROR,
+(event,data)=>{
 
 
-
-// recevoir arrêt du live
-
-socket.on(
-"camera_stopped",
-()=>{
+console.log(
+data
+);
 
 
 status.innerHTML =
-"⛔ Live arrêté";
-
-
-video.srcObject =
-null;
+"❌ Erreur de connexion";
 
 
 });
 
 
-
-
-
-// Nouveau spectateur arrivé
-
-socket.on(
-"viewer_joined",
-async data => {
-
-
-let offer =
-await peer.createOffer();
-
-
-
-await peer.setLocalDescription(
-offer
-);
-
-
-
-socket.emit(
-"camera_offer",
-{
-room:data.room,
-offer:offer
 }
-);
 
+
+
+
+else if(video.canPlayType(
+'application/vnd.apple.mpegurl'
+)){
+
+
+video.src =
+streamUrl;
+
+
+video.addEventListener(
+"loadedmetadata",
+()=>{
+
+
+video.play();
+
+
+status.innerHTML =
+"🔴 Live en cours";
 
 
 });
+
+
+}
+
+
+
+else{
+
+
+status.innerHTML =
+"❌ Navigateur non compatible";
+
+
+}
 
 
 
