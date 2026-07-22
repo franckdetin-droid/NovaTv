@@ -17,6 +17,7 @@ Regarder live - MY TV APP
 
 
 
+
 <div class="live-player">
 
 
@@ -29,14 +30,18 @@ width="100%">
 </video>
 
 
+
+<button
+id="fullscreenBtn">
+
+⛶ Plein écran
+
+</button>
+
+
 </div>
 
 
-
-
-<button id="fullscreenBtn">
-⛶ Plein écran
-</button>
 
 
 
@@ -52,7 +57,10 @@ width="100%">
 
 
 
+
 <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+
+
 
 
 
@@ -66,9 +74,9 @@ width="100%">
 
 const socket = io({
 
-reconnection:true,
+    reconnection:true,
 
-reconnectionAttempts:10
+    reconnectionAttempts:20
 
 });
 
@@ -76,11 +84,16 @@ reconnectionAttempts:10
 
 
 
+
+// ==========================
+// ELEMENTS
+// ==========================
+
+
 const video =
 document.getElementById(
 "liveVideo"
 );
-
 
 
 const status =
@@ -92,14 +105,14 @@ document.getElementById(
 
 
 
+
 // ==========================
-// SALLE DU LIVE
+// SALLE LIVE
 // ==========================
 
 
 const room =
 "camera_live_{{ live.id }}";
-
 
 
 
@@ -113,17 +126,16 @@ let peer = null;
 
 
 
-
 // ==========================
-// CREER WEBRTC
+// CREATION WEBRTC
 // ==========================
 
 
 function createPeer(){
 
 
-
-peer = new RTCPeerConnection({
+peer =
+new RTCPeerConnection({
 
 iceServers:[
 
@@ -143,10 +155,14 @@ urls:
 
 
 
-// recevoir vidéo
+// réception vidéo
 
 
-peer.ontrack = (event)=>{
+peer.ontrack =
+(event)=>{
+
+
+if(event.streams[0]){
 
 
 video.srcObject =
@@ -157,7 +173,13 @@ status.innerHTML =
 "🔴 Live en cours";
 
 
+}
+
+
+
 };
+
+
 
 
 
@@ -196,8 +218,6 @@ candidate:event.candidate
 
 
 
-return peer;
-
 
 }
 
@@ -210,7 +230,7 @@ return peer;
 
 
 // ==========================
-// CONNEXION SERVEUR
+// CONNEXION
 // ==========================
 
 
@@ -220,7 +240,8 @@ socket.on(
 
 
 status.innerHTML =
-"🟢 Serveur connecté";
+"🟢 Connecté au serveur";
+
 
 
 socket.emit(
@@ -235,9 +256,7 @@ room:room
 
 
 
-}
-
-);
+});
 
 
 
@@ -248,7 +267,7 @@ room:room
 
 
 // ==========================
-// RECEVOIR OFFER CREATEUR
+// OFFRE CREATEUR
 // ==========================
 
 
@@ -281,6 +300,7 @@ data.offer
 
 
 
+
 const answer =
 await peer.createAnswer();
 
@@ -304,9 +324,7 @@ socket.emit(
 
 room:room,
 
-answer:answer,
-
-target:data.sender
+answer:answer
 
 }
 
@@ -316,21 +334,22 @@ target:data.sender
 
 
 }
+
 
 catch(error){
 
 
 console.log(
-"Erreur offer:",
 error
 );
 
 
 status.innerHTML =
-"❌ Erreur connexion";
+"❌ Erreur WebRTC";
 
 
 }
+
 
 
 });
@@ -344,7 +363,7 @@ status.innerHTML =
 
 
 // ==========================
-// RECEVOIR ICE
+// ICE
 // ==========================
 
 
@@ -371,18 +390,20 @@ data.candidate
 }
 
 
+
 }
 
 catch(error){
 
 
 console.log(
-"ICE erreur:",
+"ICE:",
 error
 );
 
 
 }
+
 
 
 });
@@ -419,7 +440,6 @@ if(peer){
 
 peer.close();
 
-
 peer=null;
 
 
@@ -438,7 +458,7 @@ peer=null;
 
 
 // ==========================
-// ERREUR SALLE
+// ERREUR
 // ==========================
 
 
@@ -448,7 +468,7 @@ socket.on(
 
 
 status.innerHTML =
-"⚠️ Nombre maximum de spectateurs atteint";
+"⚠️ Live complet";
 
 
 });
@@ -457,22 +477,13 @@ status.innerHTML =
 
 
 
-
-
-
-
-// ==========================
-// DECONNEXION
-// ==========================
-
-
 socket.on(
 "disconnect",
 ()=>{
 
 
 status.innerHTML =
-"🔴 Connexion perdue";
+"🔴 Serveur déconnecté";
 
 
 });
@@ -494,7 +505,8 @@ document
 .getElementById(
 "fullscreenBtn"
 )
-.onclick=()=>{
+.onclick =
+()=>{
 
 
 if(video.requestFullscreen){
@@ -504,6 +516,7 @@ video.requestFullscreen();
 
 
 }
+
 
 
 };
