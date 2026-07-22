@@ -15,20 +15,41 @@ Caméra Live - MY TV APP
 </h1>
 
 
+
+<div id="server-status">
+🟡 Connexion au serveur...
+</div>
+
+
+
+<!-- LISTE DES LIVES -->
+
+<section class="live-list">
+
+<h2>
+🔴 Lives en cours
+</h2>
+
+
 {% if cameras %}
 
 {% for camera in cameras %}
 
 <div class="camera-card">
 
-<h2>
+
+<h3>
 {{ camera.title }}
-</h2>
+</h3>
 
 
-<a href="{{ url_for('main.watch_camera', live_id=camera.id) }}">
-▶️ Regarder ce live
+<a class="watch-btn"
+href="{{ url_for('main.watch_camera', live_id=camera.id) }}">
+
+▶️ Regarder
+
 </a>
+
 
 </div>
 
@@ -39,11 +60,15 @@ Caméra Live - MY TV APP
 {% else %}
 
 <p>
-Aucune caméra en direct actuellement.
+Aucun live actuellement
 </p>
 
 
 {% endif %}
+
+
+</section>
+
 
 
 
@@ -52,37 +77,59 @@ Aucune caméra en direct actuellement.
 
 
 
-<h1>
+
+<!-- MA CAMERA -->
+
+<h2>
 📷 Ma caméra
-</h1>
+</h2>
 
 
 
 <video
-id="camera"
+
+id="myCamera"
+
 autoplay
+
 playsinline
+
 muted
-width="100%">
+
+class="live-video">
+
 </video>
 
 
-<br><br>
+
+<br>
+
 
 
 <button id="startBtn">
+
 🔴 Démarrer le live
+
 </button>
+
 
 
 <button id="stopBtn">
+
 ⛔ Arrêter
+
 </button>
 
 
+
 <p id="status">
+
 ⏹ Aucun live
+
 </p>
+
+
+
 
 
 
@@ -91,7 +138,9 @@ width="100%">
 
 
 
+
 <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+
 
 
 <script>
@@ -100,74 +149,75 @@ width="100%">
 const socket = io();
 
 
-let stream;
 
-let peer;
+const myVideo =
+document.getElementById(
+"myCamera"
+);
 
-
-
-const video =
-document.getElementById("camera");
 
 
 const status =
-document.getElementById("status");
+document.getElementById(
+"status"
+);
+
+
+
+const serverStatus =
+document.getElementById(
+"server-status"
+);
+
+
+
+let stream = null;
+
+let peer = null;
 
 
 
 const room =
-"camera_live_{{ session['user_id'] }}";
+"camera_live_{{session['user_id']}}";
 
 
 
 
 
-// rejoindre la salle
+// =====================
+// CONNEXION SERVEUR
+// =====================
+
+
+socket.on(
+"connect",
+()=>{
+
+
+serverStatus.innerHTML =
+"🟢 Serveur connecté";
+
 
 socket.emit(
 "join_camera",
 {
-room: room
+room:room
 }
 );
 
 
+});
 
 
 
-
-// nouveau spectateur
 
 socket.on(
-"viewer_joined",
-async data=>{
+"disconnect",
+()=>{
 
 
-if(peer){
-
-
-let offer =
-await peer.createOffer();
-
-
-
-await peer.setLocalDescription(
-offer
-);
-
-
-
-socket.emit(
-"camera_offer",
-{
-room:data.room,
-offer:offer
-}
-);
-
-
-
-}
+serverStatus.innerHTML =
+"🔴 Serveur déconnecté";
 
 
 });
@@ -178,42 +228,35 @@ offer:offer
 
 
 
-// Démarrer caméra
-
-document.getElementById("startBtn").onclick = async()=>{
-
-
-stream =
-await navigator.mediaDevices.getUserMedia({
-
-video:true,
-
-audio:true
-
-});
-
-await fetch("/start-camera-live", {
-    method: "POST",
-    headers:{
-        "Content-Type":"application/json"
-    },
-    body: JSON.stringify({
-        room: room
-    })
-});
-
-video.srcObject =
-stream;
+// =====================
+// CREER PEER
+// =====================
 
 
+function createPeer(){
 
 
 peer =
-new RTCPeerConnection();
+new RTCPeerConnection({
+
+iceServers:[
+
+{
+urls:
+"stun:stun.l.google.com:19302"
+}
+
+]
+
+});
 
 
 
-stream.getTracks().forEach(track=>{
+if(stream){
+
+
+stream.getTracks()
+.forEach(track=>{
 
 
 peer.addTrack(
@@ -225,11 +268,14 @@ stream
 });
 
 
+}
 
 
 
 
-peer.onicecandidate = (event)=>{
+
+peer.onicecandidate =
+event=>{
 
 
 if(event.candidate){
@@ -238,9 +284,13 @@ if(event.candidate){
 socket.emit(
 "camera_ice",
 {
+
 room:room,
+
 candidate:event.candidate
+
 }
+
 );
 
 
@@ -251,13 +301,52 @@ candidate:event.candidate
 
 
 
+}
 
+
+
+
+
+
+
+
+
+// =====================
+// DEMARRER LIVE
+// =====================
+
+
+document
+.getElementById("startBtn")
+.onclick =
+async()=>{
+
+
+try{
+
+
+stream =
+await navigator.mediaDevices.getUserMedia({
+
+video:true,
+
+audio:true
+
+});
+
+
+
+myVideo.srcObject =
+stream;
+
+
+
+createPeer();
 
 
 
 let offer =
 await peer.createOffer();
-
 
 
 await peer.setLocalDescription(
@@ -266,20 +355,62 @@ offer
 
 
 
-
-
 socket.emit(
 "camera_offer",
 {
+
 room:room,
+
 offer:offer
+
 }
+
 );
 
 
 
+await fetch(
+"/start-camera-live",
+{
+
+method:"POST",
+
+headers:{
+
+"Content-Type":"application/json"
+
+},
+
+body:JSON.stringify({
+
+room:room
+
+})
+
+}
+
+);
+
+
+
+
 status.innerHTML =
-"🔴 Live en cours";
+"🔴 Live en diffusion";
+
+
+
+}
+
+catch(error){
+
+
+status.innerHTML =
+"❌ Erreur caméra : "
++
+error.message;
+
+
+}
 
 
 
@@ -290,34 +421,54 @@ status.innerHTML =
 
 
 
-// recevoir la réponse du spectateur
+
+
+
+// =====================
+// RECEVOIR REPONSE
+// =====================
+
 
 socket.on(
 "camera_answer",
 async data=>{
 
-    try{
 
-        await peer.setRemoteDescription(
-            new RTCSessionDescription(data.answer)
-        );
+if(peer){
 
-    }
 
-    catch(e){
+await peer.setRemoteDescription(
 
-        console.log(e);
+new RTCSessionDescription(
+data.answer
+)
 
-    }
+);
+
+
+}
+
+
 
 });
 
 
-// recevoir ICE
+
+
+
+
+
+// =====================
+// ICE
+// =====================
+
 
 socket.on(
 "camera_ice",
 async data=>{
+
+
+if(peer){
 
 
 try{
@@ -328,16 +479,17 @@ data.candidate
 );
 
 
-
 }
 
 catch(e){
 
-
 console.log(e);
+
+}
 
 
 }
+
 
 
 });
@@ -348,18 +500,35 @@ console.log(e);
 
 
 
+// =====================
+// ARRET
+// =====================
 
-// arrêter
 
-document.getElementById("stopBtn").onclick = ()=>{
+document
+.getElementById("stopBtn")
+.onclick =
+()=>{
 
 
 if(stream){
 
 
 stream.getTracks()
-.forEach(track=>track.stop());
+.forEach(
+track=>track.stop()
+);
 
+
+}
+
+
+
+if(peer){
+
+peer.close();
+
+peer=null;
 
 }
 
@@ -368,18 +537,10 @@ stream.getTracks()
 socket.emit(
 "stop_camera",
 {
-    room: room
+room:room
 }
 );
 
-
-if(peer){
-
-    peer.close();
-
-    peer = null;
-
-}
 
 
 status.innerHTML =
@@ -388,6 +549,8 @@ status.innerHTML =
 
 
 };
+
+
 
 
 
