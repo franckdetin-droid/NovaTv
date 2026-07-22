@@ -7,19 +7,11 @@ Regarder live - MY TV APP
 
 {% block content %}
 
-
 <section class="watch-camera">
 
-
-<h1>
-🔴 {{ live.title }}
-</h1>
-
-
-
+<h1>🔴 {{ live.title }}</h1>
 
 <div class="live-player">
-
 
 <video
 id="liveVideo"
@@ -29,504 +21,187 @@ controls
 width="100%">
 </video>
 
-
-
-<button
-id="fullscreenBtn">
-
+<button id="fullscreenBtn">
 ⛶ Plein écran
-
 </button>
 
-
 </div>
-
-
-
-
 
 <p id="status">
 🟡 Connexion au live...
 </p>
 
-
-
 </section>
-
-
-
-
-
 
 <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
 
-
-
-
-
 <script>
-
 
 // ==========================
 // SOCKET
 // ==========================
 
-
 const socket = io({
-
-    reconnection:true,
-
-    reconnectionAttempts:20
-
+    reconnection: true,
+    reconnectionAttempts: 20
 });
-
-
-
-
-
 
 // ==========================
 // ELEMENTS
 // ==========================
 
-
-const video =
-document.getElementById(
-"liveVideo"
-);
-
-
-const status =
-document.getElementById(
-"status"
-);
-
-
-
-
-
+const video = document.getElementById("liveVideo");
+const status = document.getElementById("status");
 
 // ==========================
-// SALLE LIVE
+// SALLE
 // ==========================
 
-
-const room =
-"camera_live_{{ live.id }}";
-
-
-
+const room = "camera_live_{{ live.id }}";
 
 let peer = null;
-
-
-
-
-
-
-
+let creatorId = null; // 🔥 IMPORTANT
 
 // ==========================
 // CREATION WEBRTC
 // ==========================
 
-
 function createPeer(){
 
+    peer = new RTCPeerConnection({
+        iceServers: [
+            { urls: "stun:stun.l.google.com:19302" }
+        ]
+    });
 
-peer =
-new RTCPeerConnection({
+    // 🎥 réception vidéo
+    peer.ontrack = (event) => {
+        if (event.streams[0]) {
+            video.srcObject = event.streams[0];
+            status.innerHTML = "🔴 Live en cours";
+        }
+    };
 
-iceServers:[
-
-{
-
-urls:
-"stun:stun.l.google.com:19302"
-
+    // 🧊 ICE
+    peer.onicecandidate = (event) => {
+        if (event.candidate && creatorId) {
+            socket.emit("camera_ice", {
+                candidate: event.candidate,
+                target: creatorId
+            });
+        }
+    };
 }
-
-]
-
-});
-
-
-
-
-
-
-// réception vidéo
-
-
-peer.ontrack =
-(event)=>{
-
-
-if(event.streams[0]){
-
-
-video.srcObject =
-event.streams[0];
-
-
-status.innerHTML =
-"🔴 Live en cours";
-
-
-}
-
-
-
-};
-
-
-
-
-
-
-
-
-
-// ICE
-
-
-peer.onicecandidate =
-(event)=>{
-
-
-if(event.candidate){
-
-
-socket.emit(
-"camera_ice",
-{
-
-room:room,
-
-candidate:event.candidate
-
-}
-
-);
-
-
-}
-
-
-};
-
-
-
-
-
-}
-
-
-
-
-
-
-
-
 
 // ==========================
 // CONNEXION
 // ==========================
 
+socket.on("connect", () => {
 
-socket.on(
-"connect",
-()=>{
+    status.innerHTML = "🟢 Connecté";
 
-
-status.innerHTML =
-"🟢 Connecté au serveur";
-
-
-
-socket.emit(
-"join_camera",
-{
-
-room:room
-
-}
-
-);
-
-
+    socket.emit("join_camera", {
+        room: room
+    });
 
 });
-
-
-
-
-
-
-
-
 
 // ==========================
 // OFFRE CREATEUR
 // ==========================
 
+socket.on("camera_offer", async (data) => {
 
-socket.on(
-"camera_offer",
-async(data)=>{
+    try {
 
+        if (!peer) {
+            createPeer();
+        }
 
-try{
+        // 🔥 stocker le créateur
+        creatorId = data.sender;
 
+        await peer.setRemoteDescription(
+            new RTCSessionDescription(data.offer)
+        );
 
-if(!peer){
+        const answer = await peer.createAnswer();
+        await peer.setLocalDescription(answer);
 
-createPeer();
+        // 🔥 renvoyer au créateur
+        socket.emit("camera_answer", {
+            answer: answer,
+            target: creatorId
+        });
 
-}
+    } catch (error) {
 
+        console.log(error);
+        status.innerHTML = "❌ Erreur WebRTC";
 
-
-
-await peer.setRemoteDescription(
-
-new RTCSessionDescription(
-data.offer
-)
-
-);
-
-
-
-
-
-
-const answer =
-await peer.createAnswer();
-
-
-
-
-
-await peer.setLocalDescription(
-answer
-);
-
-
-
-
-
-
-
-socket.emit(
-"camera_answer",
-{
-
-room:room,
-
-answer:answer
-
-}
-
-);
-
-
-
-
-}
-
-
-catch(error){
-
-
-console.log(
-error
-);
-
-
-status.innerHTML =
-"❌ Erreur WebRTC";
-
-
-}
-
-
+    }
 
 });
 
-
-
-
-
-
-
-
-
 // ==========================
-// ICE
+// ICE RECEPTION
 // ==========================
 
+socket.on("camera_ice", async (data) => {
 
-socket.on(
-"camera_ice",
-async(data)=>{
+    try {
 
+        if (peer) {
+            await peer.addIceCandidate(
+                new RTCIceCandidate(data.candidate)
+            );
+        }
 
-try{
-
-
-if(peer){
-
-
-await peer.addIceCandidate(
-
-new RTCIceCandidate(
-data.candidate
-)
-
-);
-
-
-}
-
-
-
-}
-
-catch(error){
-
-
-console.log(
-"ICE:",
-error
-);
-
-
-}
-
-
+    } catch (error) {
+        console.log("ICE error:", error);
+    }
 
 });
 
-
-
-
-
-
-
-
-
 // ==========================
-// LIVE ARRETE
+// LIVE STOP
 // ==========================
 
+socket.on("camera_stopped", () => {
 
-socket.on(
-"camera_stopped",
-()=>{
+    status.innerHTML = "⛔ Live terminé";
+    video.srcObject = null;
 
-
-status.innerHTML =
-"⛔ Live terminé";
-
-
-video.srcObject =
-null;
-
-
-
-if(peer){
-
-
-peer.close();
-
-peer=null;
-
-
-}
-
-
+    if (peer) {
+        peer.close();
+        peer = null;
+    }
 
 });
 
-
-
-
-
-
-
-
-
 // ==========================
-// ERREUR
+// ERREURS
 // ==========================
 
-
-socket.on(
-"room_full",
-()=>{
-
-
-status.innerHTML =
-"⚠️ Live complet";
-
-
+socket.on("room_full", () => {
+    status.innerHTML = "⚠️ Live complet";
 });
 
-
-
-
-
-socket.on(
-"disconnect",
-()=>{
-
-
-status.innerHTML =
-"🔴 Serveur déconnecté";
-
-
+socket.on("disconnect", () => {
+    status.innerHTML = "🔴 Déconnecté";
 });
 
-
-
-
-
-
-
-
-
 // ==========================
-// PLEIN ECRAN
+// FULLSCREEN
 // ==========================
 
-
-document
-.getElementById(
-"fullscreenBtn"
-)
-.onclick =
-()=>{
-
-
-if(video.requestFullscreen){
-
-
-video.requestFullscreen();
-
-
-}
-
-
-
+document.getElementById("fullscreenBtn").onclick = () => {
+    if (video.requestFullscreen) {
+        video.requestFullscreen();
+    }
 };
 
-
-
-
-
 </script>
-
-
 
 {% endblock %}
