@@ -293,13 +293,9 @@ if(event.candidate){
 socket.emit(
 "camera_ice",
 {
-
-room:room,
-
-candidate:event.candidate
-
+    candidate: event.candidate,
+    target: id
 }
-
 );
 
 
