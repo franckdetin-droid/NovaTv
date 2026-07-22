@@ -218,7 +218,6 @@ document.getElementById(
 
 
 
-
 // ==========================
 // CREATION UPPY
 // ==========================
@@ -228,17 +227,13 @@ const uppy = new Uppy.Uppy({
 
 autoProceed:false,
 
-
 restrictions:{
 
-
 maxFileSize:5000000000,
-
 
 allowedFileTypes:[
 "video/*"
 ]
-
 
 }
 
@@ -257,7 +252,6 @@ uppy.use(
 Uppy.Dashboard,
 {
 
-
 inline:true,
 
 target:"#drag-drop-area",
@@ -269,8 +263,9 @@ proudlyDisplayPoweredByUppy:false,
 note:
 "Vidéo jusqu'à 5GB"
 
+}
 
-});
+);
 
 
 
@@ -287,9 +282,7 @@ document
 
 
 const dashboard =
-uppy.getPlugin(
-"Dashboard"
-);
+uppy.getPlugin("Dashboard");
 
 
 if(dashboard){
@@ -315,23 +308,20 @@ uppy.use(
 Uppy.XHRUpload,
 {
 
-
 endpoint:
 
-"https://api.cloudinary.com/v1_1/kvua1rmc/video/upload",
+"https://api.cloudinary.com/v1_1/nf8uv7f4/video/upload",
 
 
 fieldName:"file",
 
-
 formData:true,
-
 
 limit:1
 
+}
 
-});
-
+);
 
 
 
@@ -352,16 +342,14 @@ uppy.setFileMeta(
 file.id,
 {
 
-
 upload_preset:
 "novatv_video"
-
 
 });
 
 
 uploadStatus.innerHTML =
-"⏳ Vidéo prête";
+"⏳ Vidéo prête pour l'envoi";
 
 
 });
@@ -415,17 +403,18 @@ uppy.on(
 function(file,response){
 
 
-
-if(response.body.secure_url){
+if(
+response.body &&
+response.body.secure_url
+){
 
 
 videoUrl.value =
 response.body.secure_url;
 
 
-
 uploadStatus.innerHTML =
-"✅ Vidéo envoyée";
+"✅ Vidéo envoyée avec succès";
 
 
 submitBtn.disabled =
@@ -433,7 +422,6 @@ false;
 
 
 }
-
 
 
 });
@@ -454,6 +442,12 @@ uppy.on(
 function(file,error){
 
 
+console.log(
+"Erreur Cloudinary :",
+error
+);
+
+
 uploadStatus.innerHTML =
 "❌ Erreur upload : "
 +
@@ -468,7 +462,7 @@ error.message;
 
 
 // ==========================
-// PROTECTION
+// PROTECTION FORMULAIRE
 // ==========================
 
 
