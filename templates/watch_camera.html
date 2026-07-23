@@ -113,11 +113,12 @@ socket.on("connect",()=>{
     status.innerHTML="🟢 Connecté";
 
     socket.emit(
-        "join_camera",
-        {
-            room:room
-        }
-    );
+    "join_camera",
+    {
+        room: room,
+        creator: false
+    }
+);
 
 });
 
