@@ -7,14 +7,11 @@ Caméra Live - MY TV APP
 
 {% block content %}
 
-
 <section class="camera-live">
-
 
 <h1>
 🎥 Caméra Live
 </h1>
-
 
 
 <div class="live-status">
@@ -28,18 +25,13 @@ Caméra Live - MY TV APP
 ⏹ Aucun live
 </span>
 
-
 </div>
-
-
 
 
 
 <h2>
 📷 Aperçu caméra
 </h2>
-
-
 
 
 <div class="camera-box">
@@ -53,45 +45,29 @@ muted>
 </video>
 
 
-
-<button
-id="fullscreenBtn">
-
+<button id="fullscreenBtn">
 ⛶ Plein écran
-
 </button>
 
 
 </div>
-
-
-
 
 
 
 <div class="live-buttons">
 
 
-<button
-id="startBtn">
-
+<button id="startBtn">
 🔴 Démarrer le live
-
 </button>
 
 
-
-<button
-id="stopBtn">
-
+<button id="stopBtn">
 ⛔ Arrêter
-
 </button>
 
 
 </div>
-
-
 
 
 
@@ -100,17 +76,11 @@ En attente...
 </p>
 
 
-
 </section>
 
 
 
-
-
-
 <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
-
-
 
 
 <script>
@@ -119,7 +89,6 @@ En attente...
 // ==========================
 // SOCKET
 // ==========================
-
 
 const socket = io({
 
@@ -132,15 +101,13 @@ const socket = io({
 
 
 
-
-
 // ==========================
 // VARIABLES
 // ==========================
 
-
 let stream = null;
 
+let room = null;
 
 let peers = {};
 
@@ -164,20 +131,10 @@ document.getElementById("liveStatus");
 
 
 
-const room =
-"camera_live_{{ live_id }}";
-
-
-
-
-
-
-
 
 // ==========================
 // CONNEXION
 // ==========================
-
 
 socket.on(
 "connect",
@@ -188,21 +145,7 @@ serverStatus.innerHTML =
 "🟢 Serveur connecté";
 
 
-
-socket.emit(
-"join_camera",
-{
-    room: room,
-    creator: true
-}
-);
-
-
-
 });
-
-
-
 
 
 
@@ -224,15 +167,11 @@ serverStatus.innerHTML =
 
 
 
-
-
 // ==========================
 // CREER PEER
 // ==========================
 
-
 function createPeer(id){
-
 
 
 const peer =
@@ -241,10 +180,8 @@ new RTCPeerConnection({
 iceServers:[
 
 {
-
 urls:
 "stun:stun.l.google.com:19302"
-
 }
 
 ]
@@ -253,31 +190,20 @@ urls:
 
 
 
-
-
-
 if(stream){
 
 
-stream
-.getTracks()
-.forEach(track=>{
-
+stream.getTracks().forEach(
+track=>{
 
 peer.addTrack(
 track,
 stream
 );
 
-
 });
 
-
 }
-
-
-
-
 
 
 
@@ -291,34 +217,28 @@ if(event.candidate){
 socket.emit(
 "camera_ice",
 {
-    candidate: event.candidate,
-    target: id
+
+candidate:event.candidate,
+
+target:id
+
 }
 );
 
 
 }
 
-
 };
-
-
-
 
 
 
 peers[id]=peer;
 
 
-
 return peer;
 
 
-
 }
-
-
-
 
 
 
@@ -328,7 +248,6 @@ return peer;
 // ==========================
 // NOUVEAU SPECTATEUR
 // ==========================
-
 
 socket.on(
 "viewer_joined",
@@ -349,11 +268,8 @@ data.viewer_id
 
 
 
-
-
 const offer =
 await peer.createOffer();
-
 
 
 
@@ -363,13 +279,16 @@ offer
 
 
 
-
 socket.emit(
 "camera_offer",
 {
-    room: room,
-    offer: offer,
-    target: data.viewer_id
+
+room:room,
+
+offer:offer,
+
+target:data.viewer_id
+
 }
 );
 
@@ -384,28 +303,17 @@ socket.emit(
 
 
 
-
 // ==========================
-// REPONSE
+// REPONSE SPECTATEUR
 // ==========================
-
 
 socket.on(
 "camera_answer",
 async(data)=>{
 
 
-try{
-
-
-const id =
-data.sender;
-
-
-
 const peer =
-peers[id];
-
+peers[data.sender];
 
 
 if(peer){
@@ -424,18 +332,7 @@ data.answer
 
 
 
-}
-
-catch(e){
-
-console.log(e);
-
-}
-
-
-
 });
-
 
 
 
@@ -447,7 +344,6 @@ console.log(e);
 // ==========================
 // ICE
 // ==========================
-
 
 socket.on(
 "camera_ice",
@@ -462,8 +358,7 @@ let id in peers
 ){
 
 
-await peers[id]
-.addIceCandidate(
+await peers[id].addIceCandidate(
 
 new RTCIceCandidate(
 data.candidate
@@ -484,9 +379,7 @@ console.log(e);
 }
 
 
-
 });
-
 
 
 
@@ -499,7 +392,6 @@ console.log(e);
 // DEMARRER LIVE
 // ==========================
 
-
 document
 .getElementById("startBtn")
 .onclick =
@@ -508,6 +400,8 @@ async()=>{
 
 try{
 
+
+// ouvrir caméra
 
 stream =
 await navigator.mediaDevices.getUserMedia({
@@ -520,8 +414,6 @@ audio:true
 
 
 
-
-
 video.srcObject =
 stream;
 
@@ -529,32 +421,45 @@ stream;
 
 
 
-fetch(
+// créer live serveur
+
+const response =
+await fetch(
 "/start-camera-live",
 {
 
-method:"POST",
-
-headers:{
-
-"Content-Type":
-"application/json"
-
-},
-
-
-body:
-JSON.stringify({
-
-room:room
-
-})
+method:"POST"
 
 }
-
 );
 
 
+
+const data =
+await response.json();
+
+
+
+
+
+if(data.success){
+
+
+room =
+"camera_live_" + data.live_id;
+
+
+
+socket.emit(
+"join_camera",
+{
+
+room:room,
+
+creator:true
+
+}
+);
 
 
 
@@ -562,14 +467,23 @@ liveStatus.innerHTML =
 "🔴 LIVE EN COURS";
 
 
-
 message.innerHTML =
 "Votre caméra est en direct";
 
 
+}
+
+else{
+
+
+message.innerHTML =
+"❌ Impossible de créer le live";
+
 
 }
 
+
+}
 
 catch(error){
 
@@ -583,7 +497,6 @@ error.message;
 }
 
 
-
 };
 
 
@@ -595,9 +508,8 @@ error.message;
 
 
 // ==========================
-// ARRETER
+// ARRETER LIVE
 // ==========================
-
 
 document
 .getElementById("stopBtn")
@@ -608,37 +520,32 @@ document
 if(stream){
 
 
-stream
-.getTracks()
-.forEach(track=>{
+stream.getTracks().forEach(
+track=>{
 
 track.stop();
 
 });
 
-
 }
 
 
 
-
-
-Object.values(peers)
-.forEach(peer=>{
-
+Object.values(peers).forEach(
+peer=>{
 
 peer.close();
-
 
 });
 
 
 
-
-peers = {};
-
+peers={};
 
 
+
+
+if(room){
 
 
 socket.emit(
@@ -648,10 +555,10 @@ socket.emit(
 room:room
 
 }
-
 );
 
 
+}
 
 
 
@@ -659,10 +566,8 @@ liveStatus.innerHTML =
 "⛔ Live arrêté";
 
 
-
 message.innerHTML =
 "Diffusion terminée";
-
 
 
 
@@ -680,7 +585,6 @@ message.innerHTML =
 // PLEIN ECRAN
 // ==========================
 
-
 document
 .getElementById("fullscreenBtn")
 .onclick =
@@ -689,22 +593,16 @@ document
 
 if(video.requestFullscreen){
 
-
 video.requestFullscreen();
 
-
 }
-
 
 
 };
 
 
 
-
-
 </script>
-
 
 
 {% endblock %}
