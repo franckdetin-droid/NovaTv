@@ -1274,21 +1274,21 @@ def history():
 
 
 # ==========================
-# LISTE DES CAMERAS EN DIRECT
+# PAGE CAMERAS EN DIRECT
 # ==========================
 @main.route("/camera-live")
 def camera_live():
 
-    cameras = LiveStream.query.filter_by(
+    live = LiveStream.query.filter_by(
         live_source="camera",
         is_live=True
-    ).all()
+    ).first()
+
 
     return render_template(
         "camera_live.html",
-        cameras=cameras
-    )
-
+        live_id=live.id if live else None
+        )
 # ==========================
 # CREER LIVE CAMERA
 # ==========================
@@ -1299,13 +1299,10 @@ def camera_live():
 )
 def create_camera_stream():
 
-
     if "user_id" not in session:
-
-        return redirect(
-            url_for("main.login")
-        )
-
+        return {
+            "error": "non connecté"
+        }, 401
 
 
     channel = Channel.query.filter_by(
@@ -1313,28 +1310,46 @@ def create_camera_stream():
     ).first()
 
 
-
     if not channel:
+        return {
+            "error": "Créer une chaîne"
+        }, 400
 
-        return "Vous devez créer une chaîne"
+
+
+    # éviter plusieurs lives caméra du même créateur
+
+    old_live = LiveStream.query.filter_by(
+        channel_id=channel.id,
+        live_source="camera",
+        is_live=True
+    ).first()
+
+
+    if old_live:
+        return {
+            "success": True,
+            "live_id": old_live.id
+        }
 
 
 
     live = LiveStream(
 
-    channel_id=channel.id,
+        channel_id=channel.id,
 
-    title="🎥 Live caméra",
+        title="🎥 Live caméra",
 
-    stream_url=None,
+        stream_url="camera",
 
-    live_source="camera",
+        live_source="camera",
 
-    is_live=True,
+        is_live=True,
 
-    started_at=datetime.utcnow()
+        started_at=datetime.utcnow()
 
     )
+
 
     db.session.add(live)
 
@@ -1342,39 +1357,48 @@ def create_camera_stream():
 
 
 
-    return "Live caméra démarré"
-
-
+    return {
+        "success": True,
+        "live_id": live.id
+    }
 
 
 
 # ==========================
 # ARRETER LIVE CAMERA
 # ==========================
+
 @main.route(
     "/stop-camera-live",
     methods=["POST"]
 )
 def stop_camera_stream():
 
+    if "user_id" not in session:
+        return {
+            "error":"non connecté"
+        },401
+
+
     live = LiveStream.query.filter_by(
         live_source="camera",
         is_live=True
     ).first()
 
-    if live:
 
+    if live:
 
         live.is_live = False
 
         live.stopped_at = datetime.utcnow()
 
-
         db.session.commit()
 
 
 
-    return "Live caméra arrêté"
+    return {
+        "success":True
+    }
 
 
 
@@ -1397,7 +1421,8 @@ def watch_camera(live_id):
 
     return render_template(
         "watch_camera.html",
-        live=live
+        live=live,
+        live_id=live.id
     )
     # ==========================
 # AJOUTER MA LISTE
