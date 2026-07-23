@@ -421,6 +421,51 @@ def create_channel():
 
                 print("Logo uploadé :", logo_url)
 
+# ==========================
+# CREER UNE CHAINE
+# ==========================
+@main.route(
+    "/create-channel",
+    methods=["GET", "POST"]
+)
+def create_channel():
+
+    import traceback
+
+    if "user_id" not in session:
+        return redirect(
+            url_for("main.login")
+        )
+
+    if request.method == "POST":
+        try:
+            name = request.form["name"]
+            category = request.form["category"]
+            description = request.form["description"]
+
+            logo = request.files.get("logo")
+            cover = request.files.get("cover")
+
+            print("FILES REÇUS :", request.files)
+
+            logo_url = None
+            cover_url = None
+
+            # ==========================
+            # UPLOAD LOGO CLOUDINARY
+            # ==========================
+            if logo and logo.filename:
+                print("Upload logo en cours...")
+
+                upload_logo = cloudinary.uploader.upload(
+                    logo.read(),
+                    folder="novatv/logos"
+                )
+
+                logo_url = upload_logo.get("secure_url")
+
+                print("Logo uploadé :", logo_url)
+
             # ==========================
             # UPLOAD COVER CLOUDINARY
             # ==========================
@@ -464,77 +509,7 @@ def create_channel():
 
     return render_template(
         "create_channel.html"
-            )
-
-
-
-        # ==========================
-        # UPLOAD LOGO CLOUDINARY
-        # ==========================
-
-        if logo and logo.filename:
-
-            upload_logo = cloudinary.uploader.upload(
-                logo,
-                folder="novatv/logos"
-            )
-
-            logo_url = upload_logo["secure_url"]
-
-
-
-        # ==========================
-        # UPLOAD COVER CLOUDINARY
-        # ==========================
-
-        if cover and cover.filename:
-
-            upload_cover = cloudinary.uploader.upload(
-                cover,
-                folder="novatv/covers"
-            )
-
-            cover_url = upload_cover["secure_url"]
-
-
-
-        # ==========================
-        # CREATION CHAINE
-        # ==========================
-
-        channel = Channel(
-
-            user_id=session["user_id"],
-
-            name=name,
-
-            category=category,
-
-            description=description,
-
-            logo=logo_url,
-
-            cover=cover_url
-
-        )
-
-
-
-        db.session.add(channel)
-
-        db.session.commit()
-
-
-
-        return redirect(
-            url_for("main.channels")
-        )
-
-
-
-    return render_template(
-        "create_channel.html"
-    )
+                )
     # ==========================
 # UPLOAD VIDEO PRO UPPY + CLOUDINARY
 # ==========================
