@@ -1,13 +1,14 @@
 {% extends "base.html" %}
 
-
 {% block title %}
 Direct - MY TV APP
 {% endblock %}
 
 
-
 {% block content %}
+
+
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
 
 
 <section class="live-page">
@@ -38,7 +39,6 @@ alt="{{ live.channel.name }}">
 {% endif %}
 
 
-
 <h2>
 
 {% if live.channel %}
@@ -54,7 +54,6 @@ Chaîne inconnue
 </h2>
 
 
-
 <span class="live-badge">
 🔴 EN DIRECT
 </span>
@@ -68,11 +67,6 @@ Chaîne inconnue
 
 <div class="live-player">
 
-
-
-<!-- ==========================
-     LIVE URL HLS / M3U8
-========================== -->
 
 
 {% if live.live_source == "url" %}
@@ -99,12 +93,8 @@ Votre navigateur ne supporte pas ce flux.
 
 
 
-<!-- ==========================
-     LIVE CAMERA WEBRTC
-========================== -->
-
-
 {% elif live.live_source == "camera" %}
+
 
 
 <video
@@ -131,13 +121,19 @@ width="100%">
 
 
 
+
+
 <script>
 
 
 (function(){
 
 
-const socket = io();
+const socket = io({
+
+    reconnection:true
+
+});
 
 
 
@@ -163,6 +159,9 @@ const room =
 let peer = null;
 
 let creatorId = null;
+
+
+
 
 
 
@@ -193,6 +192,11 @@ peer.ontrack =
 (event)=>{
 
 
+console.log(
+"🎥 Flux reçu"
+);
+
+
 if(event.streams[0]){
 
 
@@ -203,7 +207,6 @@ event.streams[0];
 video.play();
 
 
-
 status.innerHTML =
 "🔴 Live caméra en direct";
 
@@ -212,6 +215,8 @@ status.innerHTML =
 
 
 };
+
+
 
 
 
@@ -228,7 +233,9 @@ creatorId
 
 
 socket.emit(
+
 "camera_ice",
+
 {
 
 candidate:
@@ -248,7 +255,6 @@ creatorId
 };
 
 
-
 }
 
 
@@ -263,13 +269,15 @@ socket.on(
 
 
 console.log(
-"Socket connecté caméra"
+"✅ Spectateur connecté"
 );
 
 
 
 socket.emit(
+
 "join_camera",
+
 {
 
 room:
@@ -283,7 +291,16 @@ creator:false
 
 
 
+console.log(
+"👀 Rejoint :",
+room
+);
+
+
+
 });
+
+
 
 
 
@@ -294,6 +311,12 @@ creator:false
 socket.on(
 "camera_offer",
 async(data)=>{
+
+
+console.log(
+"📡 Offre reçue"
+);
+
 
 
 try{
@@ -340,14 +363,14 @@ answer
 
 
 socket.emit(
+
 "camera_answer",
+
 {
 
-answer:
-answer,
+answer:answer,
 
-target:
-creatorId
+target:creatorId
 
 }
 
@@ -355,12 +378,18 @@ creatorId
 
 
 
+console.log(
+"✅ Réponse envoyée"
+);
+
+
+
 }
 
-catch(e){
+catch(error){
 
 
-console.log(e);
+console.log(error);
 
 
 status.innerHTML =
@@ -372,6 +401,8 @@ status.innerHTML =
 
 
 });
+
+
 
 
 
@@ -404,15 +435,17 @@ data.candidate
 
 }
 
-catch(e){
+catch(error){
 
-console.log(e);
+console.log(error);
 
 }
 
 
 
 });
+
+
 
 
 
@@ -432,14 +465,19 @@ status.innerHTML =
 video.srcObject=null;
 
 
+
 if(peer){
 
 peer.close();
 
+peer=null;
+
 }
 
 
+
 });
+
 
 
 
@@ -453,10 +491,6 @@ peer.close();
 
 
 
-
-<!-- ==========================
-     AUCUN FLUX
-========================== -->
 
 
 {% else %}
@@ -472,6 +506,8 @@ peer.close();
 
 
 </div>
+
+
 
 
 
@@ -519,12 +555,6 @@ Aucun direct disponible actuellement.
 
 
 </section>
-
-
-
-
-
-<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
 
 
 
