@@ -1,35 +1,25 @@
 {% extends "base.html" %}
 
-
 {% block title %}
 Appel vidéo - MY TV APP
 {% endblock %}
 
 
-
 {% block content %}
-
 
 <section class="video-page">
 
-
-<h1>
-📹 Appel vidéo multi-personnes
-</h1>
-
+<h1>📹 Appel vidéo multi-personnes</h1>
 
 
 <div id="videos" class="video-grid">
 
 
-<!-- Ma caméra -->
-
 <div class="video-box">
 
 <p>Moi</p>
 
-<video
-id="localVideo"
+<video id="localVideo"
 autoplay
 playsinline
 muted>
@@ -42,9 +32,6 @@ muted>
 
 
 
-<div class="buttons">
-
-
 <button id="startBtn">
 🟢 Rejoindre l'appel
 </button>
@@ -55,24 +42,16 @@ muted>
 </button>
 
 
-</div>
-
-
-
 <p id="status">
 En attente...
 </p>
-
 
 
 </section>
 
 
 
-
-
 <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
-
 
 
 <script>
@@ -83,33 +62,25 @@ const socket = io();
 
 let localStream = null;
 
-
 let peers = {};
 
-
-let room = "video_room_1";
-
+const room = "video_room_1";
 
 
 const videos =
-document.getElementById(
-"videos"
-);
-
+document.getElementById("videos");
 
 
 const status =
-document.getElementById(
-"status"
-);
+document.getElementById("status");
 
 
 
 
 
-// =====================
-// DEMARRER CAMERA
-// =====================
+// ======================
+// START CAMERA
+// ======================
 
 
 document
@@ -146,7 +117,6 @@ room:room
 );
 
 
-
 status.innerHTML =
 "🟢 Connecté";
 
@@ -155,10 +125,8 @@ status.innerHTML =
 
 catch(e){
 
-
 status.innerHTML =
-"Erreur caméra : "+e.message;
-
+"❌ "+e.message;
 
 }
 
@@ -170,24 +138,30 @@ status.innerHTML =
 
 
 
-
-// =====================
-// NOUVEAUX UTILISATEURS
-// =====================
+// ======================
+// ANCIENS UTILISATEURS
+// ======================
 
 
 socket.on(
 "all_users",
-async(data)=>{
+async(users)=>{
+
+
+console.log(
+"Utilisateurs présents",
+users
+);
+
 
 
 for(
-let user of data.users
+let id of users
 ){
 
 
 createPeer(
-user,
+id,
 true
 );
 
@@ -202,10 +176,14 @@ true
 
 
 
+// ======================
+// NOUVEL UTILISATEUR
+// ======================
+
 
 socket.on(
 "user_joined",
-async(data)=>{
+(data)=>{
 
 
 createPeer(
@@ -222,19 +200,16 @@ true
 
 
 
+// ======================
+// CREATION PEER
+// ======================
 
-// =====================
-// CREER CONNEXION
-// =====================
 
-
-function createPeer(id,createOffer){
-
+function createPeer(id,offer){
 
 
 if(peers[id])
 return;
-
 
 
 let peer =
@@ -258,11 +233,6 @@ peers[id]=peer;
 
 
 
-
-
-// envoyer caméra micro
-
-
 localStream
 .getTracks()
 .forEach(track=>{
@@ -280,17 +250,13 @@ localStream
 
 
 
-
-// recevoir caméra distante
-
-
 peer.ontrack =
 (event)=>{
 
 
 let video =
 document.getElementById(
-"video_"+id
+"remote_"+id
 );
 
 
@@ -305,12 +271,13 @@ document.createElement(
 
 
 video.id =
-"video_"+id;
+"remote_"+id;
 
 
 video.autoplay=true;
 
 video.playsInline=true;
+
 
 
 let box =
@@ -323,30 +290,15 @@ box.className =
 "video-box";
 
 
-let title =
-document.createElement(
-"p"
-);
+box.innerHTML =
+"<p>Participant</p>";
 
 
-title.innerHTML =
-"Participant";
+
+box.appendChild(video);
 
 
-box.appendChild(
-title
-);
-
-
-box.appendChild(
-video
-);
-
-
-videos.appendChild(
-box
-);
-
+videos.appendChild(box);
 
 
 }
@@ -362,10 +314,6 @@ event.streams[0];
 
 
 
-
-
-
-// ICE
 
 
 peer.onicecandidate =
@@ -398,22 +346,15 @@ candidate:event.candidate
 
 
 
-
-// créer offre
-
-
-if(createOffer){
+if(offer){
 
 
 peer.createOffer()
 
-.then(
-offer=>{
+.then(async(o)=>{
 
 
-peer.setLocalDescription(
-offer
-);
+await peer.setLocalDescription(o);
 
 
 
@@ -423,7 +364,7 @@ socket.emit(
 
 target:id,
 
-offer:offer
+offer:o
 
 }
 
@@ -439,7 +380,6 @@ offer:offer
 
 return peer;
 
-
 }
 
 
@@ -448,9 +388,9 @@ return peer;
 
 
 
-// =====================
-// OFFRE RECUE
-// =====================
+// ======================
+// OFFER
+// ======================
 
 
 socket.on(
@@ -480,7 +420,6 @@ let answer =
 await peer.createAnswer();
 
 
-
 await peer.setLocalDescription(
 answer
 );
@@ -500,7 +439,6 @@ answer:answer
 );
 
 
-
 });
 
 
@@ -510,9 +448,9 @@ answer:answer
 
 
 
-// =====================
-// REPONSE
-// =====================
+// ======================
+// ANSWER
+// ======================
 
 
 socket.on(
@@ -548,9 +486,9 @@ data.answer
 
 
 
-// =====================
+// ======================
 // ICE
-// =====================
+// ======================
 
 
 socket.on(
@@ -569,14 +507,12 @@ await peer.addIceCandidate(
 
 new RTCIceCandidate(
 data.candidate
-
 )
 
 );
 
 
 }
-
 
 
 });
@@ -587,10 +523,9 @@ data.candidate
 
 
 
-
-// =====================
+// ======================
 // QUITTER
-// =====================
+// ======================
 
 
 document
@@ -611,20 +546,31 @@ t=>t.stop()
 }
 
 
+
 Object.values(peers)
 .forEach(
 p=>p.close()
 );
 
 
+
 peers={};
+
+
+
+socket.emit(
+"leave_room",
+{
+room:room
+}
+);
+
 
 
 location.reload();
 
 
 };
-
 
 
 
@@ -637,7 +583,6 @@ location.reload();
 
 .video-grid{
 
-
 display:grid;
 
 grid-template-columns:
@@ -645,13 +590,11 @@ repeat(auto-fit,minmax(250px,1fr));
 
 gap:15px;
 
-
 }
 
 
 
 .video-box{
-
 
 background:#111;
 
@@ -659,13 +602,11 @@ padding:10px;
 
 border-radius:10px;
 
-
 }
 
 
 
 .video-box video{
-
 
 width:100%;
 
@@ -675,13 +616,11 @@ object-fit:cover;
 
 border-radius:10px;
 
-
 }
 
 
 
 button{
-
 
 padding:15px;
 
@@ -691,12 +630,10 @@ border-radius:10px;
 
 font-size:18px;
 
-
 }
 
 
 </style>
-
 
 
 {% endblock %}
