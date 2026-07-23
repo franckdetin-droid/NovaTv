@@ -192,11 +192,9 @@ serverStatus.innerHTML =
 socket.emit(
 "join_camera",
 {
-
-room:room
-
+    room: room,
+    creator: true
 }
-
 );
 
 
@@ -369,12 +367,9 @@ offer
 socket.emit(
 "camera_offer",
 {
-room: room,
-
-offer: offer,
-
-target: data.viewer
-
+    room: room,
+    offer: offer,
+    target: data.viewer_id
 }
 );
 
