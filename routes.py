@@ -635,7 +635,6 @@ def upload_video():
 
 
 
-
 # ==========================
 # SUPPRIMER VIDEO
 # ==========================
@@ -663,10 +662,10 @@ def delete_video(video_id):
 
 
     if not channel or channel.user_id != session["user_id"]:
-        return "❌ Pas autorisé"
+        return "❌ Vous n'avez pas l'autorisation"
 
 
-        try:
+    try:
 
         # Supprimer historique
         History.query.filter_by(
@@ -692,7 +691,7 @@ def delete_video(video_id):
         ).delete()
 
 
-        # Supprimer Cloudinary vidéo
+        # Supprimer vidéo Cloudinary
         if video.file_path:
 
             cloudinary.uploader.destroy(
@@ -701,7 +700,7 @@ def delete_video(video_id):
             )
 
 
-        # Supprimer miniature
+        # Supprimer miniature Cloudinary
         if video.thumbnail:
 
             cloudinary.uploader.destroy(
