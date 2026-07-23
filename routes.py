@@ -1556,29 +1556,81 @@ def my_list():
 )
 def delete_channel(channel_id):
 
-
     if "user_id" not in session:
-
         return redirect(
             url_for("main.login")
         )
-
-
 
     channel = Channel.query.get_or_404(
         channel_id
     )
 
-
-
-    # Vérifier propriétaire
-
     if channel.user_id != session["user_id"]:
-
         return "Accès refusé"
 
 
+    try:
+        # supprimer les vidéos liées
+        videos = Video.query.filter_by(
+            channel_id=channel.id
+        ).all()
 
+        for video in videos:
+
+            History.query.filter_by(
+                video_id=video.id
+            ).delete(
+                synchronize_session=False
+            )
+
+            Favorite.query.filter_by(
+                video_id=video.id
+            ).delete(
+                synchronize_session=False
+            )
+
+            VideoLike.query.filter_by(
+                video_id=video.id
+            ).delete(
+                synchronize_session=False
+            )
+
+
+            db.session.delete(video)
+
+
+        # supprimer les programmes
+        Program.query.filter_by(
+            channel_id=channel.id
+        ).delete(
+            synchronize_session=False
+        )
+
+
+        # supprimer les lives
+        LiveStream.query.filter_by(
+            channel_id=channel.id
+        ).delete(
+            synchronize_session=False
+        )
+
+
+        # supprimer la chaîne
+        db.session.delete(channel)
+
+        db.session.commit()
+
+
+    except Exception as e:
+
+        db.session.rollback()
+
+        return f"Erreur suppression : {e}"
+
+
+    return redirect(
+        url_for("main.creator")
+    )
 
 
     # ==========================
