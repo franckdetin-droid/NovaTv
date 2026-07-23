@@ -86,7 +86,6 @@ type="application/x-mpegURL">
 
 Votre navigateur ne supporte pas ce flux.
 
-
 </video>
 
 
@@ -104,6 +103,8 @@ id="remoteVideo-{{ live.id }}"
 autoplay
 
 playsinline
+
+muted
 
 controls
 
@@ -131,7 +132,7 @@ width="100%">
 
 const socket = io({
 
-    reconnection:true
+reconnection:true
 
 });
 
@@ -175,8 +176,15 @@ iceServers:[
 
 {
 
-urls:
-"stun:stun.l.google.com:19302"
+urls:[
+
+"stun:stun.l.google.com:19302",
+
+"stun:stun1.l.google.com:19302",
+
+"stun:stun2.l.google.com:19302"
+
+]
 
 }
 
@@ -188,13 +196,17 @@ urls:
 
 
 
+// VIDEO RECUE
+
 peer.ontrack =
 (event)=>{
 
 
 console.log(
-"🎥 Flux reçu"
+"🎥 Flux vidéo reçu",
+event
 );
+
 
 
 if(event.streams[0]){
@@ -204,7 +216,11 @@ video.srcObject =
 event.streams[0];
 
 
-video.play();
+video.play()
+.catch(
+err=>console.log(err)
+);
+
 
 
 status.innerHTML =
@@ -222,6 +238,55 @@ status.innerHTML =
 
 
 
+// ETAT CONNEXION
+
+peer.onconnectionstatechange =
+()=>{
+
+
+console.log(
+"WebRTC :",
+peer.connectionState
+);
+
+
+
+if(
+peer.connectionState === "connected"
+){
+
+
+status.innerHTML =
+"🟢 Connecté au live";
+
+
+}
+
+
+
+if(
+peer.connectionState === "failed"
+){
+
+
+status.innerHTML =
+"❌ Connexion WebRTC échouée";
+
+
+}
+
+
+
+};
+
+
+
+
+
+
+
+// ICE
+
 peer.onicecandidate =
 (event)=>{
 
@@ -238,11 +303,9 @@ socket.emit(
 
 {
 
-candidate:
-event.candidate,
+candidate:event.candidate,
 
-target:
-creatorId
+target:creatorId
 
 }
 
@@ -255,6 +318,7 @@ creatorId
 };
 
 
+
 }
 
 
@@ -262,6 +326,9 @@ creatorId
 
 
 
+
+
+// SOCKET CONNECTE
 
 socket.on(
 "connect",
@@ -280,8 +347,7 @@ socket.emit(
 
 {
 
-room:
-room,
+room:room,
 
 creator:false
 
@@ -292,7 +358,7 @@ creator:false
 
 
 console.log(
-"👀 Rejoint :",
+"👀 Chambre :",
 room
 );
 
@@ -307,6 +373,8 @@ room
 
 
 
+
+// OFFER CREATEUR
 
 socket.on(
 "camera_offer",
@@ -386,10 +454,14 @@ console.log(
 
 }
 
+
 catch(error){
 
 
-console.log(error);
+console.log(
+"Erreur WebRTC :",
+error
+);
 
 
 status.innerHTML =
@@ -409,6 +481,7 @@ status.innerHTML =
 
 
 
+// ICE
 
 socket.on(
 "camera_ice",
@@ -437,7 +510,10 @@ data.candidate
 
 catch(error){
 
-console.log(error);
+console.log(
+"ICE erreur",
+error
+);
 
 }
 
@@ -452,6 +528,7 @@ console.log(error);
 
 
 
+// LIVE ARRETE
 
 socket.on(
 "camera_stopped",
@@ -532,7 +609,6 @@ Chaîne :
 Inconnue
 
 {% endif %}
-
 
 </p>
 
