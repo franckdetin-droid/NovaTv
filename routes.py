@@ -717,11 +717,12 @@ def delete_video(video_id):
 
     except Exception as e:
 
-        db.session.rollback()
+    db.session.rollback()
 
-        print("ERREUR DELETE VIDEO :", e)
+    import traceback
+    traceback.print_exc()
 
-        return "Erreur suppression"
+    return f"Erreur suppression : {e}"
 
 
     return redirect(
