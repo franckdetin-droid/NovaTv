@@ -1210,15 +1210,13 @@ def history():
 # ==========================
 # LISTE DES CAMERAS EN DIRECT
 # ==========================
-
 @main.route("/camera-live")
 def camera_live():
 
     cameras = LiveStream.query.filter_by(
-        stream_url="camera",
+        live_source="camera",
         is_live=True
     ).all()
-
 
     return render_template(
         "camera_live.html",
@@ -1293,13 +1291,10 @@ def create_camera_stream():
 )
 def stop_camera_stream():
 
-
     live = LiveStream.query.filter_by(
-        stream_url="camera",
+        live_source="camera",
         is_live=True
     ).first()
-
-
 
     if live:
 
