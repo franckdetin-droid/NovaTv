@@ -1,0 +1,702 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Appel vidéo - MY TV APP
+{% endblock %}
+
+
+
+{% block content %}
+
+
+<section class="video-page">
+
+
+<h1>
+📹 Appel vidéo multi-personnes
+</h1>
+
+
+
+<div id="videos" class="video-grid">
+
+
+<!-- Ma caméra -->
+
+<div class="video-box">
+
+<p>Moi</p>
+
+<video
+id="localVideo"
+autoplay
+playsinline
+muted>
+</video>
+
+</div>
+
+
+</div>
+
+
+
+<div class="buttons">
+
+
+<button id="startBtn">
+🟢 Rejoindre l'appel
+</button>
+
+
+<button id="stopBtn">
+🔴 Quitter
+</button>
+
+
+</div>
+
+
+
+<p id="status">
+En attente...
+</p>
+
+
+
+</section>
+
+
+
+
+
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+
+
+
+<script>
+
+
+const socket = io();
+
+
+let localStream = null;
+
+
+let peers = {};
+
+
+let room = "video_room_1";
+
+
+
+const videos =
+document.getElementById(
+"videos"
+);
+
+
+
+const status =
+document.getElementById(
+"status"
+);
+
+
+
+
+
+// =====================
+// DEMARRER CAMERA
+// =====================
+
+
+document
+.getElementById("startBtn")
+.onclick = async()=>{
+
+
+try{
+
+
+localStream =
+await navigator.mediaDevices.getUserMedia({
+
+video:true,
+
+audio:true
+
+});
+
+
+
+document
+.getElementById("localVideo")
+.srcObject =
+localStream;
+
+
+
+socket.emit(
+"join_room",
+{
+room:room
+}
+);
+
+
+
+status.innerHTML =
+"🟢 Connecté";
+
+
+}
+
+catch(e){
+
+
+status.innerHTML =
+"Erreur caméra : "+e.message;
+
+
+}
+
+
+};
+
+
+
+
+
+
+
+// =====================
+// NOUVEAUX UTILISATEURS
+// =====================
+
+
+socket.on(
+"all_users",
+async(data)=>{
+
+
+for(
+let user of data.users
+){
+
+
+createPeer(
+user,
+true
+);
+
+
+}
+
+
+});
+
+
+
+
+
+
+
+socket.on(
+"user_joined",
+async(data)=>{
+
+
+createPeer(
+data.id,
+true
+);
+
+
+});
+
+
+
+
+
+
+
+
+// =====================
+// CREER CONNEXION
+// =====================
+
+
+function createPeer(id,createOffer){
+
+
+
+if(peers[id])
+return;
+
+
+
+let peer =
+new RTCPeerConnection({
+
+iceServers:[
+
+{
+urls:
+"stun:stun.l.google.com:19302"
+}
+
+]
+
+});
+
+
+
+peers[id]=peer;
+
+
+
+
+
+
+// envoyer caméra micro
+
+
+localStream
+.getTracks()
+.forEach(track=>{
+
+
+peer.addTrack(
+track,
+localStream
+);
+
+
+});
+
+
+
+
+
+
+// recevoir caméra distante
+
+
+peer.ontrack =
+(event)=>{
+
+
+let video =
+document.getElementById(
+"video_"+id
+);
+
+
+
+if(!video){
+
+
+video =
+document.createElement(
+"video"
+);
+
+
+video.id =
+"video_"+id;
+
+
+video.autoplay=true;
+
+video.playsInline=true;
+
+
+let box =
+document.createElement(
+"div"
+);
+
+
+box.className =
+"video-box";
+
+
+let title =
+document.createElement(
+"p"
+);
+
+
+title.innerHTML =
+"Participant";
+
+
+box.appendChild(
+title
+);
+
+
+box.appendChild(
+video
+);
+
+
+videos.appendChild(
+box
+);
+
+
+
+}
+
+
+
+video.srcObject =
+event.streams[0];
+
+
+};
+
+
+
+
+
+
+
+// ICE
+
+
+peer.onicecandidate =
+(event)=>{
+
+
+if(event.candidate){
+
+
+socket.emit(
+"ice_candidate",
+{
+
+target:id,
+
+candidate:event.candidate
+
+}
+
+);
+
+
+}
+
+
+};
+
+
+
+
+
+
+
+// créer offre
+
+
+if(createOffer){
+
+
+peer.createOffer()
+
+.then(
+offer=>{
+
+
+peer.setLocalDescription(
+offer
+);
+
+
+
+socket.emit(
+"offer",
+{
+
+target:id,
+
+offer:offer
+
+}
+
+);
+
+
+});
+
+
+}
+
+
+
+return peer;
+
+
+}
+
+
+
+
+
+
+
+// =====================
+// OFFRE RECUE
+// =====================
+
+
+socket.on(
+"offer",
+async(data)=>{
+
+
+let peer =
+createPeer(
+data.from,
+false
+);
+
+
+
+await peer.setRemoteDescription(
+
+new RTCSessionDescription(
+data.offer
+)
+
+);
+
+
+
+let answer =
+await peer.createAnswer();
+
+
+
+await peer.setLocalDescription(
+answer
+);
+
+
+
+socket.emit(
+"answer",
+{
+
+target:data.from,
+
+answer:answer
+
+}
+
+);
+
+
+
+});
+
+
+
+
+
+
+
+
+// =====================
+// REPONSE
+// =====================
+
+
+socket.on(
+"answer",
+async(data)=>{
+
+
+let peer =
+peers[data.from];
+
+
+if(peer){
+
+
+await peer.setRemoteDescription(
+
+new RTCSessionDescription(
+data.answer
+)
+
+);
+
+
+}
+
+
+});
+
+
+
+
+
+
+
+
+// =====================
+// ICE
+// =====================
+
+
+socket.on(
+"ice_candidate",
+async(data)=>{
+
+
+let peer =
+peers[data.from];
+
+
+if(peer){
+
+
+await peer.addIceCandidate(
+
+new RTCIceCandidate(
+data.candidate
+
+)
+
+);
+
+
+}
+
+
+
+});
+
+
+
+
+
+
+
+
+// =====================
+// QUITTER
+// =====================
+
+
+document
+.getElementById("stopBtn")
+.onclick = ()=>{
+
+
+if(localStream){
+
+
+localStream
+.getTracks()
+.forEach(
+t=>t.stop()
+);
+
+
+}
+
+
+Object.values(peers)
+.forEach(
+p=>p.close()
+);
+
+
+peers={};
+
+
+location.reload();
+
+
+};
+
+
+
+
+</script>
+
+
+
+<style>
+
+
+.video-grid{
+
+
+display:grid;
+
+grid-template-columns:
+repeat(auto-fit,minmax(250px,1fr));
+
+gap:15px;
+
+
+}
+
+
+
+.video-box{
+
+
+background:#111;
+
+padding:10px;
+
+border-radius:10px;
+
+
+}
+
+
+
+.video-box video{
+
+
+width:100%;
+
+height:250px;
+
+object-fit:cover;
+
+border-radius:10px;
+
+
+}
+
+
+
+button{
+
+
+padding:15px;
+
+margin:10px;
+
+border-radius:10px;
+
+font-size:18px;
+
+
+}
+
+
+</style>
+
+
+
+{% endblock %}
