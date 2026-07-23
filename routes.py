@@ -657,32 +657,76 @@ def delete_video(video_id):
     )
 
 
-    # Vérifier que la vidéo appartient bien au créateur connecté
-
     channel = Channel.query.get(
         video.channel_id
     )
 
 
     if not channel or channel.user_id != session["user_id"]:
-        return "❌ Vous n'avez pas l'autorisation de supprimer cette vidéo"
+        return "❌ Pas autorisé"
 
 
-    # Supprimer la vidéo de la base
+    try:
 
-    db.session.delete(video)
+        # Supprimer historique
+        History.query.filter_by(
+            video_id=video.id
+        ).delete()
 
-    db.session.commit()
+
+        # Supprimer favoris
+        Favorite.query.filter_by(
+            video_id=video.id
+        ).delete()
+
+
+        # Supprimer likes
+        VideoLike.query.filter_by(
+            video_id=video.id
+        ).delete()
+
+
+        # Supprimer programmes liés
+        Program.query.filter_by(
+            video_id=video.id
+        ).delete()
+
+
+        # Supprimer Cloudinary vidéo
+        if video.file_path:
+
+            cloudinary.uploader.destroy(
+                get_cloudinary_public_id(video.file_path),
+                resource_type="video"
+            )
+
+
+        # Supprimer miniature
+        if video.thumbnail:
+
+            cloudinary.uploader.destroy(
+                get_cloudinary_public_id(video.thumbnail)
+            )
+
+
+        # Supprimer la vidéo
+        db.session.delete(video)
+
+        db.session.commit()
+
+
+    except Exception as e:
+
+        db.session.rollback()
+
+        print("ERREUR DELETE VIDEO :", e)
+
+        return "Erreur suppression"
 
 
     return redirect(
         url_for("main.creator")
     )
-
-
-
-
-        
 
 
 
