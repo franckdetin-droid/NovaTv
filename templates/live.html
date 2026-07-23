@@ -10,7 +10,6 @@ Direct - MY TV APP
 {% block content %}
 
 
-
 <section class="live-page">
 
 
@@ -20,17 +19,13 @@ Direct - MY TV APP
 
 
 
-
 {% for live in lives %}
-
 
 
 <div class="live-card">
 
 
-
 <div class="live-header">
-
 
 
 {% if live.channel and live.channel.logo %}
@@ -41,7 +36,6 @@ class="live-logo"
 alt="{{ live.channel.name }}">
 
 {% endif %}
-
 
 
 
@@ -66,10 +60,7 @@ Chaîne inconnue
 </span>
 
 
-
 </div>
-
-
 
 
 
@@ -80,11 +71,11 @@ Chaîne inconnue
 
 
 <!-- ==========================
-     LIVE HLS / M3U8
+     LIVE URL HLS / M3U8
 ========================== -->
 
-{% if live.stream_url and live.stream_url.startswith("http") %}
 
+{% if live.live_source == "url" %}
 
 
 <video
@@ -101,7 +92,10 @@ type="application/x-mpegURL">
 
 Votre navigateur ne supporte pas ce flux.
 
+
 </video>
+
+
 
 
 
@@ -110,23 +104,353 @@ Votre navigateur ne supporte pas ce flux.
 ========================== -->
 
 
-{% elif live.stream_url == "camera" %}
-
+{% elif live.live_source == "camera" %}
 
 
 <video
+
 id="remoteVideo-{{ live.id }}"
+
 autoplay
+
 playsinline
+
 controls
+
 width="100%">
+
 </video>
 
 
 
 <p id="liveStatus-{{ live.id }}">
-🔄 Connexion au live caméra...
+
+🟡 Connexion caméra...
+
 </p>
+
+
+
+<script>
+
+
+(function(){
+
+
+const socket = io();
+
+
+
+const video =
+document.getElementById(
+"remoteVideo-{{ live.id }}"
+);
+
+
+
+const status =
+document.getElementById(
+"liveStatus-{{ live.id }}"
+);
+
+
+
+const room =
+"camera_live_{{ live.id }}";
+
+
+
+let peer = null;
+
+let creatorId = null;
+
+
+
+function createPeer(){
+
+
+peer =
+new RTCPeerConnection({
+
+iceServers:[
+
+{
+
+urls:
+"stun:stun.l.google.com:19302"
+
+}
+
+]
+
+});
+
+
+
+
+
+peer.ontrack =
+(event)=>{
+
+
+if(event.streams[0]){
+
+
+video.srcObject =
+event.streams[0];
+
+
+video.play();
+
+
+
+status.innerHTML =
+"🔴 Live caméra en direct";
+
+
+}
+
+
+};
+
+
+
+
+
+peer.onicecandidate =
+(event)=>{
+
+
+if(
+event.candidate &&
+creatorId
+){
+
+
+socket.emit(
+"camera_ice",
+{
+
+candidate:
+event.candidate,
+
+target:
+creatorId
+
+}
+
+);
+
+
+}
+
+
+};
+
+
+
+}
+
+
+
+
+
+
+
+socket.on(
+"connect",
+()=>{
+
+
+console.log(
+"Socket connecté caméra"
+);
+
+
+
+socket.emit(
+"join_camera",
+{
+
+room:
+room,
+
+creator:false
+
+}
+
+);
+
+
+
+});
+
+
+
+
+
+
+
+socket.on(
+"camera_offer",
+async(data)=>{
+
+
+try{
+
+
+creatorId =
+data.sender;
+
+
+
+if(!peer){
+
+createPeer();
+
+}
+
+
+
+
+await peer.setRemoteDescription(
+
+new RTCSessionDescription(
+data.offer
+)
+
+);
+
+
+
+
+
+const answer =
+await peer.createAnswer();
+
+
+
+
+await peer.setLocalDescription(
+answer
+);
+
+
+
+
+
+socket.emit(
+"camera_answer",
+{
+
+answer:
+answer,
+
+target:
+creatorId
+
+}
+
+);
+
+
+
+}
+
+catch(e){
+
+
+console.log(e);
+
+
+status.innerHTML =
+"❌ Erreur WebRTC";
+
+
+}
+
+
+
+});
+
+
+
+
+
+
+
+socket.on(
+"camera_ice",
+async(data)=>{
+
+
+try{
+
+
+if(peer){
+
+
+await peer.addIceCandidate(
+
+new RTCIceCandidate(
+data.candidate
+)
+
+);
+
+
+}
+
+
+}
+
+catch(e){
+
+console.log(e);
+
+}
+
+
+
+});
+
+
+
+
+
+
+
+socket.on(
+"camera_stopped",
+()=>{
+
+
+status.innerHTML =
+"⛔ Live terminé";
+
+
+video.srcObject=null;
+
+
+if(peer){
+
+peer.close();
+
+}
+
+
+});
+
+
+
+
+
+})();
+
+
+</script>
+
+
 
 
 
@@ -153,8 +477,6 @@ width="100%">
 
 
 
-
-
 <h3>
 {{ live.title }}
 </h3>
@@ -175,6 +497,7 @@ Inconnue
 
 {% endif %}
 
+
 </p>
 
 
@@ -183,16 +506,12 @@ Inconnue
 
 
 
-
-
 {% else %}
-
 
 
 <p>
 Aucun direct disponible actuellement.
 </p>
-
 
 
 {% endfor %}
@@ -205,112 +524,7 @@ Aucun direct disponible actuellement.
 
 
 
-
 <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
-
-
-
-<script>
-
-
-const socket = io();
-
-
-
-// ==========================
-// CONNEXION SOCKET
-// ==========================
-
-
-socket.on(
-"connect",
-function(){
-
-
-console.log(
-"✅ Connecté au serveur live"
-);
-
-
-});
-
-
-
-
-
-
-// ==========================
-// LIVE DEMARRE
-// ==========================
-
-
-socket.on(
-"live_started",
-function(data){
-
-
-const status = document.getElementById(
-"liveStatus-" + data.live_id
-);
-
-
-
-if(status){
-
-
-status.innerHTML =
-"🔴 Live caméra connecté";
-
-
-}
-
-
-
-});
-
-
-
-
-
-
-
-// ==========================
-// LIVE ARRETE
-// ==========================
-
-
-socket.on(
-"live_stopped",
-function(data){
-
-
-
-const status = document.getElementById(
-"liveStatus-" + data.live_id
-);
-
-
-
-if(status){
-
-
-status.innerHTML =
-"⛔ Live arrêté";
-
-
-}
-
-
-
-});
-
-
-
-
-
-
-</script>
-
 
 
 
