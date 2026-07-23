@@ -656,62 +656,104 @@ def delete_video(video_id):
     )
 
 
+    # Vérifier le propriétaire de la vidéo
+
     channel = Channel.query.get(
         video.channel_id
     )
 
 
     if not channel or channel.user_id != session["user_id"]:
-        return "❌ Vous n'avez pas l'autorisation"
+        return "❌ Vous n'avez pas l'autorisation de supprimer cette vidéo"
+
 
 
     try:
 
         # Supprimer historique
+
         History.query.filter_by(
             video_id=video.id
-        ).delete()
+        ).delete(
+            synchronize_session=False
+        )
 
 
         # Supprimer favoris
+
         Favorite.query.filter_by(
             video_id=video.id
-        ).delete()
+        ).delete(
+            synchronize_session=False
+        )
 
 
         # Supprimer likes
+
         VideoLike.query.filter_by(
             video_id=video.id
-        ).delete()
+        ).delete(
+            synchronize_session=False
+        )
 
 
         # Supprimer programmes liés
+
         Program.query.filter_by(
             video_id=video.id
-        ).delete()
+        ).delete(
+            synchronize_session=False
+        )
 
 
         # Supprimer vidéo Cloudinary
+
         if video.file_path:
 
-            cloudinary.uploader.destroy(
-                get_cloudinary_public_id(video.file_path),
-                resource_type="video"
-            )
+            try:
+
+                cloudinary.uploader.destroy(
+                    get_cloudinary_public_id(
+                        video.file_path
+                    ),
+                    resource_type="video"
+                )
+
+            except Exception:
+
+                pass
+
 
 
         # Supprimer miniature Cloudinary
+
         if video.thumbnail:
 
-            cloudinary.uploader.destroy(
-                get_cloudinary_public_id(video.thumbnail)
-            )
+            try:
+
+                cloudinary.uploader.destroy(
+                    get_cloudinary_public_id(
+                        video.thumbnail
+                    )
+                )
+
+            except Exception:
+
+                pass
 
 
-        # Supprimer la vidéo
-        db.session.delete(video)
+
+        # Suppression directe SQL pour éviter la récursion
+
+        Video.query.filter_by(
+            id=video.id
+        ).delete(
+            synchronize_session=False
+        )
+
 
         db.session.commit()
+
 
 
     except Exception as e:
@@ -724,11 +766,10 @@ def delete_video(video_id):
         return f"Erreur suppression : {e}"
 
 
+
     return redirect(
         url_for("main.creator")
-    )
-
-        
+        )
     
     
             
