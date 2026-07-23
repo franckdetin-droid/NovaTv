@@ -376,50 +376,6 @@ def logout():
         url_for("main.home")
     ) 
 
-# ==========================
-# CREER UNE CHAINE
-# ==========================
-@main.route(
-    "/create-channel",
-    methods=["GET", "POST"]
-)
-def create_channel():
-
-    import traceback
-
-    if "user_id" not in session:
-        return redirect(
-            url_for("main.login")
-        )
-
-    if request.method == "POST":
-        try:
-            name = request.form["name"]
-            category = request.form["category"]
-            description = request.form["description"]
-
-            logo = request.files.get("logo")
-            cover = request.files.get("cover")
-
-            print("FILES REÇUS :", request.files)
-
-            logo_url = None
-            cover_url = None
-
-            # ==========================
-            # UPLOAD LOGO CLOUDINARY
-            # ==========================
-            if logo and logo.filename:
-                print("Upload logo en cours...")
-
-                upload_logo = cloudinary.uploader.upload(
-                    logo.read(),
-                    folder="novatv/logos"
-                )
-
-                logo_url = upload_logo.get("secure_url")
-
-                print("Logo uploadé :", logo_url)
 
 # ==========================
 # CREER UNE CHAINE
