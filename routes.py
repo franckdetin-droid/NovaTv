@@ -666,7 +666,7 @@ def delete_video(video_id):
         return "❌ Pas autorisé"
 
 
-    try:
+        try:
 
         # Supprimer historique
         History.query.filter_by(
@@ -717,19 +717,17 @@ def delete_video(video_id):
 
     except Exception as e:
 
-    db.session.rollback()
+        db.session.rollback()
 
-    import traceback
-    traceback.print_exc()
+        import traceback
+        traceback.print_exc()
 
-    return f"Erreur suppression : {e}"
+        return f"Erreur suppression : {e}"
 
 
     return redirect(
         url_for("main.creator")
     )
-
-
 
         
     
