@@ -376,8 +376,6 @@ def logout():
         url_for("main.home")
     ) 
 
-
-# ==========================
 # ==========================
 # CREER UNE CHAINE
 # ==========================
@@ -391,7 +389,9 @@ def create_channel():
 
     if request.method == "POST":
         try:
+            # ==========================
             # Données du formulaire
+            # ==========================
             name = request.form["name"]
             category = request.form["category"]
             description = request.form["description"]
@@ -443,20 +443,11 @@ def create_channel():
 
         except Exception as e:
             db.session.rollback()
-
             print("ERREUR :", str(e))
             traceback.print_exc()
-
             return "Erreur lors de la création de la chaîne", 500
 
     return render_template("create_channel.html")
-# ==========================
-# GESTION ERREUR
-# ==========================
-except Exception as e:
-    db.session.rollback()
-    print("ERREUR :", str(e))
-    return "Erreur lors de la création de la chaîne", 500
 
 
 
