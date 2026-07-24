@@ -1941,4 +1941,851 @@ transition:.8s;
 left:160%;
 
    }
+/* =====================================================
+   PARTIE 7 - RESPONSIVE MOBILE V4
+===================================================== */
+
+/* Container */
+
+.container,
+.main-content,
+.creator-page,
+.profile-page,
+.search-page,
+.download-page,
+.form-page,
+.camera-live-page{
+
+    width:100%;
+    max-width:1400px;
+    margin:auto;
+    padding:20px;
+
+}
+
+/* Titres */
+
+h1{
+
+    font-size:32px;
+    line-height:1.2;
+    margin-bottom:20px;
+
+}
+
+h2{
+
+    font-size:24px;
+
+}
+
+h3{
+
+    font-size:18px;
+
+}
+
+/* Boutons */
+
+.btn,
+button{
+
+    min-height:48px;
+    padding:12px 20px;
+    font-size:15px;
+    border-radius:14px;
+
+}
+
+/* Cartes */
+
+.media-card,
+.netflix-card,
+.movie-card,
+.profile-card,
+.action-card{
+
+    border-radius:18px;
+    overflow:hidden;
+
+}
+
+/* Images */
+
+.media-card img,
+.netflix-card img,
+.movie-card img{
+
+    width:100%;
+    height:220px;
+    object-fit:cover;
+
+}
+
+/* Vidéos */
+
+video{
+
+    width:100%;
+    height:auto;
+    border-radius:18px;
+    display:block;
+
+}
+
+/* Formulaires */
+
+input,
+textarea,
+select{
+
+    font-size:16px;
+
+}
+
+/* Téléphone */
+
+@media(max-width:768px){
+
+.main-content{
+
+padding:12px;
+
+}
+
+.header{
+
+padding:12px 15px;
+
+}
+
+.logo{
+
+font-size:22px;
+
+}
+
+.nav{
+
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+gap:10px;
+
+}
+
+.nav a{
+
+font-size:14px;
+
+}
+
+.hero-content h1{
+
+font-size:30px;
+
+}
+
+.hero-content p{
+
+font-size:15px;
+
+}
+
+.netflix-grid,
+.movie-row,
+.card-grid{
+
+grid-template-columns:
+repeat(2,1fr);
+
+gap:12px;
+
+}
+
+.media-card img,
+.netflix-card img,
+.movie-card img{
+
+height:170px;
+
+}
+
+.btn,
+button{
+
+width:100%;
+
+}
+
+}
+/* =====================================================
+   PARTIE 8 - CREATOR STUDIO / PROFIL / RECHERCHE
+===================================================== */
+
+/* ===== Creator Studio ===== */
+
+.creator-actions{
+
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:18px;
+margin:25px 0;
+
+}
+
+.action-card{
+
+background:#171717;
+border:1px solid #2b2b2b;
+border-radius:18px;
+padding:22px;
+transition:.3s;
+
+}
+
+.action-card:hover{
+
+transform:translateY(-5px);
+border-color:#ff2d55;
+box-shadow:0 10px 30px rgba(255,45,85,.20);
+
+}
+
+.action-card h3{
+
+margin-bottom:10px;
+font-size:20px;
+
+}
+
+.action-card p{
+
+color:#bdbdbd;
+font-size:14px;
+
+}
+
+/* ===== Profil ===== */
+
+.profile-header{
+
+display:flex;
+flex-direction:column;
+align-items:center;
+text-align:center;
+padding:30px 20px;
+margin-bottom:30px;
+
+}
+
+.profile-image{
+
+width:120px;
+height:120px;
+border-radius:50%;
+object-fit:cover;
+border:4px solid #ff2d55;
+margin-bottom:15px;
+
+}
+
+.profile-menu{
+
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:18px;
+
+}
+
+.profile-card{
+
+background:#171717;
+border-radius:18px;
+padding:20px;
+text-align:center;
+transition:.3s;
+
+}
+
+.profile-card:hover{
+
+transform:translateY(-5px);
+
+}
+
+/* ===== Recherche ===== */
+
+.search-form{
+
+display:flex;
+gap:12px;
+margin:20px 0;
+flex-wrap:wrap;
+
+}
+
+.search-form input{
+
+flex:1;
+
+}
+
+.card-grid{
+
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+gap:18px;
+
+}
+
+.media-card{
+
+background:#171717;
+border-radius:18px;
+overflow:hidden;
+transition:.3s;
+
+}
+
+.media-card:hover{
+
+transform:translateY(-5px);
+
+}
+
+.media-card img{
+
+height:180px;
+object-fit:cover;
+
+}
+
+.media-card h3{
+
+padding:15px;
+font-size:17px;
+
+}
+
+.media-card a{
+
+display:block;
+margin:0 15px 15px;
+text-align:center;
+
+}
+
+/* ===== Téléchargement ===== */
+
+.download-box{
+
+max-width:600px;
+margin:auto;
+background:#171717;
+padding:30px;
+border-radius:20px;
+text-align:center;
+
+}
+
+.app-logo{
+
+width:120px;
+margin:auto;
+margin-bottom:20px;
+
+}
+
+.download-btn{
+
+display:inline-flex;
+margin-top:25px;
+
+}
+
+.warning{
+
+margin-top:20px;
+color:#ffb84d;
+
+}
+
+/* ===== Responsive ===== */
+
+@media(max-width:768px){
+
+.creator-actions,
+.profile-menu,
+.card-grid{
+
+grid-template-columns:1fr;
+
+}
+
+.profile-image{
+
+width:90px;
+height:90px;
+
+}
+
+.download-box{
+
+padding:20px;
+
+}
+
+.action-card{
+
+padding:18px;
+
+}
+
+   }
+/* =====================================================
+   PARTIE 9 - LIVE / CAMERA / PLAYER V4
+===================================================== */
+
+/* ======== PAGE LIVE ======== */
+
+.live-page,
+.watch-camera,
+.camera-live-page{
+
+max-width:1400px;
+margin:auto;
+padding:20px;
+
+}
+
+/* ======== LECTEUR VIDEO ======== */
+
+.live-player,
+.camera-box,
+.video-card{
+
+position:relative;
+width:100%;
+background:#111;
+border:1px solid #242424;
+border-radius:18px;
+overflow:hidden;
+box-shadow:0 10px 25px rgba(0,0,0,.35);
+
+}
+
+.live-player video,
+.camera-box video,
+.video-card video{
+
+display:block;
+width:100%;
+aspect-ratio:16/9;
+background:#000;
+object-fit:cover;
+
+}
+
+/* ======== BOUTON PLEIN ECRAN ======== */
+
+#fullscreenBtn{
+
+position:absolute;
+right:15px;
+bottom:15px;
+z-index:50;
+padding:10px 14px;
+border-radius:12px;
+font-size:14px;
+
+}
+
+/* ======== STATUS ======== */
+
+.live-status,
+#status,
+#message{
+
+margin-top:15px;
+padding:12px;
+background:#181818;
+border-radius:12px;
+font-size:15px;
+color:#ddd;
+
+}
+
+/* ======== BADGE LIVE ======== */
+
+.live-active,
+.live-badge{
+
+display:inline-flex;
+align-items:center;
+gap:8px;
+background:#ff2d55;
+color:#fff;
+padding:8px 14px;
+border-radius:30px;
+font-weight:700;
+animation:livePulse 1.4s infinite;
+
+}
+
+@keyframes livePulse{
+
+0%{opacity:1;}
+50%{opacity:.55;}
+100%{opacity:1;}
+
+}
+
+/* ======== SPECTATEURS ======== */
+
+.viewers-grid{
+
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+gap:15px;
+margin-top:20px;
+
+}
+
+.viewer-card{
+
+background:#181818;
+border-radius:15px;
+padding:10px;
+text-align:center;
+border:1px solid #282828;
+
+}
+
+.viewer-card video{
+
+width:100%;
+aspect-ratio:9/16;
+border-radius:12px;
+background:#000;
+object-fit:cover;
+
+}
+
+.viewer-card span{
+
+display:block;
+margin-top:8px;
+font-size:14px;
+color:#ddd;
+
+}
+
+/* ======== ATTENTE ======== */
+
+.waiting-viewer{
+
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+padding:40px 20px;
+border:2px dashed #333;
+border-radius:16px;
+color:#999;
+text-align:center;
+
+}
+
+/* ======== BOUTONS LIVE ======== */
+
+.video-controls,
+.live-buttons{
+
+display:flex;
+flex-wrap:wrap;
+gap:10px;
+margin-top:15px;
+
+}
+
+.live-btn{
+
+flex:1;
+min-width:120px;
+
+}
+
+.start{
+
+background:#00b050;
+
+}
+
+.stop{
+
+background:#d80032;
+
+}
+
+/* ======== MOBILE ======== */
+
+@media(max-width:768px){
+
+.live-page,
+.watch-camera,
+.camera-live-page{
+
+padding:12px;
+
+}
+
+.viewers-grid{
+
+grid-template-columns:1fr;
+
+}
+
+.video-controls,
+.live-buttons{
+
+flex-direction:column;
+
+}
+
+.live-btn,
+#fullscreenBtn{
+
+width:100%;
+
+}
+
+.viewer-card video{
+
+aspect-ratio:16/9;
+
+}
+
+   }
+/* =====================================================
+   PARTIE 10 - FINITIONS / OPTIMISATIONS V4
+===================================================== */
+
+/* ====== Empêcher les overlays de bloquer les clics ====== */
+
+.hero-netflix::before,
+.hero-netflix::after,
+.movie-card::before,
+.movie-card::after,
+.netflix-card::before,
+.netflix-card::after{
+
+pointer-events:none;
+
+}
+
+/* ====== Boutons toujours au-dessus ====== */
+
+button,
+.btn,
+.live-btn,
+a,
+input[type="submit"]{
+
+position:relative;
+z-index:20;
+
+}
+
+/* ====== Vidéos ====== */
+
+video{
+
+max-width:100%;
+height:auto;
+display:block;
+
+}
+
+/* ====== Images ====== */
+
+img{
+
+max-width:100%;
+height:auto;
+
+}
+
+/* ====== Scroll horizontal ====== */
+
+body{
+
+overflow-x:hidden;
+
+}
+
+/* ====== Liens ====== */
+
+a{
+
+transition:.25s;
+
+}
+
+a:hover{
+
+opacity:.95;
+
+}
+
+/* ====== Focus ====== */
+
+button:focus,
+input:focus,
+textarea:focus,
+select:focus{
+
+outline:none;
+
+}
+
+/* ====== Animation des cartes ====== */
+
+.media-card,
+.movie-card,
+.netflix-card,
+.action-card{
+
+transition:
+transform .25s,
+box-shadow .25s;
+
+}
+
+.media-card:hover,
+.movie-card:hover,
+.netflix-card:hover,
+.action-card:hover{
+
+transform:translateY(-4px);
+
+}
+
+/* ====== Grilles ====== */
+
+.card-grid,
+.netflix-grid,
+.movie-row{
+
+align-items:start;
+
+}
+
+/* ====== Lecture vidéo ====== */
+
+.live-player,
+.video-card{
+
+background:#000;
+
+}
+
+/* ====== Mobile ====== */
+
+@media(max-width:768px){
+
+body{
+
+font-size:15px;
+
+}
+
+h1{
+
+font-size:28px;
+
+}
+
+h2{
+
+font-size:22px;
+
+}
+
+h3{
+
+font-size:17px;
+
+}
+
+p{
+
+font-size:14px;
+line-height:1.6;
+
+}
+
+button,
+.btn{
+
+font-size:14px;
+padding:12px 16px;
+
+}
+
+.card-grid,
+.netflix-grid,
+.movie-row{
+
+grid-template-columns:
+repeat(2,minmax(0,1fr));
+
+gap:10px;
+
+}
+
+.media-card img,
+.movie-card img,
+.netflix-card img{
+
+height:150px;
+
+}
+
+.header{
+
+position:sticky;
+top:0;
+
+}
+
+}
+
+/* ====== Très petits écrans ====== */
+
+@media(max-width:420px){
+
+.card-grid,
+.netflix-grid,
+.movie-row{
+
+grid-template-columns:1fr;
+
+}
+
+.hero-content h1{
+
+font-size:24px;
+
+}
+
+.main-content{
+
+padding:10px;
+
+}
+
+}
+
+/* ====== Fin ====== */
 
