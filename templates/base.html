@@ -1,116 +1,104 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-Content-Type-Options" content="nosniff">
-    <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
 
-    <title>{% block title %}MY TV APP{% endblock %}</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<title>{% block title %}MY TV APP{% endblock %}</title>
 
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='css/style.css') }}">
+<meta name="theme-color" content="#ff2d55">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+<link rel="stylesheet"
+href="{{ url_for('static', filename='css/style.css') }}">
+
+{% block head %}{% endblock %}
+
 </head>
 
 <body>
 
 <header class="header">
 
-    <div class="logo">
-        <i class="fas fa-tv"></i>
-        <span>MY TV APP</span>
-    </div>
+<div class="header-left">
 
-    <nav class="nav">
+<a href="{{ url_for('main.home') }}" class="logo">
 
-        <a href="{{ url_for('main.home') }}">
-            <i class="fas fa-house"></i>
-            Accueil
-        </a>
+<i class="fas fa-tv"></i>
 
-        <a href="/download">
-            <i class="fas fa-mobile-screen-button"></i>
-            Application
-        </a>
+<span>MY TV APP</span>
 
-        <a href="{{ url_for('main.channels') }}">
-            <i class="fas fa-photo-film"></i>
-            Chaînes
-        </a>
+</a>
 
-        <a href="{{ url_for('main.live') }}">
-            <i class="fas fa-circle-dot"></i>
-            Direct
-        </a>
+</div>
 
-        <a href="{{ url_for('main.camera_live') }}">
-            <i class="fas fa-video"></i>
-            Caméra Live
-        </a>
+<nav class="nav">
 
-        <form action="{{ url_for('main.search') }}"
-              method="get"
-              class="search-form">
+<a href="{{ url_for('main.home') }}">
+<i class="fas fa-house"></i>
+Accueil
+</a>
 
-            <div class="search-box">
-                <i class="fas fa-magnifying-glass"></i>
+<a href="{{ url_for('main.channels') }}">
+<i class="fas fa-tv"></i>
+Chaînes
+</a>
 
-                <input
-                    type="search"
-                    name="q"
-                    placeholder="Rechercher une chaîne..."
-                    maxlength="100"
-                    autocomplete="off"
-                    required>
-            </div>
+<a href="{{ url_for('main.live') }}">
+<i class="fas fa-circle-play"></i>
+Direct
+</a>
 
-        </form>
+<a href="{{ url_for('main.camera_live') }}">
+<i class="fas fa-video"></i>
+Caméra Live
+</a>
 
-        {% if session.get("user_id") %}
+<a href="{{ url_for('main.creator') }}">
+<i class="fas fa-clapperboard"></i>
+Creator Studio
+</a>
 
-            <a href="{{ url_for('main.my_list') }}">
-                <i class="fas fa-heart"></i>
-                Ma liste
-            </a>
+</nav>
 
-            <a href="{{ url_for('main.history') }}">
-                <i class="fas fa-clock-rotate-left"></i>
-                Historique
-            </a>
+<div class="header-right">
 
-            <a href="{{ url_for('main.profile') }}">
-                <i class="fas fa-user"></i>
-                Profil
-            </a>
+<form
+action="{{ url_for('main.search') }}"
+method="get"
+class="search-form">
 
-            <a href="{{ url_for('main.creator') }}">
-                <i class="fas fa-clapperboard"></i>
-                Creator Studio
-            </a>
+<div class="search-box">
 
-            <a href="{{ url_for('main.logout') }}">
-                <i class="fas fa-right-from-bracket"></i>
-                Déconnexion
-            </a>
+<i class="fas fa-search"></i>
 
-        {% else %}
+<input
+type="search"
+name="q"
+placeholder="Rechercher..."
+autocomplete="off">
 
-            <a href="{{ url_for('main.login') }}">
-                <i class="fas fa-right-to-bracket"></i>
-                Connexion
-            </a>
+</div>
 
-            <a href="{{ url_for('main.register') }}">
-                <i class="fas fa-user-plus"></i>
-                Inscription
-            </a>
+</form>
 
-        {% endif %}
+<button class="menu-toggle">
 
-    </nav>
+<i class="fas fa-bars"></i>
+
+</button>
+
+</div>
 
 </header>
 
@@ -118,36 +106,118 @@
 
 {% with messages = get_flashed_messages() %}
 {% if messages %}
+
 <div class="flash-message">
-    {% for message in messages %}
-    <p>{{ message }}</p>
-    {% endfor %}
+
+{% for message in messages %}
+
+<p>{{ message }}</p>
+
+{% endfor %}
+
 </div>
+
 {% endif %}
 {% endwith %}
-{% block content %}
-</main>
 
-<footer class="main-footer">
+{% block content %}
+    {% if session.get("user_id") %}
+
+<div class="user-toolbar">
+
+    <a href="{{ url_for('main.profile') }}" class="toolbar-item">
+        <i class="fas fa-user"></i>
+        <span>Profil</span>
+    </a>
+
+    <a href="{{ url_for('main.my_list') }}" class="toolbar-item">
+        <i class="fas fa-heart"></i>
+        <span>Ma liste</span>
+    </a>
+
+    <a href="{{ url_for('main.history') }}" class="toolbar-item">
+        <i class="fas fa-clock-rotate-left"></i>
+        <span>Historique</span>
+    </a>
+
+    <a href="{{ url_for('main.creator') }}" class="toolbar-item">
+        <i class="fas fa-clapperboard"></i>
+        <span>Studio</span>
+    </a>
+
+    <a href="{{ url_for('main.logout') }}" class="toolbar-item logout">
+        <i class="fas fa-right-from-bracket"></i>
+        <span>Déconnexion</span>
+    </a>
+
+</div>
+
+{% else %}
+
+<div class="guest-toolbar">
+
+    <a href="{{ url_for('main.login') }}" class="btn-login">
+        <i class="fas fa-right-to-bracket"></i>
+        Connexion
+    </a>
+
+    <a href="{{ url_for('main.register') }}" class="btn-register">
+        <i class="fas fa-user-plus"></i>
+        Inscription
+    </a>
+
+</div>
+
+{% endif %}
+
+<div class="page-container">
+
+{% endblock %}
+
+</div>
+
+    </main>
+    <footer class="main-footer">
 
     <div class="footer-container">
+
+        <!-- Logo -->
 
         <div class="footer-brand">
 
             <div class="footer-logo">
+
                 <i class="fas fa-tv"></i>
+
                 <span>MY TV APP</span>
+
             </div>
 
             <p>
-                Regardez vos chaînes préférées, créez votre propre chaîne,
-                diffusez en direct avec Caméra Live et gérez votre contenu
-                grâce à Creator Studio.
+
+                Regardez des chaînes TV en direct,
+                des films, des séries et créez vos
+                propres contenus avec Creator Studio.
+
             </p>
+
+            <div class="footer-social">
+
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+
+                <a href="#"><i class="fab fa-instagram"></i></a>
+
+                <a href="#"><i class="fab fa-youtube"></i></a>
+
+                <a href="#"><i class="fab fa-tiktok"></i></a>
+
+            </div>
 
         </div>
 
-        <div class="footer-links">
+        <!-- Navigation -->
+
+        <div class="footer-column">
 
             <h3>Navigation</h3>
 
@@ -160,7 +230,7 @@
             </a>
 
             <a href="{{ url_for('main.live') }}">
-                Direct
+               TV en direct
             </a>
 
             <a href="{{ url_for('main.camera_live') }}">
@@ -169,12 +239,16 @@
 
         </div>
 
-        <div class="footer-links">
+        <!-- Mon compte -->
 
-            <h3>Creator</h3>
+        <div class="footer-column">
 
-            <a href="{{ url_for('main.creator') }}">
-                Creator Studio
+            <h3>Mon compte</h3>
+
+            {% if session.get("user_id") %}
+
+            <a href="{{ url_for('main.profile') }}">
+                Profil
             </a>
 
             <a href="{{ url_for('main.my_list') }}">
@@ -185,35 +259,45 @@
                 Historique
             </a>
 
-            <a href="{{ url_for('main.profile') }}">
-                Profil
+            <a href="{{ url_for('main.logout') }}">
+                Déconnexion
             </a>
+
+            {% else %}
+
+            <a href="{{ url_for('main.login') }}">
+                Connexion
+            </a>
+
+            <a href="{{ url_for('main.register') }}">
+                Inscription
+            </a>
+
+            {% endif %}
 
         </div>
 
-        <div class="footer-links">
+        <!-- Application -->
 
-            <h3>Suivez-nous</h3>
+        <div class="footer-column">
 
-            <div class="social-icons">
+            <h3>Application</h3>
 
-                <a href="#">
-                    <i class="fab fa-facebook-f"></i>
-                </a>
+            <a href="/download">
+                Télécharger
+            </a>
 
-                <a href="#">
-                    <i class="fab fa-instagram"></i>
-                </a>
+            <a href="{{ url_for('main.creator') }}">
+                Creator Studio
+            </a>
 
-                <a href="#">
-                    <i class="fab fa-youtube"></i>
-                </a>
+            <a href="#">
+                Confidentialité
+            </a>
 
-                <a href="#">
-                    <i class="fab fa-x-twitter"></i>
-                </a>
-
-            </div>
+            <a href="#">
+                Conditions d'utilisation
+            </a>
 
         </div>
 
@@ -221,16 +305,96 @@
 
     <div class="footer-bottom">
 
-        © {{ current_year if current_year else 2026 }}
-        MY TV APP — Votre télévision. Votre contenu. Partout.
+        <p>
+
+            © {{ current_year if current_year else 2026 }}
+            MY TV APP — Tous droits réservés.
+
+        </p>
 
     </div>
 
-</footer>
+            </footer>
+            <!-- Overlay menu mobile -->
+
+<div class="mobile-overlay"></div>
+
+<!-- Bouton retour en haut -->
+
+<button id="backToTop" class="back-to-top">
+
+    <i class="fas fa-arrow-up"></i>
+
+</button>
+
+<!-- Scripts -->
 
 <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 
+<script>
+
+document.addEventListener("DOMContentLoaded", function(){
+
+const menuBtn = document.querySelector(".menu-toggle");
+const nav = document.querySelector(".nav");
+const overlay = document.querySelector(".mobile-overlay");
+
+if(menuBtn){
+
+menuBtn.addEventListener("click",function(){
+
+nav.classList.toggle("active");
+overlay.classList.toggle("active");
+
+});
+
+}
+
+if(overlay){
+
+overlay.addEventListener("click",function(){
+
+nav.classList.remove("active");
+overlay.classList.remove("active");
+
+});
+
+}
+
+const topBtn=document.getElementById("backToTop");
+
+window.addEventListener("scroll",function(){
+
+if(window.scrollY>400){
+
+topBtn.classList.add("show");
+
+}else{
+
+topBtn.classList.remove("show");
+
+}
+
+});
+
+topBtn.addEventListener("click",function(){
+
+window.scrollTo({
+
+top:0,
+
+behavior:"smooth"
+
+});
+
+});
+
+});
+
+</script>
+
+{% block scripts %}{% endblock %}
+
 </body>
+
 </html>
-{% endblock %}
-    
