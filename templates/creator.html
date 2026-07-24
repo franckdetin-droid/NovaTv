@@ -1,309 +1,409 @@
 {% extends "base.html" %}
 
-
 {% block title %}
 Creator Studio - MY TV APP
 {% endblock %}
 
-
-
 {% block content %}
-
 
 <section class="creator-page">
 
+<div class="creator-header">
 
-<header class="page-header">
+<div>
 
-    <h1>
-        🎬 Creator Studio
-    </h1>
+<h1>
 
-    <p>
-        Gérez vos chaînes, vidéos et programmations.
-    </p>
+🎬 Creator Studio
 
-</header>
+</h1>
 
+<p>
 
+Gérez vos chaînes, vidéos, directs et programmations depuis un seul endroit.
 
-
-
-<!-- ACTIONS CREATEUR -->
-
-<div class="creator-actions">
-
-
-    <a href="{{ url_for('main.create_channel') }}" class="action-card">
-
-        <h3>
-            📺 Créer une chaîne
-        </h3>
-
-        <p>
-            Créer votre propre chaîne TV.
-        </p>
-
-    </a>
-
-
-
-
-
-    <a href="{{ url_for('main.upload_video') }}" class="action-card">
-
-        <h3>
-            🎬 Ajouter une vidéo
-        </h3>
-
-        <p>
-            Importer un film, journal ou programme.
-        </p>
-
-    </a>
-
-
-
-
-
-    <a href="{{ url_for('main.schedule') }}" class="action-card">
-
-        <h3>
-            ⏰ Programmation
-        </h3>
-
-        <p>
-            Organiser la diffusion automatique.
-        </p>
-
-    </a>
-
-
-
-
-
-    <a href="{{ url_for('main.create_live') }}" class="action-card">
-
-        <h3>
-            🟢 Direct
-        </h3>
-
-        <p>
-            Configurer une diffusion en direct.
-        </p>
-
-    </a>
-
-
+</p>
 
 </div>
 
+<div class="creator-badge">
 
+⭐ Créateur
 
+</div>
 
+</div>
 
+<!-- ========================= -->
+<!-- STATISTIQUES -->
+<!-- ========================= -->
 
+<div class="creator-stats">
 
-<!-- MES CHAINES -->
-
-<section class="my-channels">
-
+<div class="stat-card">
 
 <h2>
-    📺 Mes chaînes
+
+{{ channels|length }}
+
 </h2>
 
+<p>
 
+📺 Chaînes
 
-<div class="card-grid">
+</p>
 
+</div>
 
+<div class="stat-card">
+
+<h2>
+
+{{ videos|length }}
+
+</h2>
+
+<p>
+
+🎬 Vidéos
+
+</p>
+
+</div>
+
+<div class="stat-card">
+
+<h2>
+
+{{ videos|sum(attribute='views') }}
+
+</h2>
+
+<p>
+
+👁️ Vues
+
+</p>
+
+</div>
+
+<div class="stat-card">
+
+<h2>
+
+🟢
+
+</h2>
+
+<p>
+
+Live
+
+</p>
+
+</div>
+
+</div>
+
+<!-- ========================= -->
+<!-- ACTIONS -->
+<!-- ========================= -->
+
+<div class="creator-actions">
+
+<a href="{{ url_for('main.create_channel') }}" class="studio-card">
+
+<div class="studio-icon">
+
+📺
+
+</div>
+
+<h3>
+
+Créer une chaîne
+
+</h3>
+
+<p>
+
+Ajoutez une nouvelle chaîne TV.
+
+</p>
+
+</a>
+
+<a href="{{ url_for('main.upload_video') }}" class="studio-card">
+
+<div class="studio-icon">
+
+🎬
+
+</div>
+
+<h3>
+
+Ajouter une vidéo
+
+</h3>
+
+<p>
+
+Importer un nouveau contenu.
+
+</p>
+
+</a>
+
+<a href="{{ url_for('main.schedule') }}" class="studio-card">
+
+<div class="studio-icon">
+
+📅
+
+</div>
+
+<h3>
+
+Programmation
+
+</h3>
+
+<p>
+
+Planifier une diffusion automatique.
+
+</p>
+
+</a>
+
+<a href="{{ url_for('main.create_live') }}" class="studio-card">
+
+<div class="studio-icon">
+
+🔴
+
+</div>
+
+<h3>
+
+Créer un direct
+
+</h3>
+
+<p>
+
+Diffuser votre chaîne en direct.
+
+</p>
+
+</a>
+
+</div>
+
+<!-- ========================= -->
+<!-- MES CHAINES -->
+<!-- ========================= -->
+
+<section class="creator-section">
+
+<div class="section-title">
+
+<h2>
+
+📺 Mes chaînes
+
+</h2>
+
+<span>
+
+{{ channels|length }}
+
+chaîne(s)
+
+</span>
+
+</div>
+
+<div class="netflix-grid">
 
 {% for channel in channels %}
 
-
-
-<div class="media-card">
-
-
+<div class="netflix-card">
 
 {% if channel.logo %}
 
 <img
 src="{{ channel.logo }}"
-class="channel-logo"
 alt="{{ channel.name }}">
+
+{% else %}
+
+<div class="no-image">
+
+📺
+
+</div>
 
 {% endif %}
 
-
+<div class="card-info">
 
 <h3>
-    {{ channel.name }}
+
+{{ channel.name }}
+
 </h3>
 
+<div class="card-buttons">
 
+<a
+href="{{ url_for('main.channel_detail', channel_id=channel.id) }}"
+class="btn-watch">
 
-<a href="{{ url_for('main.channel_detail', channel_id=channel.id) }}">
-    ▶ Ouvrir
+▶ Ouvrir
+
 </a>
-
-
-
 
 <form
 action="{{ url_for('main.delete_channel', channel_id=channel.id) }}"
 method="POST">
 
-
 <button
-type="submit"
-class="delete-button"
-onclick="return confirm('Supprimer cette chaîne et toutes ses vidéos ?');">
+class="btn-delete"
+onclick="return confirm('Supprimer cette chaîne ?')">
 
-🗑 Supprimer la chaîne
+🗑
 
 </button>
 
-
 </form>
-
-
 
 </div>
 
+</div>
 
+</div>
 
 {% else %}
 
-
 <p>
-    Vous n'avez aucune chaîne.
-</p>
 
+Vous n'avez créé aucune chaîne.
+
+</p>
 
 {% endfor %}
 
-
-
 </div>
-
 
 </section>
 
-
-
-
-
-
-
-
-
+<!-- ========================= -->
 <!-- MES VIDEOS -->
+<!-- ========================= -->
 
-<section class="my-videos">
+<section class="creator-section">
 
+<div class="section-title">
 
 <h2>
-    🎬 Mes vidéos
+
+🎬 Mes vidéos
+
 </h2>
 
+<span>
 
+{{ videos|length }}
 
-<div class="card-grid">
+vidéo(s)
 
+</span>
 
+</div>
+
+<div class="netflix-grid">
 
 {% for video in videos %}
 
-
-
-<div class="media-card">
-
-
+<div class="netflix-card">
 
 {% if video.thumbnail %}
 
 <img
 src="{{ video.thumbnail }}"
-class="video-thumbnail"
 alt="{{ video.title }}">
+
+{% else %}
+
+<div class="no-image">
+
+🎬
+
+</div>
 
 {% endif %}
 
-
-
-
+<div class="card-info">
 
 <h3>
-    {{ video.title }}
+
+{{ video.title }}
+
 </h3>
 
-
-
 <p>
-    👁 {{ video.views }} vues
+
+👁️ {{ video.views }} vues
+
 </p>
 
+<div class="card-buttons">
 
+<a
+href="{{ url_for('main.watch', video_id=video.id) }}"
+class="btn-watch">
 
-<a href="{{ url_for('main.watch', video_id=video.id) }}">
-    ▶ Regarder
+▶ Regarder
+
 </a>
-
-
-
-
-
 
 <form
 action="{{ url_for('main.delete_video', video_id=video.id) }}"
 method="POST">
 
-
 <button
-type="submit"
-class="delete-button"
-onclick="return confirm('Voulez-vous supprimer cette vidéo ?');">
+class="btn-delete"
+onclick="return confirm('Supprimer cette vidéo ?')">
 
-🗑 Supprimer la vidéo
+🗑
 
 </button>
 
-
 </form>
-
-
 
 </div>
 
+</div>
 
+</div>
 
 {% else %}
 
-
 <p>
-    Vous n'avez aucune vidéo.
+
+Vous n'avez publié aucune vidéo.
+
 </p>
-
-
 
 {% endfor %}
 
-
-
 </div>
 
-
 </section>
 
-
-
-
-
-
 </section>
-
-
 
 {% endblock %}
