@@ -38,45 +38,25 @@
 
 {% if live.live_source=="url" %}
 
-
-
-<!-- ================================= -->
-<!-- LECTEUR UNIVERSEL FLUX -->
-<!-- HLS .m3u8 + MP4 + HLS NATIF -->
-<!-- ================================= -->
-
+<!-- ========================= -->
+<!-- LECTEUR VIDEO HLS AMELIORE -->
+<!-- ========================= -->
 
 <video
 
+id="player-{{ live.id }}"
+
+class="video-js vjs-big-play-centered"
+
 controls
 
-autoplay
+preload="auto"
 
 playsinline
 
-muted
-
 width="100%">
 
-<source
-
-src="{{ live.stream_url }}"
-
-type="application/x-mpegURL">
-
 </video>
-
-
-<button
-
-class="sound-btn"
-
-onclick="enableSound('{{ live.id }}')">
-
-🔊 Activer le son
-
-</button>
-
 
 
 <script>
@@ -84,142 +64,62 @@ onclick="enableSound('{{ live.id }}')">
 (function(){
 
 
-const video = document.getElementById(
-"livePlayer-{{ live.id }}"
-);
-
-
 const url = "{{ live.stream_url }}";
 
 
+const player = videojs(
+"player-{{ live.id }}",
+{
+controls:true,
+autoplay:false,
+preload:"auto",
+fluid:true
+}
+);
 
-// ===============================
-// HLS.JS
-// ===============================
+
 
 if(
-window.Hls &&
-Hls.isSupported()
+url.endsWith(".m3u8")
 ){
 
 
-const hls = new Hls({
+player.src({
 
-enableWorker:true,
+src:url,
 
-lowLatencyMode:true,
-
-capLevelToPlayerSize:true
+type:"application/x-mpegURL"
 
 });
 
 
-hls.loadSource(url);
+}
+else{
 
 
-hls.attachMedia(video);
+player.src({
+
+src:url
+
+});
+
+
+}
 
 
 
-hls.on(
-Hls.Events.MANIFEST_PARSED,
-function(){
+player.ready(function(){
 
-video.play()
-.catch(()=>{
+player.play().catch(function(){
 
 console.log(
-"Autoplay bloqué"
+"Lecture automatique bloquée"
 );
 
 });
 
-});
-
-
-hls.on(
-Hls.Events.ERROR,
-function(event,data){
-
-
-console.log(
-"Erreur HLS",
-data
-);
-
 
 });
-
-
-
-}
-
-
-
-// ===============================
-// HLS NATIF
-// Safari / iPhone
-// ===============================
-
-
-else if(
-
-video.canPlayType(
-"application/vnd.apple.mpegurl"
-)
-
-){
-
-
-video.src=url;
-
-
-}
-
-
-
-// ===============================
-// AUTRES FORMATS
-// ===============================
-
-
-else {
-
-
-video.src=url;
-
-
-}
-
-
-
-window.enableSound = function(id){
-
-
-const player =
-document.getElementById(
-"livePlayer-"+id
-);
-
-
-
-if(player){
-
-
-player.muted=false;
-
-player.volume=1;
-
-
-player.play()
-.catch(()=>{});
-
-
-}
-
-
-
-};
 
 
 
@@ -228,8 +128,11 @@ player.play()
 </script>
 
 
-
 {% elif live.live_source=="camera" %}
+
+
+
+
 
 
 
