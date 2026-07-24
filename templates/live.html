@@ -31,13 +31,41 @@
 {% if live.live_source=="url" %}
 
 <video
-id="hlsPlayer-{{ live.id }}"
+id="player-{{ live.id }}"
 controls
 autoplay
 muted
 playsinline
 width="100%">
 </video>
+
+<script>
+setTimeout(function(){
+
+const video = document.getElementById("player-{{ live.id }}");
+const url = "{{ live.stream_url }}";
+
+console.log("Flux :", url);
+
+if (window.Hls && Hls.isSupported()) {
+
+    const hls = new Hls();
+
+    hls.loadSource(url);
+    hls.attachMedia(video);
+
+    hls.on(Hls.Events.MANIFEST_PARSED, function(){
+        video.play();
+    });
+
+} else {
+
+    video.src = url;
+
+}
+
+},1000);
+</script>
 
 <script>
 document.addEventListener("DOMContentLoaded", function(){
