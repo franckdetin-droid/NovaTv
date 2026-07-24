@@ -31,18 +31,53 @@
 {% if live.live_source=="url" %}
 
 <video
+id="hlsPlayer-{{ live.id }}"
 controls
 autoplay
 muted
 playsinline
-width="100%"
-class="live-url-video">
-
-<source
-src="{{ live.stream_url }}"
-type="application/x-mpegURL">
-
+width="100%">
 </video>
+
+<script>
+
+const video{{ live.id }} = document.getElementById(
+"hlsPlayer-{{ live.id }}"
+);
+
+const url{{ live.id }} = "{{ live.stream_url }}";
+
+
+if (Hls.isSupported()) {
+
+    const hls{{ live.id }} = new Hls();
+
+    hls{{ live.id }}.loadSource(url{{ live.id }});
+
+    hls{{ live.id }}.attachMedia(video{{ live.id }});
+
+    hls{{ live.id }}.on(
+        Hls.Events.MANIFEST_PARSED,
+        function(){
+
+            video{{ live.id }}.play();
+
+        }
+    );
+
+}
+
+else if (
+    video{{ live.id }}.canPlayType(
+        "application/vnd.apple.mpegurl"
+    )
+) {
+
+    video{{ live.id }}.src = url{{ live.id }};
+
+}
+
+  </script>
 
 {% elif live.live_source=="camera" %}
 
