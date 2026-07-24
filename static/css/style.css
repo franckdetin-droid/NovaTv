@@ -1,24 +1,57 @@
-/* ===========================
-   MY TV APP PREMIUM UI
-=========================== */
+/* ===================================================
+   MY TV APP PREMIUM UI v2
+   PARTIE 1/5
+=================================================== */
 
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
 
+:root{
+
+--primary:#ff2d55;
+--primary-dark:#d90039;
+
+--bg:#050505;
+--bg2:#0b0b0b;
+--card:#141414;
+--card2:#1c1c1c;
+
+--text:#ffffff;
+--text2:#bdbdbd;
+
+--border:#2b2b2b;
+
+--radius:20px;
+
+--shadow:
+0 15px 40px rgba(0,0,0,.45);
+
+--transition:.35s;
+
+}
+
 *{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+
+margin:0;
+padding:0;
+box-sizing:border-box;
+
+}
+
+html{
+
+scroll-behavior:smooth;
+
 }
 
 body{
 
-    font-family:'Poppins',sans-serif;
+font-family:"Poppins",sans-serif;
 
-    background:#070707;
+background:var(--bg);
 
-    color:#fff;
+color:var(--text);
 
-    overflow-x:hidden;
+overflow-x:hidden;
 
 }
 
@@ -26,228 +59,311 @@ body{
 
 body::before{
 
-    content:"";
+content:"";
 
-    position:fixed;
+position:fixed;
 
-    inset:0;
+inset:0;
 
-    background:
-    radial-gradient(circle at top right,#5b2cff33,transparent 40%),
-    radial-gradient(circle at bottom left,#ff003c22,transparent 45%),
-    #070707;
+background:
 
-    z-index:-2;
+radial-gradient(circle at top right,
+rgba(255,45,85,.12),
+transparent 35%),
 
-}
+radial-gradient(circle at bottom left,
+rgba(0,140,255,.10),
+transparent 40%),
 
-body::after{
+#050505;
 
-    content:"";
-
-    position:fixed;
-
-    inset:0;
-
-    backdrop-filter:blur(1px);
-
-    z-index:-1;
+z-index:-2;
 
 }
 
-/* HEADER */
+a{
+
+text-decoration:none;
+
+color:white;
+
+}
+
+img{
+
+display:block;
+
+width:100%;
+
+}
+
+/* ==========================
+HEADER
+========================== */
 
 .header{
 
-    position:fixed;
+position:fixed;
 
-    top:0;
+top:0;
 
-    left:0;
+left:0;
 
-    width:100%;
+width:100%;
 
-    padding:15px 40px;
+height:82px;
 
-    display:flex;
+padding:0 35px;
 
-    justify-content:space-between;
+display:flex;
 
-    align-items:center;
+align-items:center;
 
-    background:rgba(8,8,8,.82);
+justify-content:space-between;
 
-    backdrop-filter:blur(18px);
+background:rgba(8,8,8,.75);
 
-    border-bottom:1px solid rgba(255,255,255,.08);
+backdrop-filter:blur(18px);
 
-    z-index:999;
+border-bottom:1px solid rgba(255,255,255,.06);
+
+z-index:9999;
 
 }
 
 .logo{
 
-    display:flex;
+display:flex;
 
-    align-items:center;
+align-items:center;
 
-    gap:12px;
+gap:12px;
 
-    font-size:28px;
+font-size:30px;
 
-    font-weight:800;
+font-weight:800;
 
-    color:#fff;
+letter-spacing:1px;
 
 }
 
 .logo i{
 
-    color:#ff2d55;
+color:var(--primary);
 
-    font-size:34px;
+font-size:35px;
 
 }
 
-/* MENU */
+/* ==========================
+NAVIGATION
+========================== */
 
 .nav{
 
-    display:flex;
+display:flex;
 
-    align-items:center;
+align-items:center;
 
-    gap:20px;
-
-    flex-wrap:wrap;
+gap:22px;
 
 }
 
 .nav a{
 
-    color:#ddd;
+font-size:15px;
 
-    text-decoration:none;
+font-weight:500;
 
-    font-weight:500;
+color:#ddd;
 
-    transition:.3s;
+transition:var(--transition);
+
+position:relative;
 
 }
 
 .nav a:hover{
 
-    color:#ff2d55;
+color:white;
 
 }
 
-/* Recherche */
+.nav a::after{
+
+content:"";
+
+position:absolute;
+
+bottom:-8px;
+
+left:0;
+
+width:0;
+
+height:3px;
+
+background:var(--primary);
+
+border-radius:20px;
+
+transition:.3s;
+
+}
+
+.nav a:hover::after{
+
+width:100%;
+
+}
+
+/* ==========================
+SEARCH
+========================== */
+
+.search-form{
+
+margin-left:20px;
+
+}
 
 .search-box{
 
-    display:flex;
+display:flex;
 
-    align-items:center;
+align-items:center;
 
-    background:#171717;
+width:280px;
 
-    border:1px solid #303030;
+padding:12px 18px;
 
-    border-radius:40px;
+background:#151515;
 
-    padding:10px 18px;
+border:1px solid #2f2f2f;
 
-    width:260px;
+border-radius:50px;
 
 }
 
 .search-box i{
 
-    color:#888;
+color:#888;
 
-    margin-right:10px;
+margin-right:10px;
 
 }
 
 .search-box input{
 
-    width:100%;
+background:none;
 
-    border:none;
+border:none;
 
-    background:none;
+outline:none;
 
-    color:white;
+color:white;
 
-    outline:none;
+font-size:15px;
 
-    font-size:15px;
+width:100%;
 
 }
 
-/* CONTENU */
+.search-box input::placeholder{
+
+color:#777;
+
+}
+
+/* ==========================
+CONTENU
+========================== */
 
 .main-content{
 
-    margin-top:110px;
+padding-top:110px;
 
-    padding:30px;
+padding-left:35px;
 
-}
+padding-right:35px;
 
-/* HERO */
+padding-bottom:50px;
+
+                }
+/* ===================================================
+   MY TV APP PREMIUM UI v2
+   PARTIE 2/5
+===================================================*/
+
+/* ==========================
+   HERO
+========================== */
 
 .hero-netflix{
 
     position:relative;
+    width:100%;
+    height:75vh;
+    min-height:520px;
 
-    height:78vh;
-
-    border-radius:30px;
+    border-radius:28px;
 
     overflow:hidden;
 
-    margin-bottom:40px;
+    margin-bottom:60px;
+
+    box-shadow:0 25px 60px rgba(0,0,0,.55);
 
 }
 
 .hero-background{
 
+    width:100%;
     height:100%;
 
     background-size:cover;
-
     background-position:center;
+
+    transform:scale(1.03);
 
 }
 
 .hero-dark{
 
     width:100%;
-
     height:100%;
+
+    background:
+    linear-gradient(
+        90deg,
+        rgba(0,0,0,.93) 15%,
+        rgba(0,0,0,.55) 45%,
+        rgba(0,0,0,.15) 100%
+    );
 
     display:flex;
 
     align-items:center;
 
-    padding:60px;
-
-    background:linear-gradient(90deg,#000 15%,rgba(0,0,0,.5),transparent);
+    padding:70px;
 
 }
 
 .hero-content{
 
-    max-width:650px;
+    width:620px;
 
 }
 
 .hero-content h1{
 
-    font-size:60px;
+    font-size:62px;
 
-    margin-bottom:20px;
+    font-weight:800;
+
+    line-height:1.05;
+
+    margin-bottom:18px;
 
 }
 
@@ -255,312 +371,925 @@ body::after{
 
     font-size:18px;
 
-    color:#ddd;
+    color:#d4d4d4;
 
-    line-height:1.7;
+    line-height:1.8;
 
-    }
-/* ===========================
-   BOUTONS
-=========================== */
+    margin-bottom:35px;
+
+}
+
+/* ==========================
+   HERO BUTTONS
+========================== */
 
 .hero-buttons{
 
     display:flex;
-    gap:15px;
-    margin-top:30px;
+
+    gap:18px;
+
+    flex-wrap:wrap;
 
 }
 
 .btn-watch{
 
-    background:#ff2d55;
+    background:linear-gradient(
+        135deg,
+        #ff2d55,
+        #ff003c
+    );
+
     color:#fff;
-    padding:14px 32px;
+
+    padding:15px 34px;
+
     border-radius:50px;
-    text-decoration:none;
+
     font-weight:700;
-    transition:.3s;
+
+    transition:.35s;
+
+    box-shadow:
+    0 12px 25px rgba(255,45,85,.35);
 
 }
 
 .btn-watch:hover{
 
-    background:#ff003c;
-    transform:translateY(-3px);
+    transform:translateY(-4px);
+
+    box-shadow:
+    0 18px 35px rgba(255,45,85,.45);
 
 }
 
 .btn-list{
 
-    background:#ffffff18;
-    color:#fff;
-    padding:14px 32px;
+    background:rgba(255,255,255,.12);
+
+    color:white;
+
+    padding:15px 34px;
+
     border-radius:50px;
-    text-decoration:none;
-    backdrop-filter:blur(8px);
-    transition:.3s;
+
+    backdrop-filter:blur(15px);
+
+    border:1px solid rgba(255,255,255,.15);
+
+    transition:.35s;
 
 }
 
 .btn-list:hover{
 
-    background:#ffffff30;
+    background:rgba(255,255,255,.22);
 
 }
 
-/* ===========================
-   SECTIONS
-=========================== */
+/* ==========================
+   TITRES
+========================== */
 
 .content-section{
 
-    margin-top:50px;
+    margin-top:55px;
 
 }
 
 .content-section h2{
 
-    font-size:28px;
-    margin-bottom:20px;
+    font-size:30px;
+
     font-weight:700;
 
+    margin-bottom:25px;
+
 }
 
-/* ===========================
+/* Ligne rouge */
+
+.content-section h2::after{
+
+    content:"";
+
+    display:block;
+
+    width:70px;
+
+    height:4px;
+
+    border-radius:50px;
+
+    background:#ff2d55;
+
+    margin-top:10px;
+
+   }
+/* ===================================================
+   MY TV APP PREMIUM UI v2
+   PARTIE 3/5
+===================================================*/
+
+/* ==========================
    GRILLES
-=========================== */
+========================== */
 
-.netflix-grid,
-.movie-row{
+.movie-row,
+.netflix-grid{
 
-    display:grid;
-    grid-template-columns:
-    repeat(auto-fill,minmax(220px,1fr));
+display:grid;
 
-    gap:25px;
+grid-template-columns:
+repeat(auto-fill,minmax(220px,1fr));
+
+gap:24px;
+
+margin-top:25px;
 
 }
 
-/* ===========================
+/* ==========================
    CARTES
-=========================== */
+========================== */
 
-.netflix-card,
-.movie-card{
+.movie-card,
+.netflix-card{
 
-    background:#111;
-    border-radius:20px;
-    overflow:hidden;
+position:relative;
 
-    transition:.35s;
+background:#141414;
 
-    border:1px solid rgba(255,255,255,.05);
+border-radius:22px;
+
+overflow:hidden;
+
+cursor:pointer;
+
+transition:.35s;
+
+border:1px solid rgba(255,255,255,.05);
+
+box-shadow:
+0 12px 30px rgba(0,0,0,.35);
 
 }
 
-.netflix-card:hover,
-.movie-card:hover{
+.movie-card:hover,
+.netflix-card:hover{
 
-    transform:translateY(-8px);
+transform:
+translateY(-8px)
+scale(1.03);
 
-    box-shadow:
-    0 15px 40px rgba(255,45,85,.25);
+box-shadow:
+0 25px 45px rgba(0,0,0,.55);
 
 }
 
-.netflix-card img,
-.movie-card img{
+/* IMAGE */
 
-    width:100%;
-    height:300px;
-    object-fit:cover;
+.movie-card img,
+.netflix-card img{
+
+width:100%;
+
+height:310px;
+
+object-fit:cover;
+
+transition:.4s;
+
+}
+
+.movie-card:hover img,
+.netflix-card:hover img{
+
+transform:scale(1.08);
+
+}
+
+/* ==========================
+   OVERLAY
+========================== */
+
+.movie-card::after,
+.netflix-card::after{
+
+content:"";
+
+position:absolute;
+
+left:0;
+
+bottom:0;
+
+width:100%;
+
+height:45%;
+
+background:
+
+linear-gradient(
+transparent,
+rgba(0,0,0,.92));
+
+}
+
+/* ==========================
+   TITRES
+========================== */
+
+.movie-card h4,
+.card-info h3{
+
+font-size:18px;
+
+font-weight:700;
+
+margin-bottom:8px;
+
+}
+
+.channel-title{
+
+padding:16px;
 
 }
 
 .card-info{
 
-    padding:18px;
+position:absolute;
 
-}
+left:0;
 
-.card-info h3{
+bottom:0;
 
-    font-size:18px;
-    margin-bottom:8px;
+width:100%;
+
+padding:18px;
+
+z-index:3;
 
 }
 
 .card-info p{
 
-    color:#aaa;
-    margin-bottom:8px;
+color:#c8c8c8;
+
+font-size:14px;
+
+margin-bottom:8px;
 
 }
 
 .card-info span{
 
-    color:#ff2d55;
-    font-size:14px;
+color:#ff2d55;
+
+font-size:13px;
+
+font-weight:600;
 
 }
 
-/* ===========================
-   CHAÎNES
-=========================== */
-
-.channel-title{
-
-    padding:15px;
-    text-align:center;
-
-}
+/* ==========================
+   BADGE LIVE
+========================== */
 
 .live-badge{
 
-    display:inline-block;
-    margin-top:10px;
-    background:#ff2d55;
-    color:#fff;
-    padding:6px 14px;
-    border-radius:30px;
-    font-size:12px;
-    font-weight:700;
+display:inline-flex;
+
+align-items:center;
+
+gap:8px;
+
+margin-top:12px;
+
+padding:8px 14px;
+
+background:#ff003c;
+
+color:white;
+
+font-size:12px;
+
+font-weight:700;
+
+border-radius:30px;
+
+box-shadow:
+0 8px 20px rgba(255,0,60,.35);
 
 }
 
-/* ===========================
+/* ==========================
+   IMAGE ABSENTE
+========================== */
+
+.no-image{
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+height:310px;
+
+background:#1b1b1b;
+
+font-size:70px;
+
+color:#666;
+
+}
+
+/* ==========================
+   EFFET PREMIUM
+========================== */
+
+.movie-card:hover::before,
+.netflix-card:hover::before{
+
+content:"";
+
+position:absolute;
+
+inset:0;
+
+border:2px solid rgba(255,45,85,.65);
+
+border-radius:22px;
+
+z-index:10;
+
+pointer-events:none;
+
+   }
+/* ===================================================
+   MY TV APP PREMIUM UI v2
+   PARTIE 4/5
+===================================================*/
+
+/* ==========================
+   BOUTONS GLOBAUX
+========================== */
+
+.btn,
+button,
+input[type="submit"]{
+
+display:inline-flex;
+
+align-items:center;
+
+justify-content:center;
+
+padding:14px 28px;
+
+border:none;
+
+border-radius:50px;
+
+background:linear-gradient(135deg,#ff2d55,#ff003c);
+
+color:#fff;
+
+font-size:15px;
+
+font-weight:700;
+
+cursor:pointer;
+
+transition:.35s;
+
+box-shadow:0 12px 25px rgba(255,45,85,.30);
+
+}
+
+.btn:hover,
+button:hover,
+input[type="submit"]:hover{
+
+transform:translateY(-3px);
+
+box-shadow:0 18px 35px rgba(255,45,85,.40);
+
+}
+
+/* ==========================
+   FORMULAIRES
+========================== */
+
+form{
+
+margin-top:20px;
+
+}
+
+input,
+textarea,
+select{
+
+width:100%;
+
+padding:15px 18px;
+
+margin-bottom:18px;
+
+background:#161616;
+
+color:#fff;
+
+border:1px solid #2d2d2d;
+
+border-radius:16px;
+
+font-size:15px;
+
+transition:.30s;
+
+}
+
+textarea{
+
+min-height:130px;
+
+resize:vertical;
+
+}
+
+input:focus,
+textarea:focus,
+select:focus{
+
+outline:none;
+
+border-color:#ff2d55;
+
+box-shadow:0 0 0 4px rgba(255,45,85,.18);
+
+}
+
+/* ==========================
+   FLASH MESSAGE
+========================== */
+
+.flash-message{
+
+background:#1b1b1b;
+
+border-left:5px solid #ff2d55;
+
+padding:18px;
+
+border-radius:16px;
+
+margin-bottom:25px;
+
+color:white;
+
+}
+
+/* ==========================
    FOOTER
-=========================== */
+========================== */
 
 .main-footer{
 
-    margin-top:80px;
-    background:#0b0b0b;
-    padding:60px 40px;
+margin-top:80px;
+
+padding:60px 40px;
+
+background:#090909;
+
+border-top:1px solid #202020;
 
 }
 
 .footer-container{
 
-    display:grid;
-    grid-template-columns:
-    repeat(auto-fit,minmax(220px,1fr));
+display:grid;
 
-    gap:40px;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+
+gap:35px;
 
 }
 
 .footer-logo{
 
-    display:flex;
-    align-items:center;
-    gap:12px;
+display:flex;
 
-    font-size:28px;
-    font-weight:700;
+align-items:center;
+
+gap:12px;
+
+font-size:28px;
+
+font-weight:700;
+
+margin-bottom:18px;
 
 }
 
 .footer-logo i{
 
-    color:#ff2d55;
+color:#ff2d55;
+
+}
+
+.footer-brand p{
+
+color:#b8b8b8;
+
+line-height:1.8;
 
 }
 
 .footer-links h3{
 
-    margin-bottom:18px;
+margin-bottom:18px;
 
 }
 
 .footer-links a{
 
-    display:block;
-    color:#aaa;
-    text-decoration:none;
-    margin-bottom:10px;
+display:block;
+
+margin-bottom:10px;
+
+color:#bdbdbd;
+
+transition:.30s;
 
 }
 
 .footer-links a:hover{
 
-    color:#fff;
+color:#fff;
+
+padding-left:6px;
 
 }
 
 .social-icons{
 
-    display:flex;
-    gap:15px;
+display:flex;
+
+gap:14px;
+
+margin-top:15px;
 
 }
 
 .social-icons a{
 
-    width:45px;
-    height:45px;
+display:flex;
 
-    border-radius:50%;
+align-items:center;
 
-    display:flex;
-    justify-content:center;
-    align-items:center;
+justify-content:center;
 
-    background:#1c1c1c;
+width:46px;
 
-    color:white;
+height:46px;
 
-    transition:.3s;
+border-radius:50%;
+
+background:#191919;
+
+transition:.30s;
 
 }
 
 .social-icons a:hover{
 
-    background:#ff2d55;
+background:#ff2d55;
+
+transform:translateY(-5px);
 
 }
 
 .footer-bottom{
 
-    margin-top:40px;
-    padding-top:20px;
-    border-top:1px solid #222;
+margin-top:35px;
 
-    text-align:center;
+padding-top:20px;
 
-    color:#888;
+border-top:1px solid #202020;
+
+text-align:center;
+
+color:#888;
+
+font-size:14px;
 
 }
 
-/* ===========================
-   RESPONSIVE
-=========================== */
+/* ==========================
+   ANIMATIONS
+========================== */
+
+@keyframes fadeUp{
+
+0%{
+
+opacity:0;
+
+transform:translateY(30px);
+
+}
+
+100%{
+
+opacity:1;
+
+transform:translateY(0);
+
+}
+
+}
+
+.hero-content,
+.content-section,
+.movie-card,
+.netflix-card{
+
+animation:fadeUp .6s ease;
+
+}
+/* ===================================================
+   MY TV APP PREMIUM UI v2
+   PARTIE 5/5
+===================================================*/
+
+/* ========= SCROLLBAR ========= */
+
+::-webkit-scrollbar{
+
+width:10px;
+height:10px;
+
+}
+
+::-webkit-scrollbar-track{
+
+background:#090909;
+
+}
+
+::-webkit-scrollbar-thumb{
+
+background:#ff2d55;
+border-radius:20px;
+
+}
+
+::-webkit-scrollbar-thumb:hover{
+
+background:#ff003c;
+
+}
+
+/* ========= SELECTION ========= */
+
+::selection{
+
+background:#ff2d55;
+color:white;
+
+}
+
+/* ========= BADGES ========= */
+
+.badge{
+
+display:inline-flex;
+
+align-items:center;
+
+padding:6px 14px;
+
+border-radius:30px;
+
+background:rgba(255,45,85,.15);
+
+border:1px solid rgba(255,45,85,.4);
+
+color:#ff2d55;
+
+font-size:13px;
+
+font-weight:600;
+
+}
+
+/* ========= GLASS CARD ========= */
+
+.glass{
+
+background:rgba(255,255,255,.06);
+
+backdrop-filter:blur(15px);
+
+border:1px solid rgba(255,255,255,.08);
+
+border-radius:24px;
+
+}
+
+/* ========= CREATOR STUDIO ========= */
+
+.creator-card{
+
+background:#111;
+
+border-radius:24px;
+
+padding:25px;
+
+border:1px solid rgba(255,255,255,.05);
+
+transition:.35s;
+
+}
+
+.creator-card:hover{
+
+transform:translateY(-6px);
+
+box-shadow:0 20px 40px rgba(0,0,0,.35);
+
+}
+
+.creator-card h3{
+
+margin-bottom:12px;
+
+font-size:22px;
+
+}
+
+.creator-card p{
+
+color:#bdbdbd;
+
+line-height:1.7;
+
+}
+
+/* ========= CAMERA LIVE ========= */
+
+.live-camera{
+
+position:relative;
+
+overflow:hidden;
+
+border-radius:24px;
+
+}
+
+.live-camera::before{
+
+content:"LIVE";
+
+position:absolute;
+
+top:18px;
+
+left:18px;
+
+background:#ff003c;
+
+color:white;
+
+padding:8px 16px;
+
+border-radius:30px;
+
+font-size:12px;
+
+font-weight:700;
+
+z-index:5;
+
+}
+
+/* ========= PROFILE ========= */
+
+.profile-card{
+
+background:#141414;
+
+border-radius:25px;
+
+padding:30px;
+
+text-align:center;
+
+}
+
+.profile-avatar{
+
+width:110px;
+
+height:110px;
+
+border-radius:50%;
+
+margin:auto;
+
+margin-bottom:20px;
+
+border:4px solid #ff2d55;
+
+object-fit:cover;
+
+}
+
+/* ========= LOADING ========= */
+
+.loading{
+
+width:50px;
+
+height:50px;
+
+border:5px solid #333;
+
+border-top-color:#ff2d55;
+
+border-radius:50%;
+
+animation:spin 1s linear infinite;
+
+margin:auto;
+
+}
+
+@keyframes spin{
+
+100%{
+
+transform:rotate(360deg);
+
+}
+
+}
+
+/* ========= MOBILE ========= */
 
 @media(max-width:900px){
 
 .header{
 
+padding:15px;
+
 flex-direction:column;
-gap:15px;
+
+height:auto;
+
+}
+
+.logo{
+
+font-size:24px;
 
 }
 
 .nav{
 
+width:100%;
+
+display:flex;
+
+flex-wrap:wrap;
+
 justify-content:center;
 
-}
+gap:12px;
 
-.hero-content h1{
-
-font-size:40px;
+margin-top:15px;
 
 }
 
-.hero-dark{
+.nav a{
 
-padding:30px;
+font-size:14px;
+
+}
+
+.search-form{
+
+width:100%;
+
+margin:15px 0;
 
 }
 
@@ -570,25 +1299,67 @@ width:100%;
 
 }
 
+.hero-netflix{
+
+height:55vh;
+
+min-height:420px;
+
+}
+
+.hero-dark{
+
+padding:30px;
+
+}
+
+.hero-content{
+
+width:100%;
+
+}
+
+.hero-content h1{
+
+font-size:36px;
+
+}
+
+.hero-content p{
+
+font-size:15px;
+
+}
+
+.movie-row,
+.netflix-grid{
+
+grid-template-columns:
+repeat(auto-fill,minmax(150px,1fr));
+
+gap:15px;
+
+}
+
+.movie-card img,
+.netflix-card img{
+
+height:220px;
+
+}
+
+.footer-container{
+
+grid-template-columns:1fr;
+
+}
+
 .main-content{
 
 padding:20px;
 
 }
 
-.netflix-grid,
-.movie-row{
-
-grid-template-columns:
-repeat(auto-fill,minmax(160px,1fr));
-
 }
 
-.netflix-card img,
-.movie-card img{
-
-height:220px;
-
-}
-
-    }
+/* ========= FIN ========= */
