@@ -6,145 +6,249 @@ Caméra Live - MY TV APP
 
 {% block content %}
 
-<section class="camera-live-page">
+<section class="live-page">
 
-<div class="camera-header">
+<div class="live-topbar">
 
-<div>
+    <div class="live-title">
 
-<h1>
+        <h1>🎥 MY TV LIVE</h1>
 
-🎥 Caméra Live
+        <p>Diffusez votre contenu en direct.</p>
 
-</h1>
+    </div>
 
-<p>
+    <div class="live-info">
 
-Diffusez en direct avec une qualité professionnelle.
+        <span id="liveStatus" class="offline">
+            ⏹ Hors ligne
+        </span>
 
-</p>
+        <span id="serverStatus">
+            🟡 Connexion...
+        </span>
 
-</div>
+        <span class="viewer-counter">
+            👀
+            <span id="viewerCount">0</span>
+        </span>
 
-<div class="live-badge" id="liveStatus">
-
-⏹ Hors ligne
-
-</div>
-
-</div>
-
-<div class="camera-layout">
-
-<!-- CAMERA CREATEUR -->
-
-<div class="creator-panel">
-
-<div class="video-card">
-
-<div class="video-title">
-
-<span>
-
-📹 Votre caméra
-
-</span>
-
-<span id="serverStatus">
-
-🟡 Connexion...
-
-</span>
+    </div>
 
 </div>
 
-<video
-id="camera"
-autoplay
-playsinline
-muted>
+<div class="live-container">
 
-</video>
+    <!-- VIDEO PRINCIPALE -->
 
-<div class="video-controls">
+    <div class="main-live">
 
-<button
-id="startBtn"
-class="live-btn start">
+        <div class="video-wrapper">
 
-<i class="fas fa-circle"></i>
+            <video
+                id="camera"
+                autoplay
+                playsinline
+                muted>
+            </video>
 
-Démarrer
+            <div class="live-overlay">
 
-</button>
+                <div class="creator-name">
 
-<button
-id="stopBtn"
-class="live-btn stop">
+                    🔴 EN DIRECT
 
-<i class="fas fa-stop"></i>
+                </div>
 
-Arrêter
+                <div class="quality">
 
-</button>
+                    HD
 
-<button
-id="fullscreenBtn"
-class="live-btn">
+                </div>
 
-<i class="fas fa-expand"></i>
+            </div>
 
-Plein écran
+        </div>
 
-</button>
+        <div class="live-controls">
 
-</div>
+            <button id="startBtn" class="live-btn start">
+                🔴 Démarrer
+            </button>
 
-<p id="message">
+            <button id="stopBtn" class="live-btn stop">
+                ⛔ Arrêter
+            </button>
 
-En attente...
+            <button id="muteBtn" class="live-btn">
+                🎤 Micro
+            </button>
 
-</p>
+            <button id="cameraBtn" class="live-btn">
+                📷 Caméra
+            </button>
 
-</div>
+            <button id="switchBtn" class="live-btn">
+                🔄 Caméra
+            </button>
 
-</div>
+            <button id="screenBtn" class="live-btn">
+                🖥 Écran
+            </button>
 
-<!-- SPECTATEURS -->
+            <button id="fullscreenBtn" class="live-btn">
+                ⛶ Plein écran
+            </button>
 
-<div class="viewers-panel">
+        </div>
 
-<div class="panel-title">
+        <p id="message">
 
-👥 Spectateurs connectés
+            Prêt à diffuser.
 
-<span id="viewerCount">
+        </p>
 
-0
+    </div>
 
-</span>
+    <!-- INVITÉS -->
 
-</div>
+    <aside class="guests-panel">
 
-<div
-id="viewersGrid"
-class="viewers-grid">
+        <h3>
 
-<div class="waiting-viewer">
+            👥 Invités
 
-<i class="fas fa-users"></i>
+        </h3>
 
-<p>
+        <div id="guestGrid" class="guest-grid">
 
-Aucun spectateur connecté
+            <div class="guest-empty">
 
-</p>
+                Aucun invité connecté.
 
-</div>
+            </div>
 
-</div>
+        </div>
 
-</div>
+    </aside>
+
+  </div>
+      <!-- ==========================
+         COLONNE DROITE
+    =========================== -->
+
+    <aside class="live-sidebar">
+
+        <!-- CHAT -->
+
+        <div class="chat-panel">
+
+            <div class="panel-header">
+
+                💬 Chat en direct
+
+            </div>
+
+            <div
+                id="chatMessages"
+                class="chat-messages">
+
+                <div class="system-message">
+
+                    Bienvenue sur MY TV LIVE.
+
+                </div>
+
+            </div>
+
+            <div class="chat-input">
+
+                <input
+                    id="chatText"
+                    type="text"
+                    placeholder="Écrire un message...">
+
+                <button id="sendChat">
+
+                    Envoyer
+
+                </button>
+
+            </div>
+
+        </div>
+
+        <!-- REACTIONS -->
+
+        <div class="reaction-panel">
+
+            <div class="panel-header">
+
+                ❤️ Réactions
+
+            </div>
+
+            <div class="reaction-buttons">
+
+                <button class="reaction-btn" data-emoji="❤️">
+                    ❤️
+                </button>
+
+                <button class="reaction-btn" data-emoji="😂">
+                    😂
+                </button>
+
+                <button class="reaction-btn" data-emoji="🔥">
+                    🔥
+                </button>
+
+                <button class="reaction-btn" data-emoji="👏">
+                    👏
+                </button>
+
+                <button class="reaction-btn" data-emoji="👍">
+                    👍
+                </button>
+
+                <button class="reaction-btn" data-emoji="😍">
+                    😍
+                </button>
+
+            </div>
+
+            <div
+                id="floatingReactions"
+                class="floating-reactions">
+
+            </div>
+
+        </div>
+
+        <!-- DEMANDES -->
+
+        <div class="request-panel">
+
+            <div class="panel-header">
+
+                ✋ Demandes d'invitation
+
+            </div>
+
+            <div
+                id="requestList"
+                class="request-list">
+
+                <div class="empty-request">
+
+                    Aucune demande.
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </aside>
 
 </div>
 
@@ -155,484 +259,1085 @@ Aucun spectateur connecté
 <script>
 
 const socket = io({
-reconnection:true
+
+    reconnection:true
+
 });
 
-let stream=null;
-let room=null;
-let peers={};
+let stream = null;
 
-const video=document.getElementById("camera");
-const message=document.getElementById("message");
-const serverStatus=document.getElementById("serverStatus");
-const liveStatus=document.getElementById("liveStatus");
-const viewersGrid=document.getElementById("viewersGrid");
-const viewerCount=document.getElementById("viewerCount");
+let room = null;
+
+let peers = {};
+
+let screenSharing = false;
+
+let currentCamera = "user";
+
+const video = document.getElementById("camera");
+
+const liveStatus = document.getElementById("liveStatus");
+
+const serverStatus = document.getElementById("serverStatus");
+
+const viewerCount = document.getElementById("viewerCount");
+
+const guestGrid = document.getElementById("guestGrid");
+
+const requestList = document.getElementById("requestList");
+
+const floatingReactions =
+document.getElementById("floatingReactions");
+
+const chatMessages =
+document.getElementById("chatMessages");
+
+const message =
+document.getElementById("message");
+  // ======================================================
+// CONNEXION SOCKET
+// ======================================================
 
 socket.on("connect",()=>{
 
-serverStatus.innerHTML="🟢 Serveur connecté";
+    serverStatus.innerHTML="🟢 Serveur connecté";
 
 });
 
 socket.on("disconnect",()=>{
 
-serverStatus.innerHTML="🔴 Serveur déconnecté";
+    serverStatus.innerHTML="🔴 Serveur déconnecté";
 
 });
-  // ==========================
-// CREATION PEER
-// ==========================
+
+// ======================================================
+// CREATION PEER WEBRTC
+// ======================================================
 
 function createPeer(id){
 
-const peer=new RTCPeerConnection({
+    const peer = new RTCPeerConnection({
 
-iceServers:[
+        iceServers:[
 
-{
-urls:[
-"stun:stun.l.google.com:19302"
-]
-}
+            {
 
-]
+                urls:[
+                    "stun:stun.l.google.com:19302"
+                ]
 
-});
+            }
 
-// Envoyer votre caméra
+        ]
 
-if(stream){
+    });
 
-stream.getTracks().forEach(track=>{
+    // Envoyer caméra + micro
 
-peer.addTrack(track,stream);
+    if(stream){
 
-});
+        stream.getTracks().forEach(track=>{
 
-}
+            peer.addTrack(track,stream);
 
-// Recevoir la vidéo du spectateur
+        });
 
-peer.ontrack=(event)=>{
+    }
 
-let viewer=document.getElementById("viewer-"+id);
+    // Recevoir la vidéo d'un invité
 
-if(!viewer){
+    peer.ontrack=(event)=>{
 
-const card=document.createElement("div");
+        let card=document.getElementById("guest-"+id);
 
-card.className="viewer-card";
+        if(!card){
 
-viewer=document.createElement("video");
+            if(document.querySelector(".guest-empty")){
 
-viewer.id="viewer-"+id;
+                document.querySelector(".guest-empty").remove();
 
-viewer.autoplay=true;
+            }
 
-viewer.playsInline=true;
+            card=document.createElement("div");
 
-card.appendChild(viewer);
+            card.className="guest-card";
 
-const name=document.createElement("span");
+            card.id="guest-"+id;
 
-name.innerHTML="👤 Spectateur";
+            const guestVideo=document.createElement("video");
 
-card.appendChild(name);
+            guestVideo.autoplay=true;
 
-const waiting=document.querySelector(".waiting-viewer");
+            guestVideo.playsInline=true;
 
-if(waiting){
+            guestVideo.srcObject=event.streams[0];
 
-waiting.remove();
+            const guestName=document.createElement("span");
 
-}
+            guestName.innerHTML="👤 Invité";
 
-viewersGrid.appendChild(card);
+            card.appendChild(guestVideo);
 
-viewerCount.innerHTML=
+            card.appendChild(guestName);
 
-Object.keys(peers).length+1;
+            guestGrid.appendChild(card);
 
-}
+        }
 
-viewer.srcObject=event.streams[0];
+    };
 
-};
+    // ICE
 
-// ICE
+    peer.onicecandidate=(event)=>{
 
-peer.onicecandidate=(event)=>{
+        if(event.candidate){
 
-if(event.candidate){
+            socket.emit("camera_ice",{
 
-socket.emit("camera_ice",{
+                target:id,
 
-candidate:event.candidate,
+                candidate:event.candidate
 
-target:id,
+            });
 
-sender:socket.id
+        }
 
-});
+    };
 
-}
+    peers[id]=peer;
 
-};
-
-peers[id]=peer;
-
-return peer;
+    return peer;
 
 }
 
-// ==========================
+// ======================================================
 // NOUVEAU SPECTATEUR
-// ==========================
+// ======================================================
 
 socket.on("viewer_joined",async(data)=>{
 
-const peer=createPeer(data.viewer_id);
+    viewerCount.innerHTML=data.count;
 
-const offer=await peer.createOffer();
+    const peer=createPeer(data.viewer_id);
 
-await peer.setLocalDescription(offer);
+    const offer=await peer.createOffer();
 
-socket.emit("camera_offer",{
+    await peer.setLocalDescription(offer);
 
-room:room,
+    socket.emit("camera_offer",{
 
-offer:offer,
+        room:room,
 
-target:data.viewer_id,
+        target:data.viewer_id,
 
-sender:socket.id
+        offer:offer
+
+    });
 
 });
 
+// ======================================================
+// RECEVOIR OFFER
+// ======================================================
+
+socket.on("camera_offer",async(data)=>{
+
+    const peer=createPeer(data.sender);
+
+    await peer.setRemoteDescription(
+
+        new RTCSessionDescription(data.offer)
+
+    );
+
+    const answer=await peer.createAnswer();
+
+    await peer.setLocalDescription(answer);
+
+    socket.emit("camera_answer",{
+
+        target:data.sender,
+
+        answer:answer
+
+    });
+
 });
 
-// ==========================
-// REPONSE
-// ==========================
+// ======================================================
+// RECEVOIR ANSWER
+// ======================================================
 
 socket.on("camera_answer",async(data)=>{
 
-const peer=peers[data.sender];
+    if(peers[data.sender]){
 
-if(peer){
+        await peers[data.sender].setRemoteDescription(
 
-await peer.setRemoteDescription(
+            new RTCSessionDescription(data.answer)
 
-new RTCSessionDescription(data.answer)
+        );
 
-);
+    }
 
-}
+});
+  // ======================================================
+// ICE CANDIDATES
+// ======================================================
+
+socket.on("camera_ice", async(data)=>{
+
+    try{
+
+        if(peers[data.sender]){
+
+            await peers[data.sender].addIceCandidate(
+
+                new RTCIceCandidate(data.candidate)
+
+            );
+
+        }
+
+    }catch(err){
+
+        console.log(err);
+
+    }
 
 });
 
-// ==========================
-// ICE
-// ==========================
-
-socket.on("camera_ice",async(data)=>{
-
-try{
-
-const peer=peers[data.sender];
-
-if(peer){
-
-await peer.addIceCandidate(
-
-new RTCIceCandidate(data.candidate)
-
-);
-
-}
-
-}catch(e){
-
-console.log(e);
-
-}
-
-});
-  // ==========================
+// ======================================================
 // DEMARRER LE LIVE
-// ==========================
+// ======================================================
 
-document.getElementById("startBtn").onclick = async ()=>{
+document.getElementById("startBtn").onclick = async()=>{
 
-try{
+    try{
 
-stream = await navigator.mediaDevices.getUserMedia({
+        stream = await navigator.mediaDevices.getUserMedia({
 
-video:{
-width:1280,
-height:720,
-facingMode:"user"
-},
+            video:{
+                width:1280,
+                height:720,
+                facingMode:currentCamera
+            },
 
-audio:true
+            audio:true
 
-});
+        });
 
-video.srcObject = stream;
+        video.srcObject = stream;
 
-await video.play();
+        await video.play();
 
-const response = await fetch("/start-camera-live",{
+        const response = await fetch("/start-camera-live",{
 
-method:"POST"
+            method:"POST"
 
-});
+        });
 
-const data = await response.json();
+        const data = await response.json();
 
-if(data.success){
+        if(data.success){
 
-room = "camera_live_" + data.live_id;
+            room = "camera_live_" + data.live_id;
 
-socket.emit("join_camera",{
+            socket.emit("join_camera",{
 
-room:room,
+                room:room,
 
-creator:true
+                creator:true
 
-});
+            });
 
-liveStatus.innerHTML="🔴 EN DIRECT";
+            liveStatus.innerHTML="🔴 EN DIRECT";
 
-liveStatus.classList.add("live-active");
+            liveStatus.classList.add("live-active");
 
-message.innerHTML="✅ Diffusion en direct démarrée.";
+            message.innerHTML="✅ Live démarré.";
 
-}else{
+        }else{
 
-message.innerHTML="❌ Impossible de créer le live.";
+            message.innerHTML="❌ Impossible de démarrer.";
 
-}
+        }
 
-}catch(error){
+    }catch(error){
 
-console.log(error);
+        console.log(error);
 
-message.innerHTML="❌ "+error.message;
+        message.innerHTML="❌ "+error.message;
 
-}
+    }
 
 };
 
-// ==========================
-// SPECTATEUR QUITTE
-// ==========================
-
-socket.on("viewer_left",(data)=>{
-
-const viewer=document.getElementById(
-
-"viewer-"+data.viewer_id
-
-);
-
-if(viewer){
-
-viewer.parentElement.remove();
-
-}
-
-if(peers[data.viewer_id]){
-
-peers[data.viewer_id].close();
-
-delete peers[data.viewer_id];
-
-}
-
-viewerCount.innerHTML=
-
-Object.keys(peers).length;
-
-if(Object.keys(peers).length===0){
-
-viewersGrid.innerHTML=`
-
-<div class="waiting-viewer">
-
-<i class="fas fa-users"></i>
-
-<p>
-
-Aucun spectateur connecté
-
-</p>
-
-</div>
-
-`;
-
-}
-
-});
-
-// ==========================
-// LIVE STOPPE PAR LE SERVEUR
-// ==========================
-
-socket.on("camera_stopped",()=>{
-
-liveStatus.innerHTML="⛔ Live terminé";
-
-message.innerHTML="Le direct est terminé.";
-
-});
-  // ==========================
-// ARRÊTER LE LIVE
-// ==========================
+// ======================================================
+// ARRETER LE LIVE
+// ======================================================
 
 document.getElementById("stopBtn").onclick=()=>{
 
-if(stream){
+    if(stream){
 
-stream.getTracks().forEach(track=>track.stop());
+        stream.getTracks().forEach(track=>track.stop());
 
-stream=null;
+        stream=null;
 
-}
+    }
 
-Object.values(peers).forEach(peer=>{
+    Object.values(peers).forEach(peer=>{
 
-peer.close();
+        peer.close();
 
-});
+    });
 
-peers={};
+    peers={};
 
-if(room){
+    if(room){
 
-socket.emit("stop_camera",{
+        socket.emit("stop_camera",{
 
-room:room
+            room:room
 
-});
+        });
 
-}
+    }
 
-video.srcObject=null;
+    video.srcObject=null;
 
-viewersGrid.innerHTML=`
+    guestGrid.innerHTML=`
 
-<div class="waiting-viewer">
+        <div class="guest-empty">
 
-<i class="fas fa-users"></i>
+            Aucun invité connecté.
 
-<p>
+        </div>
 
-Aucun spectateur connecté
+    `;
 
-</p>
+    viewerCount.innerHTML="0";
 
-</div>
+    liveStatus.innerHTML="⛔ Hors ligne";
 
-`;
+    liveStatus.classList.remove("live-active");
 
-viewerCount.innerHTML="0";
-
-liveStatus.innerHTML="⛔ Hors ligne";
-
-liveStatus.classList.remove("live-active");
-
-message.innerHTML="Diffusion arrêtée.";
+    message.innerHTML="Live arrêté.";
 
 };
 
-// ==========================
-// PLEIN ÉCRAN
-// ==========================
+// ======================================================
+// PLEIN ECRAN
+// ======================================================
 
 document.getElementById("fullscreenBtn").onclick=()=>{
 
-if(video.requestFullscreen){
+    if(video.requestFullscreen){
 
-video.requestFullscreen();
+        video.requestFullscreen();
 
-}else if(video.webkitRequestFullscreen){
-
-video.webkitRequestFullscreen();
-
-}
+    }
 
 };
 
-// ==========================
-// CHANGEMENT CAMÉRA (Mobile)
-// ==========================
+// ======================================================
+// MICRO ON/OFF
+// ======================================================
 
-let currentCamera="user";
+document.getElementById("muteBtn").onclick=()=>{
 
-async function switchCamera(){
+    if(!stream) return;
 
-if(stream){
+    const audio=stream.getAudioTracks()[0];
 
-stream.getTracks().forEach(track=>track.stop());
+    audio.enabled=!audio.enabled;
+
+    document.getElementById("muteBtn").innerHTML=
+
+        audio.enabled
+
+        ?
+
+        "🎤 Micro"
+
+        :
+
+        "🔇 Micro";
+
+};
+
+// ======================================================
+// CAMERA ON/OFF
+// ======================================================
+
+document.getElementById("cameraBtn").onclick=()=>{
+
+    if(!stream) return;
+
+    const cam=stream.getVideoTracks()[0];
+
+    cam.enabled=!cam.enabled;
+
+    document.getElementById("cameraBtn").innerHTML=
+
+        cam.enabled
+
+        ?
+
+        "📷 Caméra"
+
+        :
+
+        "🚫 Caméra";
+
+};
+  // ======================================================
+// CHANGER DE CAMERA (Mobile)
+// ======================================================
+
+document.getElementById("switchBtn").onclick = async()=>{
+
+    if(!stream) return;
+
+    stream.getTracks().forEach(track=>track.stop());
+
+    currentCamera =
+
+        currentCamera==="user"
+
+        ?
+
+        "environment"
+
+        :
+
+        "user";
+
+    stream = await navigator.mediaDevices.getUserMedia({
+
+        video:{
+            facingMode:currentCamera
+        },
+
+        audio:true
+
+    });
+
+    video.srcObject = stream;
+
+    // Remplacer les pistes vidéo/audio
+    Object.values(peers).forEach(peer=>{
+
+        const senders = peer.getSenders();
+
+        stream.getTracks().forEach(track=>{
+
+            const sender = senders.find(s=>
+
+                s.track &&
+                s.track.kind===track.kind
+
+            );
+
+            if(sender){
+
+                sender.replaceTrack(track);
+
+            }
+
+        });
+
+    });
+
+};
+
+// ======================================================
+// PARTAGE D'ECRAN
+// ======================================================
+
+document.getElementById("screenBtn").onclick = async()=>{
+
+    try{
+
+        const display =
+
+        await navigator.mediaDevices.getDisplayMedia({
+
+            video:true
+
+        });
+
+        const screenTrack =
+        display.getVideoTracks()[0];
+
+        video.srcObject = display;
+
+        Object.values(peers).forEach(peer=>{
+
+            const sender = peer.getSenders().find(s=>
+
+                s.track &&
+                s.track.kind==="video"
+
+            );
+
+            if(sender){
+
+                sender.replaceTrack(screenTrack);
+
+            }
+
+        });
+
+        screenTrack.onended=()=>{
+
+            document.getElementById("switchBtn").click();
+
+        };
+
+    }catch(e){
+
+        console.log(e);
+
+    }
+
+};
+
+// ======================================================
+// ENVOYER MESSAGE
+// ======================================================
+
+document.getElementById("sendChat").onclick=()=>{
+
+    const input =
+    document.getElementById("chatText");
+
+    if(input.value.trim()==="") return;
+
+    socket.emit("live_message",{
+
+        room:room,
+
+        message:input.value
+
+    });
+
+    input.value="";
+
+};
+
+// ======================================================
+// RECEVOIR MESSAGE
+// ======================================================
+
+socket.on("live_message",(data)=>{
+
+    const div =
+    document.createElement("div");
+
+    div.className="chat-item";
+
+    div.innerHTML=
+
+    "<b>"+data.user+"</b> : "+data.message;
+
+    chatMessages.appendChild(div);
+
+    chatMessages.scrollTop=
+
+    chatMessages.scrollHeight;
+
+});
+
+// ======================================================
+// ENTRÉE = ENVOYER
+// ======================================================
+
+document.getElementById("chatText")
+
+.addEventListener("keypress",(e)=>{
+
+    if(e.key==="Enter"){
+
+        e.preventDefault();
+
+        document.getElementById("sendChat").click();
+
+    }
+
+});
+  // ======================================================
+// ENVOYER UNE REACTION
+// ======================================================
+
+document.querySelectorAll(".reaction-btn").forEach(btn=>{
+
+    btn.onclick=()=>{
+
+        socket.emit("live_reaction",{
+
+            room:room,
+
+            emoji:btn.dataset.emoji
+
+        });
+
+    };
+
+});
+
+// ======================================================
+// RECEVOIR UNE REACTION
+// ======================================================
+
+socket.on("live_reaction",(data)=>{
+
+    const emoji=document.createElement("div");
+
+    emoji.className="floating-emoji";
+
+    emoji.innerHTML=data.emoji;
+
+    emoji.style.left=Math.random()*80+10+"%";
+
+    floatingReactions.appendChild(emoji);
+
+    setTimeout(()=>{
+
+        emoji.remove();
+
+    },3000);
+
+});
+
+// ======================================================
+// DEMANDER A REJOINDRE LE LIVE
+// ======================================================
+
+function requestJoinLive(){
+
+    if(!room) return;
+
+    socket.emit("request_join_live",{
+
+        room:room
+
+    });
 
 }
 
-currentCamera=
+// ======================================================
+// LE CREATEUR RECOIT UNE DEMANDE
+// ======================================================
 
-currentCamera==="user"
+socket.on("join_request",(data)=>{
 
-?
+    if(document.querySelector(".empty-request")){
 
-"environment"
+        document.querySelector(".empty-request").remove();
 
-:
+    }
 
-"user";
+    const card=document.createElement("div");
 
-stream=await navigator.mediaDevices.getUserMedia({
+    card.className="request-card";
 
-video:{
+    card.id="request-"+data.guest;
 
-facingMode:currentCamera
+    card.innerHTML=`
 
-},
+        <span>
 
-audio:true
+            👤 ${data.guest.substring(0,6)}
+
+        </span>
+
+        <div>
+
+            <button class="accept-btn">
+
+                ✅
+
+            </button>
+
+            <button class="reject-btn">
+
+                ❌
+
+            </button>
+
+        </div>
+
+    `;
+
+    requestList.appendChild(card);
+
+    // ACCEPTER
+
+    card.querySelector(".accept-btn").onclick=()=>{
+
+        socket.emit("accept_guest",{
+
+            room:room,
+
+            guest:data.guest
+
+        });
+
+        card.remove();
+
+    };
+
+    // REFUSER
+
+    card.querySelector(".reject-btn").onclick=()=>{
+
+        card.remove();
+
+    };
 
 });
 
-video.srcObject=stream;
+// ======================================================
+// INVITE ACCEPTE
+// ======================================================
 
-Object.values(peers).forEach(peer=>{
+socket.on("guest_accepted",()=>{
 
-stream.getTracks().forEach(track=>{
-
-peer.addTrack(track,stream);
-
-});
+    message.innerHTML="🎉 Vous avez rejoint le live comme invité.";
 
 });
 
-}
+// ======================================================
+// INVITE CONNECTE
+// ======================================================
+
+socket.on("guest_joined",(data)=>{
+
+    console.log("Nouvel invité :",data.guest);
+
+});
+
+// ======================================================
+// INVITE QUITTE
+// ======================================================
+
+socket.on("guest_left",(data)=>{
+
+    const card=document.getElementById(
+
+        "guest-"+data.id
+
+    );
+
+    if(card){
+
+        card.remove();
+
+    }
+
+    if(document.querySelectorAll(".guest-card").length===0){
+
+        guestGrid.innerHTML=`
+
+            <div class="guest-empty">
+
+                Aucun invité connecté.
+
+            </div>
+
+        `;
+
+    }
+
+});
+
+// ======================================================
+// INVITE EXCLU
+// ======================================================
+
+socket.on("kicked",()=>{
+
+    alert("Vous avez été retiré du live.");
+
+    if(stream){
+
+        stream.getTracks().forEach(track=>track.stop());
+
+    }
+
+    window.location.reload();
+
+});
+  // ======================================================
+// RACCOURCIS CLAVIER
+// ======================================================
 
 document.addEventListener("keydown",(e)=>{
 
-if(e.key==="f"){
+    switch(e.key.toLowerCase()){
 
-document.getElementById("fullscreenBtn").click();
+        case "f":
 
-}
+            document.getElementById("fullscreenBtn").click();
 
-if(e.key==="c"){
+            break;
 
-switchCamera();
+        case "m":
 
-}
+            document.getElementById("muteBtn").click();
+
+            break;
+
+        case "v":
+
+            document.getElementById("cameraBtn").click();
+
+            break;
+
+        case "c":
+
+            document.getElementById("switchBtn").click();
+
+            break;
+
+        case "s":
+
+            document.getElementById("screenBtn").click();
+
+            break;
+
+    }
 
 });
+
+// ======================================================
+// RECONNEXION AUTOMATIQUE
+// ======================================================
+
+socket.io.on("reconnect",()=>{
+
+    serverStatus.innerHTML="🟢 Reconnecté";
+
+    if(room){
+
+        socket.emit("join_camera",{
+
+            room:room,
+
+            creator:true
+
+        });
+
+    }
+
+});
+
+// ======================================================
+// CAMERA STOPPEE PAR LE SERVEUR
+// ======================================================
+
+socket.on("camera_stopped",()=>{
+
+    liveStatus.innerHTML="⛔ Live terminé";
+
+    liveStatus.classList.remove("live-active");
+
+    message.innerHTML="Le direct est terminé.";
+
+});
+
+// ======================================================
+// MISE A JOUR DU NOMBRE DE SPECTATEURS
+// ======================================================
+
+socket.on("viewer_count",(data)=>{
+
+    viewerCount.innerHTML=data.count;
+
+});
+
+// ======================================================
+// QUALITE VIDEO
+// ======================================================
+
+const quality={
+
+    width:{ideal:1280},
+
+    height:{ideal:720},
+
+    frameRate:{ideal:30,max:60},
+
+    facingMode:currentCamera
+
+};
+
+// ======================================================
+// DETECTION HORS LIGNE
+// ======================================================
+
+window.addEventListener("offline",()=>{
+
+    message.innerHTML="📡 Connexion Internet perdue.";
+
+});
+
+window.addEventListener("online",()=>{
+
+    message.innerHTML="🌐 Connexion rétablie.";
+
+});
+
+// ======================================================
+// EMPÊCHER LA MISE EN VEILLE (si supporté)
+// ======================================================
+
+let wakeLock=null;
+
+async function keepScreenAwake(){
+
+    try{
+
+        if("wakeLock" in navigator){
+
+            wakeLock=
+
+            await navigator.wakeLock.request("screen");
+
+        }
+
+    }catch(e){
+
+        console.log(e);
+
+    }
+
+}
+
+keepScreenAwake();
+
+// ======================================================
+// QUITTER LA PAGE
+// ======================================================
+
+window.addEventListener("beforeunload",()=>{
+
+    if(room){
+
+        socket.emit("stop_camera",{
+
+            room:room
+
+        });
+
+    }
+
+});
+  // ======================================================
+// SURVEILLANCE DE LA CONNEXION
+// ======================================================
+
+setInterval(()=>{
+
+    if(socket.connected){
+
+        serverStatus.innerHTML="🟢 Serveur connecté";
+
+    }else{
+
+        serverStatus.innerHTML="🔴 Reconnexion...";
+
+    }
+
+},3000);
+
+// ======================================================
+// ACTUALISATION DES STATISTIQUES
+// ======================================================
+
+setInterval(()=>{
+
+    if(room){
+
+        socket.emit("live_stats",{
+
+            room:room
+
+        });
+
+    }
+
+},10000);
+
+// ======================================================
+// RECEVOIR LES STATISTIQUES
+// ======================================================
+
+socket.on("live_stats",(data)=>{
+
+    if(data.viewer_count!==undefined){
+
+        viewerCount.innerHTML=data.viewer_count;
+
+    }
+
+});
+
+// ======================================================
+// GESTION DES ERREURS WEBRTC
+// ======================================================
+
+window.addEventListener("error",(e)=>{
+
+    console.log("Erreur :",e.message);
+
+});
+
+window.addEventListener("unhandledrejection",(e)=>{
+
+    console.log("Promesse rejetée :",e.reason);
+
+});
+
+// ======================================================
+// FERMETURE DES CONNEXIONS
+// ======================================================
+
+function closeAllPeers(){
+
+    Object.values(peers).forEach(peer=>{
+
+        try{
+
+            peer.close();
+
+        }catch(e){}
+
+    });
+
+    peers={};
+
+}
+
+window.addEventListener("beforeunload",()=>{
+
+    closeAllPeers();
+
+    if(stream){
+
+        stream.getTracks().forEach(track=>track.stop());
+
+    }
+
+});
+
+// ======================================================
+// INITIALISATION
+// ======================================================
+
+console.log("🎥 MY TV Live prêt.");
 
 </script>
 
