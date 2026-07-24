@@ -1,157 +1,192 @@
 {% extends "base.html" %}
 
-
 {% block title %}
 Mon profil - MY TV APP
 {% endblock %}
 
-
-
 {% block content %}
-
-
 
 <section class="profile-page">
 
+<div class="profile-banner">
 
+<div class="profile-cover"></div>
 
-
-
-<div class="profile-header">
-
-
+<div class="profile-info">
 
 {% if user.profile_image %}
 
-
 <img
 src="{{ user.profile_image }}"
-class="profile-image"
+class="profile-avatar"
 alt="{{ user.username }}">
 
+{% else %}
+
+<div class="profile-avatar default-avatar">
+
+<i class="fas fa-user"></i>
+
+</div>
 
 {% endif %}
 
-
-
+<div class="profile-details">
 
 <h1>
+
 {{ user.username }}
+
 </h1>
 
-
-
 <p>
+
+<i class="fas fa-envelope"></i>
+
 {{ user.email }}
+
 </p>
 
-
-
-<span class="role">
+<span class="role-badge">
 
 {{ user.role }}
 
 </span>
 
-
+</div>
 
 </div>
 
+</div>
 
+<div class="profile-stats">
 
+<div class="stat-card">
 
+<h2>📺</h2>
 
+<h3>Chaînes</h3>
 
+<p>Mes chaînes</p>
 
+</div>
+
+<div class="stat-card">
+
+<h2>🎬</h2>
+
+<h3>Creator</h3>
+
+<p>Mes contenus</p>
+
+</div>
+
+<div class="stat-card">
+
+<h2>🕒</h2>
+
+<h3>Historique</h3>
+
+<p>Mes vidéos</p>
+
+</div>
+
+<div class="stat-card">
+
+<h2>❤️</h2>
+
+<h3>Favoris</h3>
+
+<p>Ma liste</p>
+
+</div>
+
+</div>
 
 <div class="profile-menu">
 
-
-
-
-
-<a href="/creator"
+<a
+href="{{ url_for('main.creator') }}"
 class="profile-card">
 
-
-🎬
+<i class="fas fa-clapperboard"></i>
 
 <h3>
+
 Creator Studio
+
 </h3>
 
-
 <p>
-Gérer mes chaînes et contenus.
-</p>
 
+Créer et gérer vos contenus.
+
+</p>
 
 </a>
 
-
-
-
-
-
-
-
-<a href="/channels"
+<a
+href="{{ url_for('main.channels') }}"
 class="profile-card">
 
-
-📺
+<i class="fas fa-tv"></i>
 
 <h3>
-Mes chaînes
+
+Chaînes TV
+
 </h3>
 
-
 <p>
-Voir les chaînes disponibles.
-</p>
 
+Découvrir les chaînes.
+
+</p>
 
 </a>
 
-
-
-
-
-
-
-<a href="/history"
+<a
+href="{{ url_for('main.history') }}"
 class="profile-card">
 
-
-🕒
+<i class="fas fa-clock-rotate-left"></i>
 
 <h3>
+
 Historique
+
 </h3>
 
-
 <p>
-Voir les vidéos regardées.
-</p>
 
+Retrouver vos vidéos.
+
+</p>
 
 </a>
 
+<a
+href="{{ url_for('main.my_list') }}"
+class="profile-card">
 
+<i class="fas fa-heart"></i>
 
+<h3>
 
+Ma liste
 
+</h3>
+
+<p>
+
+Vos vidéos favorites.
+
+</p>
+
+</a>
 
 </div>
 
-
-
-
-
-
 </section>
-
-
-
 
 {% endblock %}
