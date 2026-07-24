@@ -1,35 +1,264 @@
 {% extends "base.html" %}
 
 {% block title %}
-Regarder live - MY TV APP
+🔴 {{ live.title }} - MY TV APP
 {% endblock %}
-
 
 {% block content %}
 
-<section class="watch-camera">
+<section class="watch-live-page">
 
-<h1>🔴 {{ live.title }}</h1>
+<div class="live-container">
 
-<div class="live-player">
+<div class="video-wrapper">
 
 <video
 id="liveVideo"
 autoplay
 playsinline
-controls
-width="100%">
+controls>
+
 </video>
 
-<button id="fullscreenBtn">
-⛶ Plein écran
+<div class="live-overlay">
+
+<div class="live-top">
+
+<div class="live-channel">
+
+{% if live.channel and live.channel.logo %}
+
+<img
+src="{{ live.channel.logo }}"
+class="live-logo"
+alt="{{ live.channel.name }}">
+
+{% endif %}
+
+<div>
+
+<h3>
+
+{{ live.channel.name if live.channel else "MY TV APP" }}
+
+</h3>
+
+<div class="live-info">
+
+<span class="live-badge">
+
+🔴 EN DIRECT
+
+</span>
+
+<span id="viewerCount">
+
+0 spectateur
+
+</span>
+
+</div>
+
+</div>
+
+</div>
+
+<div id="networkQuality" class="network-quality">
+
+🟢 Excellent
+
+</div>
+
+</div>
+
+<div class="floating-reactions"
+
+id="floatingReactions">
+
+</div>
+
+<div class="live-bottom">
+
+<div id="chatMessages"
+
+class="chat-box">
+
+</div>
+
+<div class="chat-input-area">
+
+<input
+
+id="chatInput"
+
+type="text"
+
+placeholder="Écrire un message...">
+
+<button
+
+id="sendBtn">
+
+Envoyer
+
 </button>
 
 </div>
 
+</div>
+
+</div>
+
+    </div>
+    <div class="live-actions">
+
+<button
+class="reaction-btn"
+onclick="sendReaction('❤️')">
+
+❤️
+
+</button>
+
+<button
+class="reaction-btn"
+onclick="sendReaction('👍')">
+
+👍
+
+</button>
+
+<button
+class="reaction-btn"
+onclick="sendReaction('😂')">
+
+😂
+
+</button>
+
+<button
+class="reaction-btn"
+onclick="sendReaction('🔥')">
+
+🔥
+
+</button>
+
+<button
+class="reaction-btn"
+onclick="sendReaction('😮')">
+
+😮
+
+</button>
+
+<button
+id="joinBtn"
+class="join-live-btn"
+onclick="requestJoin()">
+
+🎤 Rejoindre le live
+
+</button>
+
+<button
+id="fullscreenBtn"
+class="fullscreen-btn">
+
+⛶ Plein écran
+
+</button>
+
+</div>
+
+</div>
+
+<div class="live-sidebar">
+
+<div class="live-card">
+
+<h2>
+
+{{ live.title }}
+
+</h2>
+
 <p id="status">
-🟡 Connexion au live...
+
+🟡 Connexion au direct...
+
 </p>
+
+</div>
+
+<div class="live-card">
+
+<h3>
+
+📊 Statistiques
+
+</h3>
+
+<p>
+
+👥 Spectateurs :
+<span id="viewerCountSide">
+
+0
+
+</span>
+
+</p>
+
+<p>
+
+📡 Qualité :
+<span id="qualityText">
+
+Excellente
+
+</span>
+
+</p>
+
+<p>
+
+🎥 État :
+<span id="streamState">
+
+Connexion...
+
+</span>
+
+</p>
+
+</div>
+
+<div class="live-card">
+
+<h3>
+
+💬 Conseils
+
+</h3>
+
+<ul>
+
+<li>Respectez les autres participants.</li>
+
+<li>Évitez le spam.</li>
+
+<li>Les réactions sont visibles en direct.</li>
+
+<li>Vous pouvez demander à rejoindre le live.</li>
+
+</ul>
+
+</div>
+
+</div>
+
+</div>
 
 </section>
 
@@ -37,228 +266,533 @@ width="100%">
 
 <script>
 
-// ==========================
-// SOCKET
-// ==========================
+const socket=io({
 
-const socket = io({
-    reconnection: true,
-    reconnectionAttempts: 20
+reconnection:true,
+
+reconnectionAttempts:20
+
 });
 
-const video = document.getElementById("liveVideo");
-const status = document.getElementById("status");
+const room="camera_live_{{ live.id }}";
 
-const room = "camera_live_{{ live.id }}";
+const video=document.getElementById("liveVideo");
 
-let peer = null;
-let creatorId = null;
-let pendingCandidates = [];
+const status=document.getElementById("status");
 
+const viewerCount=document.getElementById("viewerCount");
 
+const viewerCountSide=document.getElementById("viewerCountSide");
+
+const streamState=document.getElementById("streamState");
+
+const qualityText=document.getElementById("qualityText");
+
+const networkQuality=document.getElementById("networkQuality");
+
+const floating=document.getElementById("floatingReactions");
+
+const chat=document.getElementById("chatMessages");
+
+const input=document.getElementById("chatInput");
+
+const sendBtn=document.getElementById("sendBtn");
+
+let peer=null;
+
+let creatorId=null;
+
+let pendingCandidates=[];
+    // ======================================
+// CREATION DU PEER WEBRTC
+// ======================================
 
 function createPeer(){
 
-    peer = new RTCPeerConnection({
+peer=new RTCPeerConnection({
 
-        iceServers:[
-            {
-                urls:"stun:stun.l.google.com:19302"
-            }
-        ]
+iceServers:[
 
-    });
+{
 
+urls:[
 
-    peer.ontrack = (event)=>{
+"stun:stun.l.google.com:19302",
 
-        if(event.streams[0]){
+"stun:stun1.l.google.com:19302",
 
-            video.srcObject = event.streams[0];
+"stun:stun2.l.google.com:19302"
 
-            video.play();
-
-            status.innerHTML =
-            "🔴 Live en cours";
-
-        }
-
-    };
-
-
-
-    peer.onicecandidate = (event)=>{
-
-        if(event.candidate && creatorId){
-
-            socket.emit(
-                "camera_ice",
-                {
-                    candidate:event.candidate,
-                    target:creatorId
-                }
-            );
-
-        }
-
-    };
+]
 
 }
 
+]
 
+});
 
+peer.ontrack=(event)=>{
+
+if(event.streams[0]){
+
+video.srcObject=event.streams[0];
+
+video.play().catch(()=>{});
+
+status.innerHTML="🔴 Live en cours";
+
+streamState.innerHTML="En direct";
+
+}
+
+};
+
+peer.onconnectionstatechange=()=>{
+
+switch(peer.connectionState){
+
+case "connected":
+
+networkQuality.innerHTML="🟢 Excellent";
+
+qualityText.innerHTML="Excellente";
+
+break;
+
+case "connecting":
+
+networkQuality.innerHTML="🟡 Connexion...";
+
+qualityText.innerHTML="Connexion";
+
+break;
+
+case "disconnected":
+
+networkQuality.innerHTML="🟠 Reconnexion";
+
+qualityText.innerHTML="Instable";
+
+break;
+
+case "failed":
+
+networkQuality.innerHTML="🔴 Échec";
+
+qualityText.innerHTML="Faible";
+
+break;
+
+}
+
+};
+
+peer.onicecandidate=(event)=>{
+
+if(event.candidate && creatorId){
+
+socket.emit("camera_ice",{
+
+candidate:event.candidate,
+
+target:creatorId
+
+});
+
+}
+
+};
+
+}
+
+// ======================================
+// CONNEXION SOCKET
+// ======================================
 
 socket.on("connect",()=>{
 
-    status.innerHTML="🟢 Connecté";
+status.innerHTML="🟢 Connecté";
 
-    socket.emit(
-    "join_camera",
-    {
-        room: room,
-        creator: false
-    }
+socket.emit("join_camera",{
+
+room:room,
+
+creator:false
+
+});
+
+});
+
+// ======================================
+// OFFRE DU CREATEUR
+// ======================================
+
+socket.on("camera_offer",async(data)=>{
+
+try{
+
+creatorId=data.sender;
+
+if(!peer){
+
+createPeer();
+
+}
+
+await peer.setRemoteDescription(
+
+new RTCSessionDescription(data.offer)
+
+);
+
+const answer=await peer.createAnswer();
+
+await peer.setLocalDescription(answer);
+
+socket.emit("camera_answer",{
+
+answer:answer,
+
+target:creatorId
+
+});
+
+while(pendingCandidates.length){
+
+await peer.addIceCandidate(
+
+pendingCandidates.shift()
+
+);
+
+}
+
+}catch(err){
+
+console.log(err);
+
+status.innerHTML="❌ Erreur WebRTC";
+
+}
+
+});
+
+// ======================================
+// ICE
+// ======================================
+
+socket.on("camera_ice",async(data)=>{
+
+const candidate=
+
+new RTCIceCandidate(data.candidate);
+
+if(peer){
+
+await peer.addIceCandidate(candidate);
+
+}else{
+
+pendingCandidates.push(candidate);
+
+}
+
+});
+
+// ======================================
+// LIVE TERMINE
+// ======================================
+
+socket.on("camera_stopped",()=>{
+
+status.innerHTML="⛔ Live terminé";
+
+streamState.innerHTML="Arrêté";
+
+video.srcObject=null;
+
+if(peer){
+
+peer.close();
+
+peer=null;
+
+}
+
+});
+    // ======================================
+// COMPTEUR DE SPECTATEURS
+// ======================================
+
+socket.on("viewer_count",(data)=>{
+
+viewerCount.innerHTML=
+
+data.count+" spectateur(s)";
+
+viewerCountSide.innerHTML=data.count;
+
+});
+
+// ======================================
+// CHAT EN DIRECT
+// ======================================
+
+sendBtn.onclick=()=>{
+
+const text=input.value.trim();
+
+if(text===""){
+
+return;
+
+}
+
+socket.emit("live_message",{
+
+room:room,
+
+message:text
+
+});
+
+input.value="";
+
+};
+
+input.addEventListener("keypress",(e)=>{
+
+if(e.key==="Enter"){
+
+sendBtn.click();
+
+}
+
+});
+
+socket.on("live_message",(data)=>{
+
+const msg=document.createElement("div");
+
+msg.className="chat-message";
+
+msg.innerHTML=
+
+"<strong>"+data.user+"</strong><br>"+data.message;
+
+chat.appendChild(msg);
+
+chat.scrollTop=chat.scrollHeight;
+
+});
+
+// ======================================
+// REACTIONS FLOTTANTES
+// ======================================
+
+function sendReaction(emoji){
+
+socket.emit("live_reaction",{
+
+room:room,
+
+emoji:emoji
+
+});
+
+}
+
+socket.on("live_reaction",(data)=>{
+
+const bubble=document.createElement("div");
+
+bubble.className="floating-emoji";
+
+bubble.innerHTML=data.emoji;
+
+floating.appendChild(bubble);
+
+setTimeout(()=>{
+
+bubble.remove();
+
+},3000);
+
+});
+
+// ======================================
+// DEMANDE DE REJOINDRE LE LIVE
+// ======================================
+
+function requestJoin(){
+
+socket.emit("request_join_live",{
+
+room:room
+
+});
+
+const btn=document.getElementById("joinBtn");
+
+btn.disabled=true;
+
+btn.innerHTML="⏳ Demande envoyée";
+
+}
+
+socket.on("guest_accepted",()=>{
+
+alert(
+
+"✅ Le créateur vous autorise à rejoindre le live."
+
 );
 
 });
 
+socket.on("kicked",()=>{
 
+alert(
 
+"❌ Vous avez été retiré du live."
 
+);
 
-socket.on("camera_offer",async(data)=>{
+if(peer){
 
+peer.close();
 
-    try{
+peer=null;
 
-
-        if(!peer){
-
-            createPeer();
-
-        }
-
-
-        creatorId = data.sender;
-
-
-        await peer.setRemoteDescription(
-            new RTCSessionDescription(
-                data.offer
-            )
-        );
-
-
-
-        const answer =
-        await peer.createAnswer();
-
-
-
-        await peer.setLocalDescription(
-            answer
-        );
-
-
-
-        socket.emit(
-            "camera_answer",
-            {
-                answer:answer,
-                target:creatorId
-            }
-        );
-
-
-
-        for(let c of pendingCandidates){
-
-            await peer.addIceCandidate(c);
-
-        }
-
-        pendingCandidates=[];
-
-
-
-    }catch(e){
-
-        console.log(e);
-
-        status.innerHTML="❌ Erreur WebRTC";
-
-    }
-
+}
 
 });
-
-
-
-
-
-
-socket.on("camera_ice",async(data)=>{
-
-
-    const candidate =
-    new RTCIceCandidate(
-        data.candidate
-    );
-
-
-
-    if(peer){
-
-        await peer.addIceCandidate(
-            candidate
-        );
-
-    }else{
-
-        pendingCandidates.push(
-            candidate
-        );
-
-    }
-
-
-});
-
-
-
-
-
-
-socket.on("camera_stopped",()=>{
-
-
-    status.innerHTML =
-    "⛔ Live terminé";
-
-
-    video.srcObject=null;
-
-
-    if(peer){
-
-        peer.close();
-
-        peer=null;
-
-    }
-
-
-});
-
-
+    // ======================================
+// PLEIN ECRAN
+// ======================================
 
 document.getElementById("fullscreenBtn").onclick=()=>{
 
-    if(video.requestFullscreen){
+if(video.requestFullscreen){
 
-        video.requestFullscreen();
+video.requestFullscreen();
 
-    }
+}else if(video.webkitRequestFullscreen){
+
+video.webkitRequestFullscreen();
+
+}
 
 };
+
+// ======================================
+// RECONNEXION AUTOMATIQUE
+// ======================================
+
+socket.io.on("reconnect",()=>{
+
+status.innerHTML="🟡 Reconnexion...";
+
+socket.emit("join_camera",{
+
+room:room,
+
+creator:false
+
+});
+
+});
+
+socket.io.on("reconnect_attempt",()=>{
+
+status.innerHTML="🟡 Tentative de reconnexion...";
+
+});
+
+socket.io.on("reconnect_error",()=>{
+
+status.innerHTML="🔴 Impossible de se reconnecter";
+
+});
+
+socket.io.on("reconnect_failed",()=>{
+
+status.innerHTML="❌ Échec de la reconnexion";
+
+});
+
+// ======================================
+// SURVEILLANCE DU RESEAU
+// ======================================
+
+setInterval(()=>{
+
+if(peer){
+
+const state=peer.connectionState;
+
+switch(state){
+
+case "connected":
+
+networkQuality.innerHTML="🟢 Excellent";
+
+qualityText.innerHTML="Excellente";
+
+break;
+
+case "connecting":
+
+networkQuality.innerHTML="🟡 Connexion";
+
+qualityText.innerHTML="Connexion";
+
+break;
+
+case "disconnected":
+
+networkQuality.innerHTML="🟠 Instable";
+
+qualityText.innerHTML="Instable";
+
+break;
+
+case "failed":
+
+networkQuality.innerHTML="🔴 Faible";
+
+qualityText.innerHTML="Faible";
+
+break;
+
+}
+
+}
+
+},3000);
+
+// ======================================
+// NETTOYAGE
+// ======================================
+
+window.addEventListener("beforeunload",()=>{
+
+if(peer){
+
+peer.close();
+
+peer=null;
+
+}
+
+socket.disconnect();
+
+});
+
+// ======================================
+// FIN DU SCRIPT
+// ======================================
+
+</script>
+
 {% endblock %}
