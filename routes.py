@@ -407,34 +407,67 @@ def create_channel():
             logo_url = None
             cover_url = None
             # ==========================
-# UPLOAD LOGO CLOUDINARY
+# INITIALISATION
 # ==========================
-if logo and logo.filename:
-    print("Upload logo en cours...")
+logo_url = None
+cover_url = None
 
-    upload_logo = cloudinary.uploader.upload(
-        logo,
-        folder="novatv/logos"
+try:
+    # ==========================
+    # UPLOAD LOGO CLOUDINARY
+    # ==========================
+    if logo and logo.filename:
+        print("Upload logo en cours...")
+
+        upload_logo = cloudinary.uploader.upload(
+            logo,
+            folder="novatv/logos"
+        )
+
+        logo_url = upload_logo.get("secure_url")
+        print("Logo uploadé :", logo_url)
+
+    # ==========================
+    # UPLOAD COVER CLOUDINARY
+    # ==========================
+    if cover and cover.filename:
+        print("Upload cover en cours...")
+
+        upload_cover = cloudinary.uploader.upload(
+            cover,
+            folder="novatv/covers"
+        )
+
+        cover_url = upload_cover.get("secure_url")
+        print("Cover uploadée :", cover_url)
+
+    # ==========================
+    # CREATION CHAINE
+    # ==========================
+    channel = Channel(
+        user_id=session.get("user_id"),
+        name=name,
+        category=category,
+        description=description,
+        logo=logo_url,
+        cover=cover_url
     )
 
-    logo_url = upload_logo.get("secure_url")
+    db.session.add(channel)
+    db.session.commit()
 
-    print("Logo uploadé :", logo_url)
+    print("Chaîne créée avec succès")
+
+    return redirect(url_for("main.channels"))
 
 # ==========================
-# UPLOAD COVER CLOUDINARY
+# GESTION ERREUR
 # ==========================
-if cover and cover.filename:
-    print("Upload cover en cours...")
-
-    upload_cover = cloudinary.uploader.upload(
-        cover,
-        folder="novatv/covers"
-    )
-
-    cover_url = upload_cover.get("secure_url")
-
-    print("Cover uploadée :", cover_url)
+except Exception as e:
+    db.session.rollback()
+    print("ERREUR :", str(e))
+    return "Erreur lors de la création de la chaîne", 500
+            
 
 # ==========================
 # CREATION CHAINE
