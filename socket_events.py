@@ -1,68 +1,79 @@
 from flask_socketio import emit, join_room, leave_room
 from flask import request
 
-
 # ==================================================
-# APPEL VIDEO MULTI PERSONNES
+# APPEL VIDEO
 # ==================================================
 
 video_rooms = {}
 
-
-
 # ==================================================
-# LIVE CAMERA MY TV
+# LIVE MULTI PERSONNES
 # ==================================================
 
-live_creators = {}
-live_viewers = {}
+live_rooms = {}
 
+"""
+Structure :
 
+live_rooms = {
 
+    "camera_live_1":{
+
+        "creator":"SID123",
+
+        "guests":{
+
+            "SID456",
+
+            "SID789"
+
+        },
+
+        "viewers":{
+
+            "SID111",
+
+            "SID222"
+
+        }
+
+    }
+
+}
+"""
 
 
 def socket_events(socketio):
 
-
-    # ==================================================
+    # ============================================
     # CONNEXION
-    # ==================================================
+    # ============================================
 
     @socketio.on("connect")
     def connect():
 
         print(
-            "🟢 Socket connecté :",
+            "🟢 Connecté :",
             request.sid
         )
 
-
-
-
-
-    # ==================================================
+    # ============================================
     # DECONNEXION
-    # ==================================================
+    # ============================================
 
     @socketio.on("disconnect")
     def disconnect():
 
         sid = request.sid
 
+        # ---------- APPEL VIDEO ----------
 
+        for room in list(video_rooms.keys()):
 
-        # ------------------------------
-        # APPEL VIDEO
-        # ------------------------------
+            if sid in video_rooms[room]:
 
-        for room, users in list(video_rooms.items()):
-
-
-            if sid in users:
-
-
-                users.remove(sid)
-
+                video_rooms[room].remove(sid)
 
                 emit(
                     "user_left",
@@ -72,44 +83,17 @@ def socket_events(socketio):
                     room=room
                 )
 
+                if len(video_rooms[room]) == 0:
 
-                leave_room(room)
+                    del video_rooms[room]
 
+        # ---------- LIVE ----------
 
+        for room in list(live_rooms.keys()):
 
-            if len(users) == 0:
+            live = live_rooms[room]
 
-                del video_rooms[room]
-
-
-
-
-
-
-        # ------------------------------
-        # LIVE CAMERA
-        # ------------------------------
-
-
-        for room, viewers in list(live_viewers.items()):
-
-
-            if sid in viewers:
-
-                viewers.remove(sid)
-
-
-
-
-
-        for room, creator in list(live_creators.items()):
-
-
-            if creator == sid:
-
-
-                del live_creators[room]
-
+            if live["creator"] == sid:
 
                 emit(
                     "camera_stopped",
@@ -117,429 +101,402 @@ def socket_events(socketio):
                     room=room
                 )
 
+                del live_rooms[room]
 
+                continue
+
+            if sid in live["guests"]:
+
+                live["guests"].remove(sid)
+
+                emit(
+                    "guest_left",
+                    {
+                        "id": sid
+                    },
+                    room=room
+                )
+
+            if sid in live["viewers"]:
+
+                live["viewers"].remove(sid)
+
+                emit(
+                    "viewer_left",
+                    {
+                        "id": sid
+                    },
+                    room=live["creator"]
+                )
 
         print(
             "🔴 Déconnecté :",
             sid
-        )
+)
+        # ==================================================
+# REJOINDRE UN LIVE
+# ==================================================
 
+@socketio.on("join_camera")
+def join_camera(data):
 
+    room = data.get("room")
+    creator = data.get("creator", False)
 
+    if not room:
+        return
 
+    join_room(room)
 
+    # Création de la salle
+    if room not in live_rooms:
 
-    # ==================================================
-    # REJOINDRE APPEL VIDEO
-    # ==================================================
+        live_rooms[room] = {
 
-    @socketio.on("join_room")
-    def join_video_room(data):
+            "creator": None,
 
+            "guests": set(),
 
-        room = data.get(
-            "room"
-        )
+            "viewers": set()
 
+        }
 
-        if not room:
+    live = live_rooms[room]
 
-            return
+    # -----------------------------
+    # Créateur
+    # -----------------------------
 
+    if creator:
 
-
-        join_room(room)
-
-
-
-        if room not in video_rooms:
-
-            video_rooms[room] = []
-
-
-
-
-        # envoyer les utilisateurs déjà présents
-
-        emit(
-            "all_users",
-            {
-                "users": video_rooms[room]
-            }
-        )
-
-
-
-
-
-        # ajouter utilisateur
-
-        if request.sid not in video_rooms[room]:
-
-
-            video_rooms[room].append(
-                request.sid
-            )
-
-
-
-
-
-        # prévenir les autres
-
+        live["creator"] = request.sid
 
         emit(
-            "user_joined",
-            {
-                "id": request.sid
-            },
-            room=room,
-            include_self=False
-        )
-
-
-
-        print(
-            "👥 Appel vidéo :",
-            request.sid,
-            room
-        )
-
-
-
-
-
-
-
-
-    # ==================================================
-    # WEBRTC OFFER
-    # ==================================================
-
-    @socketio.on("offer")
-    def offer(data):
-
-
-        emit(
-            "offer",
-            {
-                "from": request.sid,
-
-                "offer": data["offer"]
-            },
-
-            room=data["target"]
-        )
-
-
-
-
-
-
-    # ==================================================
-    # WEBRTC ANSWER
-    # ==================================================
-
-    @socketio.on("answer")
-    def answer(data):
-
-
-        emit(
-            "answer",
-            {
-                "from": request.sid,
-
-                "answer": data["answer"]
-            },
-
-            room=data["target"]
-        )
-
-
-
-
-
-
-
-    # ==================================================
-    # ICE
-    # ==================================================
-
-    @socketio.on("ice_candidate")
-    def ice_candidate(data):
-
-
-        emit(
-            "ice_candidate",
-            {
-                "from": request.sid,
-
-                "candidate": data["candidate"]
-            },
-
-            room=data["target"]
-        )
-
-
-
-
-
-
-
-
-    # ==================================================
-    # QUITTER APPEL VIDEO
-    # ==================================================
-
-    @socketio.on("leave_room")
-    def leave_video(data):
-
-
-        room = data.get(
-            "room"
-        )
-
-
-        leave_room(room)
-
-
-
-        if room in video_rooms:
-
-
-            if request.sid in video_rooms[room]:
-
-
-                video_rooms[room].remove(
-                    request.sid
-                )
-
-
-
-        emit(
-            "user_left",
-            {
-                "id": request.sid
-            },
-            room=room
-        )
-
-
-
-
-
-
-
-
-
-    # ==================================================
-    # LIVE CAMERA MY TV
-    # ==================================================
-
-    @socketio.on("join_camera")
-    def join_camera(data):
-
-
-        room = data.get(
-            "room"
-        )
-
-
-        creator = data.get(
-            "creator",
-            False
-        )
-
-
-
-        if not room:
-
-            return
-
-
-
-        join_room(room)
-
-
-
-
-        if creator:
-
-
-            live_creators[room] = request.sid
-
-
-
-            if room not in live_viewers:
-
-                live_viewers[room] = []
-
-
-
-            print(
-                "🎥 Créateur live :",
-                room
-            )
-
-
-
-
-
-        else:
-
-
-            if room not in live_viewers:
-
-                live_viewers[room] = []
-
-
-
-            live_viewers[room].append(
-                request.sid
-            )
-
-
-
-            creator_sid = live_creators.get(
-                room
-            )
-
-
-
-            if creator_sid:
-
-
-                emit(
-                    "viewer_joined",
-                    {
-                        "viewer_id": request.sid
-                    },
-                    room=creator_sid
-                )
-
-
-
-            print(
-                "👀 Spectateur live :",
-                room
-            )
-
-
-
-
-
-
-
-
-    # ==================================================
-    # CAMERA OFFER
-    # ==================================================
-
-    @socketio.on("camera_offer")
-    def camera_offer(data):
-
-
-        emit(
-            "camera_offer",
-            {
-                "offer": data["offer"],
-
-                "sender": request.sid
-            },
-
-            room=data["target"]
-        )
-
-
-
-
-
-
-    # ==================================================
-    # CAMERA ANSWER
-    # ==================================================
-
-    @socketio.on("camera_answer")
-    def camera_answer(data):
-
-
-        emit(
-            "camera_answer",
-            {
-                "answer": data["answer"],
-
-                "sender": request.sid
-            },
-
-            room=data["target"]
-        )
-
-
-
-
-
-
-
-    # ==================================================
-    # CAMERA ICE
-    # ==================================================
-
-    @socketio.on("camera_ice")
-    def camera_ice(data):
-
-
-        emit(
-            "camera_ice",
-            {
-                "candidate": data["candidate"],
-
-                "sender": request.sid
-            },
-
-            room=data["target"]
-        )
-
-
-
-
-
-
-
-    # ==================================================
-    # STOP CAMERA LIVE
-    # ==================================================
-
-    @socketio.on("stop_camera")
-    def stop_camera(data):
-
-
-        room = data.get(
-            "room"
-        )
-
-
-        emit(
-            "camera_stopped",
+            "creator_ready",
             {},
-            room=room
+            room=request.sid
         )
 
+        print("🎥 Créateur :", room)
+
+        return
+
+    # -----------------------------
+    # Spectateur
+    # -----------------------------
+
+    live["viewers"].add(request.sid)
+
+    emit(
+        "viewer_joined",
+        {
+            "viewer_id": request.sid,
+
+            "count": len(live["viewers"])
+        },
+        room=live["creator"]
+    )
+
+    emit(
+        "viewer_count",
+        {
+            "count": len(live["viewers"])
+        },
+        room=room
+    )
+
+    print(
+        "👀 Spectateur :",
+        request.sid
+    )
 
 
-        live_creators.pop(
-            room,
-            None
-        )
+# ==================================================
+# DEMANDE DE REJOINDRE LE LIVE
+# ==================================================
+
+@socketio.on("request_join_live")
+def request_join_live(data):
+
+    room = data["room"]
+
+    if room not in live_rooms:
+        return
+
+    creator = live_rooms[room]["creator"]
+
+    emit(
+
+        "join_request",
+
+        {
+
+            "guest": request.sid
+
+        },
+
+        room=creator
+
+    )
+
+    print(
+        "✋ Demande invité :",
+        request.sid
+    )
 
 
-        live_viewers.pop(
-            room,
-            None
-        )
+# ==================================================
+# LE CREATEUR ACCEPTE
+# ==================================================
+
+@socketio.on("accept_guest")
+def accept_guest(data):
+
+    room = data["room"]
+
+    guest = data["guest"]
+
+    if room not in live_rooms:
+        return
+
+    live_rooms[room]["guests"].add(guest)
+
+    emit(
+
+        "guest_accepted",
+
+        {},
+
+        room=guest
+
+    )
+
+    emit(
+
+        "guest_joined",
+
+        {
+
+            "guest": guest
+
+        },
+
+        room=room
+
+    )
+
+    print(
+        "✅ Invité accepté :",
+        guest
+                )
+    # ==================================================
+# WEBRTC OFFER
+# ==================================================
+
+@socketio.on("camera_offer")
+def camera_offer(data):
+
+    target = data.get("target")
+
+    if not target:
+        return
+
+    emit(
+
+        "camera_offer",
+
+        {
+
+            "offer": data["offer"],
+
+            "sender": request.sid
+
+        },
+
+        room=target
+
+    )
 
 
+# ==================================================
+# WEBRTC ANSWER
+# ==================================================
 
-        print(
-            "⛔ Live arrêté :",
-            room
-        )
+@socketio.on("camera_answer")
+def camera_answer(data):
+
+    target = data.get("target")
+
+    if not target:
+        return
+
+    emit(
+
+        "camera_answer",
+
+        {
+
+            "answer": data["answer"],
+
+            "sender": request.sid
+
+        },
+
+        room=target
+
+    )
+
+
+# ==================================================
+# ICE CANDIDATE
+# ==================================================
+
+@socketio.on("camera_ice")
+def camera_ice(data):
+
+    target = data.get("target")
+
+    if not target:
+        return
+
+    emit(
+
+        "camera_ice",
+
+        {
+
+            "candidate": data["candidate"],
+
+            "sender": request.sid
+
+        },
+
+        room=target
+
+    )
+
+
+# ==================================================
+# CHAT DU LIVE
+# ==================================================
+
+@socketio.on("live_message")
+def live_message(data):
+
+    room = data.get("room")
+
+    if not room:
+        return
+
+    emit(
+
+        "live_message",
+
+        {
+
+            "user": request.sid[:6],
+
+            "message": data["message"]
+
+        },
+
+        room=room
+
+    )
+
+
+# ==================================================
+# REACTIONS ❤️ 😂 🔥 👍
+# ==================================================
+
+@socketio.on("live_reaction")
+def live_reaction(data):
+
+    room = data.get("room")
+
+    if not room:
+        return
+
+    emit(
+
+        "live_reaction",
+
+        {
+
+            "emoji": data["emoji"],
+
+            "user": request.sid
+
+        },
+
+        room=room
+
+    )
+
+
+# ==================================================
+# CREATEUR EXCLUT UN INVITE
+# ==================================================
+
+@socketio.on("kick_guest")
+def kick_guest(data):
+
+    room = data["room"]
+
+    guest = data["guest"]
+
+    if room not in live_rooms:
+        return
+
+    live_rooms[room]["guests"].discard(guest)
+
+    emit(
+
+        "kicked",
+
+        {},
+
+        room=guest
+
+    )
+
+    emit(
+
+        "guest_left",
+
+        {
+
+            "id": guest
+
+        },
+
+        room=room
+
+    )
+
+
+# ==================================================
+# ARRET DU LIVE
+# ==================================================
+
+@socketio.on("stop_camera")
+def stop_camera(data):
+
+    room = data.get("room")
+
+    if not room:
+        return
+
+    emit(
+
+        "camera_stopped",
+
+        {},
+
+        room=room
+
+    )
+
+    live_rooms.pop(room, None)
+
+    print("⛔ Live arrêté :", room)
