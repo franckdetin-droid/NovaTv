@@ -1,218 +1,250 @@
 {% extends "base.html" %}
 
-
 {% block title %}
 Recherche - MY TV APP
 {% endblock %}
 
-
-
 {% block content %}
-
-
 
 <section class="search-page">
 
-
+<div class="search-header">
 
 <h1>
 🔎 Rechercher
 </h1>
 
+<p>
 
+Recherchez vos chaînes, films et vidéos préférés.
 
-
+</p>
 
 <form
 method="GET"
-action="/search"
-class="search-form">
+action="{{ url_for('main.search') }}"
+class="modern-search-form">
 
+<div class="search-input">
 
+<i class="fas fa-search"></i>
 
 <input
 type="text"
 name="q"
-placeholder="Rechercher une chaîne, un film..."
+placeholder="Rechercher une chaîne, un film ou une vidéo..."
 value="{{ query }}">
 
-
-
-
-
-<button
-type="submit">
+<button type="submit">
 
 Rechercher
 
 </button>
 
-
+</div>
 
 </form>
 
+</div>
 
+{% if query %}
 
+<div class="search-result-info">
 
+Résultats pour :
 
+<strong>
 
+{{ query }}
 
+</strong>
+
+</div>
+
+{% endif %}
+
+<!-- ========================= -->
+<!-- CHAÎNES -->
+<!-- ========================= -->
 
 <section class="content-section">
 
+<div class="section-header">
 
 <h2>
+
 📺 Chaînes
+
 </h2>
 
+<span>
 
+{{ channels|length }}
 
-<div class="card-grid">
+résultat(s)
 
+</span>
 
+</div>
+
+<div class="netflix-grid">
 
 {% for channel in channels %}
 
+<div class="netflix-card">
 
-
-<div class="media-card">
-
-
+<a href="{{ url_for('main.channel', channel_id=channel.id) }}">
 
 {% if channel.logo %}
 
-
 <img
+
 src="{{ channel.logo }}"
-class="channel-logo"
-alt="{{ channel.name }}">
 
+alt="{{ channel.name }}"
 
-{% endif %}
-
-
-
-
-
-<h3>
-{{ channel.name }}
-</h3>
-
-
-
-<a href="/channel/{{ channel.id }}">
-Voir
-</a>
-
-
-
-</div>
-
-
-
+loading="lazy">
 
 {% else %}
 
+<div class="no-image">
 
-<p>
-Aucune chaîne trouvée.
-</p>
-
-
-
-{% endfor %}
-
-
+📺
 
 </div>
 
+{% endif %}
+
+<div class="card-info">
+
+<h3>
+
+{{ channel.name }}
+
+</h3>
+
+{% if channel.live %}
+
+<span class="live-badge">
+
+🔴 EN DIRECT
+
+</span>
+
+{% endif %}
+
+</div>
+
+</a>
+
+</div>
+
+{% else %}
+
+<p class="empty-search">
+
+Aucune chaîne trouvée.
+
+</p>
+
+{% endfor %}
+
+</div>
 
 </section>
 
-
-
-
-
-
-
+<!-- ========================= -->
+<!-- VIDEOS -->
+<!-- ========================= -->
 
 <section class="content-section">
 
+<div class="section-header">
 
 <h2>
+
 🎬 Vidéos
+
 </h2>
 
+<span>
 
+{{ videos|length }}
 
-<div class="card-grid">
+résultat(s)
 
+</span>
 
+</div>
+
+<div class="netflix-grid">
 
 {% for video in videos %}
 
+<div class="netflix-card">
 
-
-<div class="media-card">
-
-
+<a href="{{ url_for('main.watch', video_id=video.id) }}">
 
 {% if video.thumbnail %}
 
-
 <img
+
 src="{{ video.thumbnail }}"
-class="thumbnail"
-alt="{{ video.title }}">
 
+alt="{{ video.title }}"
 
-{% endif %}
-
-
-
-
-
-<h3>
-{{ video.title }}
-</h3>
-
-
-
-<a href="/watch/{{ video.id }}">
-Regarder
-</a>
-
-
-
-</div>
-
-
-
+loading="lazy">
 
 {% else %}
 
+<div class="no-image">
 
-<p>
-Aucune vidéo trouvée.
-</p>
-
-
-
-{% endfor %}
-
-
+🎬
 
 </div>
 
+{% endif %}
+
+<div class="card-info">
+
+<h3>
+
+{{ video.title }}
+
+</h3>
+
+<p>
+
+{{ video.category }}
+
+</p>
+
+<span>
+
+👁️ {{ video.views if video.views else 0 }} vues
+
+</span>
+
+</div>
+
+</a>
+
+</div>
+
+{% else %}
+
+<p class="empty-search">
+
+Aucune vidéo trouvée.
+
+</p>
+
+{% endfor %}
+
+</div>
 
 </section>
 
-
-
-
 </section>
-
-
-
 
 {% endblock %}
