@@ -8,8 +8,6 @@
 
 <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
 
-<!-- Lecteur HLS -->
-<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 
 
 <section class="live-page">
@@ -46,17 +44,21 @@
 
 <video
 
-id="livePlayer-{{ live.id }}"
-
 controls
 
 autoplay
 
-muted
-
 playsinline
 
+muted
+
 width="100%">
+
+<source
+
+src="{{ live.stream_url }}"
+
+type="application/x-mpegURL">
 
 </video>
 
