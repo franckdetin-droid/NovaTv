@@ -44,21 +44,25 @@
 
 <video
 
-id="player-{{ live.id }}"
-
-class="video-js vjs-big-play-centered"
+id="livePlayer-{{ live.id }}"
 
 controls
 
-preload="auto"
+autoplay
+
+muted
 
 playsinline
 
 width="100%">
 
+<source
+
+src="{{ live.stream_url }}"
+
+type="application/x-mpegURL">
+
 </video>
-
-
 <script>
 
 (function(){
