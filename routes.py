@@ -406,67 +406,62 @@ def create_channel():
 
             logo_url = None
             cover_url = None
-
             # ==========================
-            # UPLOAD LOGO CLOUDINARY
-            # ==========================
-            if logo and logo.filename:
-                print("Upload logo en cours...")
+# UPLOAD LOGO CLOUDINARY
+# ==========================
+if logo and logo.filename:
+    print("Upload logo en cours...")
 
-                upload_logo = cloudinary.uploader.upload(
-                    logo.read(),
-                    folder="novatv/logos"
-                )
+    upload_logo = cloudinary.uploader.upload(
+        logo,
+        folder="novatv/logos"
+    )
 
-                logo_url = upload_logo.get("secure_url")
+    logo_url = upload_logo.get("secure_url")
 
-                print("Logo uploadé :", logo_url)
+    print("Logo uploadé :", logo_url)
 
-            # ==========================
-            # UPLOAD COVER CLOUDINARY
-            # ==========================
-            if cover and cover.filename:
-                print("Upload cover en cours...")
+# ==========================
+# UPLOAD COVER CLOUDINARY
+# ==========================
+if cover and cover.filename:
+    print("Upload cover en cours...")
 
-                upload_cover = cloudinary.uploader.upload(
-                    cover.read(),
-                    folder="novatv/covers"
-                )
+    upload_cover = cloudinary.uploader.upload(
+        cover,
+        folder="novatv/covers"
+    )
 
-                cover_url = upload_cover.get("secure_url")
+    cover_url = upload_cover.get("secure_url")
 
-                print("Cover uploadée :", cover_url)
+    print("Cover uploadée :", cover_url)
 
-            # ==========================
-            # CREATION CHAINE
-            # ==========================
-            channel = Channel(
-                user_id=session["user_id"],
-                name=name,
-                category=category,
-                description=description,
-                logo=logo_url,
-                cover=cover_url
-            )
+# ==========================
+# CREATION CHAINE
+# ==========================
+channel = Channel(
+    user_id=session["user_id"],
+    name=name,
+    category=category,
+    description=description,
+    logo=logo_url,
+    cover=cover_url
+)
 
-            db.session.add(channel)
-            db.session.commit()
+db.session.add(channel)
+db.session.commit()
 
-            print("Chaîne créée avec succès")
+print("Chaîne créée avec succès")
 
-            return redirect(
-                url_for("main.channels")
-            )
+return redirect(
+    url_for("main.channels")
+)
 
-        except Exception as e:
-            print("❌ ERREUR SERVEUR :", e)
-            traceback.print_exc()
-            return "Erreur serveur", 500
 
-    return render_template(
-        "create_channel.html"
-                )
-    # ==========================
+
+
+
+             # ==========================
 # UPLOAD VIDEO PRO UPPY + CLOUDINARY
 # ==========================
 
