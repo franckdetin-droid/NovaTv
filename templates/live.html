@@ -7,7 +7,6 @@
 {% block content %}
 
 <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 <section class="live-page">
 
 <h1 class="page-title">
@@ -31,13 +30,15 @@
 {% if live.live_source=="url" %}
 
 <video
-class="hls-video"
-data-url="{{ live.stream_url }}"
 controls
 autoplay
-muted
 playsinline
 width="100%">
+
+<source
+src="{{ live.stream_url }}"
+type="application/x-mpegURL">
+
 </video>
 <script>
 
