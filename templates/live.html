@@ -7,8 +7,12 @@
 {% block content %}
 
 <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+
+
 <section class="live-page">
+
 
 <h1 class="page-title">
 
@@ -16,192 +20,189 @@
 
 </h1>
 
+
+
 {% for live in lives %}
+
 
 <div class="live-container">
 
-<!-- ========================= -->
-<!-- VIDEO -->
-<!-- ========================= -->
 
 <div class="live-video-side">
 
+
 <div class="live-player">
+
+
 
 {% if live.live_source=="url" %}
 
+
+
+<!-- ========================= -->
+<!-- LECTEUR FLUX HLS (.m3u8) -->
+<!-- ========================= -->
+
+
 <video
-id="player-{{ live.id }}"
+
+id="hlsPlayer-{{ live.id }}"
+
 controls
+
 autoplay
+
 muted
+
 playsinline
+
 width="100%">
+
 </video>
 
-<script>
-setTimeout(function(){
-
-const video = document.getElementById("player-{{ live.id }}");
-const url = "{{ live.stream_url }}";
-
-console.log("Flux :", url);
-
-if (window.Hls && Hls.isSupported()) {
-
-    const hls = new Hls();
-
-    hls.loadSource(url);
-    hls.attachMedia(video);
-
-    hls.on(Hls.Events.MANIFEST_PARSED, function(){
-        video.play();
-    });
-
-} else {
-
-    video.src = url;
-
-}
-
-},1000);
-</script>
-
-<script>
-document.addEventListener("DOMContentLoaded", function(){
-
-const video = document.getElementById(
-"hlsPlayer-{{ live.id }}"
-);
-
-const url = "{{ live.stream_url }}";
 
 
-if (window.Hls && Hls.isSupported()) {
+<button
 
-    const hls = new Hls({
-        enableWorker: true
-    });
+class="sound-btn"
 
-    hls.loadSource(url);
+onclick="enableSound('{{ live.id }}')">
 
-    hls.attachMedia(video);
+🔊 Activer le son
 
-    hls.on(Hls.Events.MANIFEST_PARSED, function(){
-
-        video.play().catch(function(e){
-            console.log("Lecture bloquée", e);
-        });
-
-    });
+</button>
 
 
-    hls.on(Hls.Events.ERROR, function(event, data){
 
-        console.log("Erreur HLS", data);
-
-    });
-
-
-}
-
-else if(video.canPlayType(
-"application/vnd.apple.mpegurl"
-)){
-
-    video.src = url;
-
-}
-
-});
-
-        </script>
 <script>
 
 (function(){
 
-const video = document.getElementById(
-"player-{{ live.id }}"
+
+const video =
+document.getElementById(
+"hlsPlayer-{{ live.id }}"
 );
 
-const url = "{{ live.stream_url }}";
+
+const url =
+"{{ live.stream_url }}";
 
 
-/* Lecture native */
-if (video.canPlayType("application/vnd.apple.mpegurl")) {
 
-    video.src = url;
+if(window.Hls && Hls.isSupported()){
+
+
+
+const hls = new Hls({
+
+enableWorker:true,
+
+lowLatencyMode:true
+
+});
+
+
+
+hls.loadSource(url);
+
+
+hls.attachMedia(video);
+
+
+
+hls.on(
+Hls.Events.MANIFEST_PARSED,
+function(){
+
+video.play()
+.catch(function(error){
+
+console.log(
+"Autoplay bloqué",
+error
+);
+
+});
+
+});
+
+
+
+hls.on(
+Hls.Events.ERROR,
+function(event,data){
+
+console.log(
+"Erreur HLS :",
+data
+);
+
+});
+
 
 }
 
 
-/* Lecture avec hls.js */
-else if (Hls.isSupported()) {
 
-    const hls = new Hls();
+else if(
+video.canPlayType(
+"application/vnd.apple.mpegurl"
+)
+){
 
-    hls.loadSource(url);
 
-    hls.attachMedia(video);
+video.src=url;
 
-    hls.on(
-        Hls.Events.MANIFEST_PARSED,
-        function(){
-
-            video.play().catch(()=>{});
-
-        }
-    );
 
 }
+
 
 
 })();
 
-    </script>
-<script>
 
-const video{{ live.id }} = document.getElementById(
-"hlsPlayer-{{ live.id }}"
+
+
+
+function enableSound(id){
+
+
+const player =
+document.getElementById(
+"hlsPlayer-"+id
 );
 
-const url{{ live.id }} = "{{ live.stream_url }}";
 
 
-if (Hls.isSupported()) {
+player.muted=false;
 
-    const hls{{ live.id }} = new Hls();
+player.volume=1;
 
-    hls{{ live.id }}.loadSource(url{{ live.id }});
 
-    hls{{ live.id }}.attachMedia(video{{ live.id }});
+player.play();
 
-    hls{{ live.id }}.on(
-        Hls.Events.MANIFEST_PARSED,
-        function(){
 
-            video{{ live.id }}.play();
-
-        }
-    );
 
 }
 
-else if (
-    video{{ live.id }}.canPlayType(
-        "application/vnd.apple.mpegurl"
-    )
-) {
 
-    video{{ live.id }}.src = url{{ live.id }};
 
-}
+</script>
 
-  </script>
 
-{% elif live.live_source=="camera" %}
+
+{% endif %}
+    {% elif live.live_source=="camera" %}
+
+
+<!-- ========================= -->
+<!-- CAMERA LIVE -->
+<!-- ========================= -->
+
 
 <div class="camera-wrapper">
+
 
 <video
 
@@ -217,9 +218,13 @@ width="100%">
 
 </video>
 
+
+
 <div class="live-overlay">
 
+
 <div class="live-top">
+
 
 <span class="live-dot">
 
@@ -227,45 +232,70 @@ width="100%">
 
 </span>
 
+
+
 <span
+
 id="viewerCount-{{ live.id }}"
+
 class="viewer-counter">
 
 👥 0
 
 </span>
 
+
+
 </div>
 
+
+
 <div
+
 id="floatingReactions-{{ live.id }}"
+
 class="floating-reactions">
 
 </div>
 
-</div>
 
 </div>
+
+
+</div>
+
+
 
 <p
+
 id="liveStatus-{{ live.id }}"
+
 class="live-status">
 
 🟡 Connexion...
 
 </p>
 
+
+
 {% endif %}
+
+
 
 </div>
 
+
+
 <div class="live-info">
+
 
 <h2>
 
 {{ live.title }}
 
 </h2>
+
+
 
 <p>
 
@@ -281,77 +311,128 @@ Chaîne inconnue
 
 {% endif %}
 
+
 </p>
+
+
+
 
 <div class="live-buttons">
 
+
 <button
+
 class="reaction-btn"
+
 data-emoji="❤️">
 
 ❤️
 
 </button>
 
+
+
 <button
+
 class="reaction-btn"
+
 data-emoji="😂">
 
 😂
 
 </button>
 
+
+
 <button
+
 class="reaction-btn"
+
 data-emoji="🔥">
 
 🔥
 
 </button>
 
+
+
 <button
+
 class="reaction-btn"
+
 data-emoji="👏">
 
 👏
 
 </button>
 
+
+
 <button
+
 class="join-btn"
+
 id="joinBtn-{{ live.id }}">
 
 🎥 Rejoindre
 
 </button>
-  {% if session.get("user_id") and live.channel and live.channel.user_id == session.get("user_id") %}
 
-<form action="{{ url_for('main.delete_live', live_id=live.id) }}" method="POST" style="display:inline;">
+
+
+{% if session.get("user_id") == live.channel.user_id %}
+
+
+
+<form
+
+action="{{ url_for('main.delete_live', live_id=live.id) }}"
+
+method="POST"
+
+style="display:inline;">
+
+
 
 <button
+
 type="submit"
+
 class="delete-live-btn"
+
 onclick="return confirm('Supprimer ce direct ?');">
 
 🗑️
 
 </button>
 
+
+
 </form>
+
 
 {% endif %}
 
-</div>
+
 
 </div>
 
+
 </div>
+
+
+
+</div>
+
+
 
 <!-- ========================= -->
 <!-- CHAT -->
 <!-- ========================= -->
 
+
 <div class="live-chat">
+
 
 <h3>
 
@@ -359,11 +440,15 @@ onclick="return confirm('Supprimer ce direct ?');">
 
 </h3>
 
+
+
 <div
 
 id="messages-{{ live.id }}"
 
 class="messages">
+
+
 
 <p class="empty-chat">
 
@@ -371,9 +456,15 @@ Aucun message.
 
 </p>
 
+
+
 </div>
 
+
+
 <div class="chat-send">
+
+
 
 <input
 
@@ -383,6 +474,8 @@ id="chatInput-{{ live.id }}"
 
 placeholder="Écrire un message...">
 
+
+
 <button
 
 id="sendBtn-{{ live.id }}">
@@ -391,48 +484,93 @@ Envoyer
 
 </button>
 
-</div>
+
 
 </div>
 
-  </div>
-  <script>
+
+
+</div>
+
+
+
+    </div>
+    <script>
 
 (function(){
 
-const socket=io({
+
+const socket = io({
 
 reconnection:true
 
 });
 
-const room="camera_live_{{ live.id }}";
 
-const video=document.getElementById("remoteVideo-{{ live.id }}");
 
-const status=document.getElementById("liveStatus-{{ live.id }}");
+const room = "camera_live_{{ live.id }}";
 
-const viewerCount=document.getElementById("viewerCount-{{ live.id }}");
 
-const messages=document.getElementById("messages-{{ live.id }}");
 
-const floating=document.getElementById("floatingReactions-{{ live.id }}");
+const video =
+document.getElementById(
+"remoteVideo-{{ live.id }}"
+);
 
-const input=document.getElementById("chatInput-{{ live.id }}");
 
-const sendBtn=document.getElementById("sendBtn-{{ live.id }}");
 
-let peer=null;
+const status =
+document.getElementById(
+"liveStatus-{{ live.id }}"
+);
 
-let creatorId=null;
 
-// =====================================
-// CREATION PEER
-// =====================================
+
+const viewerCount =
+document.getElementById(
+"viewerCount-{{ live.id }}"
+);
+
+
+
+const messages =
+document.getElementById(
+"messages-{{ live.id }}"
+);
+
+
+
+const floating =
+document.getElementById(
+"floatingReactions-{{ live.id }}"
+);
+
+
+
+const input =
+document.getElementById(
+"chatInput-{{ live.id }}"
+);
+
+
+
+const sendBtn =
+document.getElementById(
+"sendBtn-{{ live.id }}"
+);
+
+
+
+let peer = null;
+
+let creatorId = null;
+
+
 
 function createPeer(){
 
-peer=new RTCPeerConnection({
+
+peer = new RTCPeerConnection({
 
 iceServers:[
 
@@ -452,63 +590,109 @@ urls:[
 
 });
 
-peer.ontrack=(event)=>{
+
+
+peer.ontrack = function(event){
+
 
 if(event.streams[0]){
 
-video.srcObject=event.streams[0];
 
-video.play().catch(()=>{});
+video.srcObject =
+event.streams[0];
 
-status.innerHTML="🟢 En direct";
+
+video.play()
+.catch(()=>{});
+
+
+if(status){
+
+status.innerHTML =
+"🟢 En direct";
 
 }
 
+
+}
+
+
 };
 
-peer.onicecandidate=(event)=>{
+
+
+
+peer.onicecandidate=function(event){
+
 
 if(event.candidate && creatorId){
 
-socket.emit("camera_ice",{
+
+socket.emit(
+"camera_ice",
+{
 
 candidate:event.candidate,
 
 target:creatorId
 
-});
+}
+
+);
+
 
 }
+
 
 };
 
+
+
 }
 
-// =====================================
-// CONNEXION
-// =====================================
+
+
+
 
 socket.on("connect",()=>{
 
-socket.emit("join_camera",{
+
+socket.emit(
+"join_camera",
+{
 
 room:room,
 
 creator:false
 
+}
+
+);
+
+
+
+if(status){
+
+status.innerHTML =
+"🟡 Connexion...";
+
+}
+
+
 });
 
-status.innerHTML="🟡 Connexion...";
 
-});
 
-// =====================================
-// OFFRE
-// =====================================
 
-socket.on("camera_offer",async(data)=>{
+
+socket.on(
+"camera_offer",
+async(data)=>{
+
 
 creatorId=data.sender;
+
+
 
 if(!peer){
 
@@ -516,63 +700,108 @@ createPeer();
 
 }
 
+
+
 await peer.setRemoteDescription(
 
-new RTCSessionDescription(data.offer)
+new RTCSessionDescription(
+data.offer
+)
 
 );
 
-const answer=
 
+
+const answer =
 await peer.createAnswer();
+
+
 
 await peer.setLocalDescription(answer);
 
-socket.emit("camera_answer",{
+
+
+socket.emit(
+"camera_answer",
+{
 
 answer:answer,
 
 target:creatorId
 
-});
-
-});
-
-// =====================================
-// ICE
-// =====================================
-
-socket.on("camera_ice",async(data)=>{
-
-try{
-
-if(peer){
-
-await peer.addIceCandidate(
-
-new RTCIceCandidate(data.candidate)
+}
 
 );
 
-}
 
-}catch(e){
-
-console.log(e);
-
-}
 
 });
 
-// =====================================
-// LIVE STOPPE
-// =====================================
 
-socket.on("camera_stopped",()=>{
 
-status.innerHTML="⛔ Live terminé";
+
+
+
+socket.on(
+"camera_ice",
+async(data)=>{
+
+
+try{
+
+
+if(peer){
+
+
+await peer.addIceCandidate(
+
+new RTCIceCandidate(
+data.candidate
+)
+
+);
+
+
+}
+
+
+}catch(e){
+
+
+console.log(e);
+
+
+}
+
+
+
+});
+
+
+
+
+
+socket.on(
+"camera_stopped",
+()=>{
+
+
+if(status){
+
+status.innerHTML =
+"⛔ Live terminé";
+
+}
+
+
+
+if(video){
 
 video.srcObject=null;
+
+}
+
+
 
 if(peer){
 
@@ -582,28 +811,47 @@ peer=null;
 
 }
 
-});
-  // =====================================
-// COMPTEUR SPECTATEURS
-// =====================================
 
-socket.on("viewer_count",(data)=>{
+});
+
+
+
+
+
+
+// COMPTEUR
+
+socket.on(
+"viewer_count",
+(data)=>{
+
 
 if(viewerCount){
 
-viewerCount.innerHTML=data.count;
+viewerCount.innerHTML =
+"👥 "+data.count;
 
 }
 
+
 });
 
-// =====================================
-// CHAT LIVE
-// =====================================
+
+
+
+
+// CHAT
+
+if(sendBtn){
+
 
 sendBtn.onclick=()=>{
 
-const text=input.value.trim();
+
+const text =
+input.value.trim();
+
+
 
 if(text===""){
 
@@ -611,265 +859,183 @@ return;
 
 }
 
-socket.emit("live_message",{
+
+
+socket.emit(
+"live_message",
+{
 
 room:room,
 
 message:text
 
-});
+}
+
+);
+
+
 
 input.value="";
 
+
 };
 
-socket.on("live_message",(data)=>{
 
-const div=document.createElement("div");
 
-div.className="live-chat-message";
+}
 
-div.innerHTML=
+
+
+
+
+socket.on(
+"live_message",
+(data)=>{
+
+
+const div =
+document.createElement("div");
+
+
+
+div.className =
+"live-chat-message";
+
+
+
+div.innerHTML =
 
 "<b>"+data.user+"</b> : "+data.message;
 
+
+
 messages.appendChild(div);
 
-messages.scrollTop=messages.scrollHeight;
+
+
+messages.scrollTop =
+messages.scrollHeight;
+
+
 
 });
 
-// =====================================
+
+
+
+
+
 // REACTIONS
-// =====================================
 
 document.querySelectorAll(
 
-"#reactionBar-{{ live.id }} button"
+".reaction-btn"
 
 ).forEach(btn=>{
 
-btn.onclick=()=>{
 
-socket.emit("live_reaction",{
+btn.onclick=function(){
+
+
+socket.emit(
+"live_reaction",
+{
 
 room:room,
 
 emoji:btn.dataset.emoji
 
-});
+}
+
+);
+
+
 
 };
 
+
+
 });
 
-socket.on("live_reaction",(data)=>{
 
-const emoji=document.createElement("div");
 
-emoji.className="floating-emoji";
 
-emoji.innerHTML=data.emoji;
+
+
+socket.on(
+"live_reaction",
+(data)=>{
+
+
+const emoji =
+document.createElement("div");
+
+
+
+emoji.className =
+"floating-emoji";
+
+
+
+emoji.innerHTML =
+data.emoji;
+
+
 
 floating.appendChild(emoji);
 
+
+
 setTimeout(()=>{
+
 
 emoji.remove();
 
+
 },3000);
 
-});
 
-// =====================================
-// DEMANDER A REJOINDRE LE LIVE
-// =====================================
-
-const joinBtn=document.getElementById(
-
-"joinLiveBtn-{{ live.id }}"
-
-);
-
-if(joinBtn){
-
-joinBtn.onclick=()=>{
-
-socket.emit("request_join_live",{
-
-room:room
 
 });
 
-joinBtn.disabled=true;
 
-joinBtn.innerHTML="⏳ Demande envoyée";
 
-};
 
-}
 
-// =====================================
-// LE CREATEUR ACCEPTE
-// =====================================
+// FERMETURE
 
-socket.on("guest_accepted",()=>{
+window.addEventListener(
+"beforeunload",
+()=>{
 
-alert(
-
-"Le créateur vous a accepté dans le live."
-
-);
-
-});
-
-// =====================================
-// VOUS ETES EXCLU
-// =====================================
-
-socket.on("kicked",()=>{
-
-alert(
-
-"Vous avez été retiré du live."
-
-);
 
 if(peer){
 
 peer.close();
 
-peer=null;
-
 }
 
-});
 
-// =====================================
-// INVITE REJOINT
-// =====================================
-
-socket.on("guest_joined",(data)=>{
-
-console.log(
-
-"Invité connecté :",
-
-data.guest
-
-);
-
-});
-  // =====================================
-// DECONNEXION
-// =====================================
-
-window.addEventListener("beforeunload",()=>{
-
-if(peer){
-
-peer.close();
-
-peer=null;
-
-}
 
 socket.disconnect();
 
-});
-
-// =====================================
-// VIDEO TERMINEE
-// =====================================
-
-video.addEventListener("ended",()=>{
-
-status.innerHTML="⛔ Flux terminé";
 
 });
 
-// =====================================
-// ERREUR VIDEO
-// =====================================
 
-video.addEventListener("error",()=>{
 
-status.innerHTML="❌ Erreur de lecture";
 
-});
-
-// =====================================
-// RECONNEXION SOCKET
-// =====================================
-
-socket.io.on("reconnect",()=>{
-
-status.innerHTML="🟡 Reconnexion...";
-
-socket.emit("join_camera",{
-
-room:room,
-
-creator:false
-
-});
-
-});
-
-// =====================================
-// PERTE DE CONNEXION
-// =====================================
-
-socket.io.on("reconnect_error",()=>{
-
-status.innerHTML="🔴 Connexion impossible";
-
-});
-
-// =====================================
-// FERMETURE DU SCRIPT
-// =====================================
 
 })();
+
 </script>
-  {% endfor %}
+
+
+
+{% endfor %}
+
 
 </section>
-<script>
 
-document.querySelectorAll(".live-url-video").forEach(video => {
 
-    video.addEventListener("click", function(){
-
-        this.muted = !this.muted;
-
-    });
-
-});
-
-</script>
-<script>
-
-document.querySelectorAll(".hls-video").forEach(video => {
-
-    const url = video.dataset.url;
-
-    if (Hls.isSupported()) {
-
-        const hls = new Hls();
-
-        hls.loadSource(url);
-
-        hls.attachMedia(video);
-
-    } 
-    else if (video.canPlayType("application/vnd.apple.mpegurl")) {
-
-        video.src = url;
-
-    }
-
-});
-
-</script>
 {% endblock %}
