@@ -378,23 +378,20 @@ def logout():
 
 
 # ==========================
+# ==========================
 # CREER UNE CHAINE
 # ==========================
-@main.route(
-    "/create-channel",
-    methods=["GET", "POST"]
-)
+@main.route("/create-channel", methods=["GET", "POST"])
 def create_channel():
 
     import traceback
 
     if "user_id" not in session:
-        return redirect(
-            url_for("main.login")
-        )
+        return redirect(url_for("main.login"))
 
     if request.method == "POST":
         try:
+            # Données du formulaire
             name = request.form["name"]
             category = request.form["category"]
             description = request.form["description"]
@@ -402,64 +399,57 @@ def create_channel():
             logo = request.files.get("logo")
             cover = request.files.get("cover")
 
-            print("FILES REÇUS :", request.files)
-
             logo_url = None
             cover_url = None
+
             # ==========================
-# INITIALISATION
-# ==========================
-logo_url = None
-cover_url = None
+            # Upload du logo
+            # ==========================
+            if logo and logo.filename:
+                upload_logo = cloudinary.uploader.upload(
+                    logo,
+                    folder="novatv/logos"
+                )
+                logo_url = upload_logo.get("secure_url")
 
-try:
-    # ==========================
-    # UPLOAD LOGO CLOUDINARY
-    # ==========================
-    if logo and logo.filename:
-        print("Upload logo en cours...")
+            # ==========================
+            # Upload de la couverture
+            # ==========================
+            if cover and cover.filename:
+                upload_cover = cloudinary.uploader.upload(
+                    cover,
+                    folder="novatv/covers"
+                )
+                cover_url = upload_cover.get("secure_url")
 
-        upload_logo = cloudinary.uploader.upload(
-            logo,
-            folder="novatv/logos"
-        )
+            # ==========================
+            # Création de la chaîne
+            # ==========================
+            channel = Channel(
+                user_id=session["user_id"],
+                name=name,
+                category=category,
+                description=description,
+                logo=logo_url,
+                cover=cover_url
+            )
 
-        logo_url = upload_logo.get("secure_url")
-        print("Logo uploadé :", logo_url)
+            db.session.add(channel)
+            db.session.commit()
 
-    # ==========================
-    # UPLOAD COVER CLOUDINARY
-    # ==========================
-    if cover and cover.filename:
-        print("Upload cover en cours...")
+            print("Chaîne créée avec succès")
 
-        upload_cover = cloudinary.uploader.upload(
-            cover,
-            folder="novatv/covers"
-        )
+            return redirect(url_for("main.channels"))
 
-        cover_url = upload_cover.get("secure_url")
-        print("Cover uploadée :", cover_url)
+        except Exception as e:
+            db.session.rollback()
 
-    # ==========================
-    # CREATION CHAINE
-    # ==========================
-    channel = Channel(
-        user_id=session.get("user_id"),
-        name=name,
-        category=category,
-        description=description,
-        logo=logo_url,
-        cover=cover_url
-    )
+            print("ERREUR :", str(e))
+            traceback.print_exc()
 
-    db.session.add(channel)
-    db.session.commit()
+            return "Erreur lors de la création de la chaîne", 500
 
-    print("Chaîne créée avec succès")
-
-    return redirect(url_for("main.channels"))
-
+    return render_template("create_channel.html")
 # ==========================
 # GESTION ERREUR
 # ==========================
@@ -467,28 +457,6 @@ except Exception as e:
     db.session.rollback()
     print("ERREUR :", str(e))
     return "Erreur lors de la création de la chaîne", 500
-            
-
-# ==========================
-# CREATION CHAINE
-# ==========================
-channel = Channel(
-    user_id=session["user_id"],
-    name=name,
-    category=category,
-    description=description,
-    logo=logo_url,
-    cover=cover_url
-)
-
-db.session.add(channel)
-db.session.commit()
-
-print("Chaîne créée avec succès")
-
-return redirect(
-    url_for("main.channels")
-)
 
 
 
