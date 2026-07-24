@@ -375,7 +375,6 @@ def logout():
     return redirect(
         url_for("main.home")
     ) 
-
 # ==========================
 # CREER UNE CHAINE
 # ==========================
@@ -389,9 +388,7 @@ def create_channel():
 
     if request.method == "POST":
         try:
-            # ==========================
             # Données du formulaire
-            # ==========================
             name = request.form["name"]
             category = request.form["category"]
             description = request.form["description"]
@@ -402,9 +399,7 @@ def create_channel():
             logo_url = None
             cover_url = None
 
-            # ==========================
             # Upload du logo
-            # ==========================
             if logo and logo.filename:
                 upload_logo = cloudinary.uploader.upload(
                     logo,
@@ -412,9 +407,7 @@ def create_channel():
                 )
                 logo_url = upload_logo.get("secure_url")
 
-            # ==========================
             # Upload de la couverture
-            # ==========================
             if cover and cover.filename:
                 upload_cover = cloudinary.uploader.upload(
                     cover,
@@ -422,9 +415,7 @@ def create_channel():
                 )
                 cover_url = upload_cover.get("secure_url")
 
-            # ==========================
             # Création de la chaîne
-            # ==========================
             channel = Channel(
                 user_id=session["user_id"],
                 name=name,
@@ -437,17 +428,14 @@ def create_channel():
             db.session.add(channel)
             db.session.commit()
 
-            print("Chaîne créée avec succès")
+            return redirect(url_for("main.channels"))
 
-           return redirect(url_for("main.channels"))
+        except Exception as e:
+            db.session.rollback()
+            traceback.print_exc()
+            return f"Erreur : {str(e)}", 500
 
-           except Exception as e:
-           db.session.rollback()
-           traceback.print_exc()
-           return f"Erreur : {str(e)}", 500
-          return render_template("create_channel.html")
-
-
+    return render_template("create_channel.html")
 
 
 
