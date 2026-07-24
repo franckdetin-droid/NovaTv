@@ -439,15 +439,13 @@ def create_channel():
 
             print("Chaîne créée avec succès")
 
-            return redirect(url_for("main.channels"))
+           return redirect(url_for("main.channels"))
 
-        except Exception as e:
-            db.session.rollback()
-            print("ERREUR :", str(e))
-            traceback.print_exc()
-            return "Erreur lors de la création de la chaîne", 500
-
-    return render_template("create_channel.html")
+           except Exception as e:
+           db.session.rollback()
+           traceback.print_exc()
+           return f"Erreur : {str(e)}", 500
+          return render_template("create_channel.html")
 
 
 
