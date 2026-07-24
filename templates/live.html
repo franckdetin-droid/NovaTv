@@ -8,6 +8,7 @@
 
 <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
 
+<!-- Lecteur HLS -->
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 
 
@@ -15,9 +16,7 @@
 
 
 <h1 class="page-title">
-
 🔴 Direct MY TV
-
 </h1>
 
 
@@ -39,14 +38,15 @@
 
 
 
-<!-- ========================= -->
-<!-- LECTEUR FLUX HLS (.m3u8) -->
-<!-- ========================= -->
+<!-- ================================= -->
+<!-- LECTEUR UNIVERSEL FLUX -->
+<!-- HLS .m3u8 + MP4 + HLS NATIF -->
+<!-- ================================= -->
 
 
 <video
 
-id="hlsPlayer-{{ live.id }}"
+id="livePlayer-{{ live.id }}"
 
 controls
 
@@ -59,7 +59,6 @@ playsinline
 width="100%">
 
 </video>
-
 
 
 <button
@@ -79,29 +78,34 @@ onclick="enableSound('{{ live.id }}')">
 (function(){
 
 
-const video =
-document.getElementById(
-"hlsPlayer-{{ live.id }}"
+const video = document.getElementById(
+"livePlayer-{{ live.id }}"
 );
 
 
-const url =
-"{{ live.stream_url }}";
+const url = "{{ live.stream_url }}";
 
 
 
-if(window.Hls && Hls.isSupported()){
+// ===============================
+// HLS.JS
+// ===============================
 
+if(
+window.Hls &&
+Hls.isSupported()
+){
 
 
 const hls = new Hls({
 
 enableWorker:true,
 
-lowLatencyMode:true
+lowLatencyMode:true,
+
+capLevelToPlayerSize:true
 
 });
-
 
 
 hls.loadSource(url);
@@ -116,39 +120,48 @@ Hls.Events.MANIFEST_PARSED,
 function(){
 
 video.play()
-.catch(function(error){
+.catch(()=>{
 
 console.log(
-"Autoplay bloqué",
-error
+"Autoplay bloqué"
 );
 
 });
 
 });
-
 
 
 hls.on(
 Hls.Events.ERROR,
 function(event,data){
 
+
 console.log(
-"Erreur HLS :",
+"Erreur HLS",
 data
 );
 
+
 });
+
 
 
 }
 
 
 
+// ===============================
+// HLS NATIF
+// Safari / iPhone
+// ===============================
+
+
 else if(
+
 video.canPlayType(
 "application/vnd.apple.mpegurl"
 )
+
 ){
 
 
@@ -159,20 +172,32 @@ video.src=url;
 
 
 
-})();
+// ===============================
+// AUTRES FORMATS
+// ===============================
+
+
+else {
+
+
+video.src=url;
+
+
+}
 
 
 
-
-
-function enableSound(id){
+window.enableSound = function(id){
 
 
 const player =
 document.getElementById(
-"hlsPlayer-"+id
+"livePlayer-"+id
 );
 
+
+
+if(player){
 
 
 player.muted=false;
@@ -180,24 +205,31 @@ player.muted=false;
 player.volume=1;
 
 
-player.play();
-
+player.play()
+.catch(()=>{});
 
 
 }
 
 
 
+};
+
+
+
+})();
+
 </script>
 
 
 
-    {% elif live.live_source=="camera" %}
+{% elif live.live_source=="camera" %}
 
 
-<!-- ========================= -->
+
+<!-- ================================= -->
 <!-- CAMERA LIVE -->
-<!-- ========================= -->
+<!-- ================================= -->
 
 
 <div class="camera-wrapper">
@@ -216,7 +248,6 @@ controls
 width="100%">
 
 </video>
-
 
 
 <div class="live-overlay">
@@ -281,11 +312,8 @@ class="live-status">
 
 
 
-</div>
-
-
-
-<div class="live-info">
+    </div>
+    <div class="live-info">
 
 
 <h2>
@@ -310,13 +338,13 @@ Chaîne inconnue
 
 {% endif %}
 
-
 </p>
 
 
 
 
 <div class="live-buttons">
+
 
 
 <button
@@ -367,6 +395,7 @@ data-emoji="👏">
 
 
 
+
 <button
 
 class="join-btn"
@@ -376,6 +405,8 @@ id="joinBtn-{{ live.id }}">
 🎥 Rejoindre
 
 </button>
+
+
 
 
 
@@ -401,7 +432,7 @@ class="delete-live-btn"
 
 onclick="return confirm('Supprimer ce direct ?');">
 
-🗑️
+🗑️ Supprimer
 
 </button>
 
@@ -410,24 +441,29 @@ onclick="return confirm('Supprimer ce direct ?');">
 </form>
 
 
+
 {% endif %}
 
 
 
-</div>
 
 
 </div>
 
 
+</div>
+
+
 
 </div>
 
 
 
-<!-- ========================= -->
-<!-- CHAT -->
-<!-- ========================= -->
+
+
+<!-- ================================= -->
+<!-- CHAT LIVE -->
+<!-- ================================= -->
 
 
 <div class="live-chat">
@@ -461,8 +497,8 @@ Aucun message.
 
 
 
-<div class="chat-send">
 
+<div class="chat-send">
 
 
 <input
@@ -488,15 +524,20 @@ Envoyer
 </div>
 
 
+</div>
+
+
+
 
 </div>
 
 
 
-    </div>
-    <script>
+
+<script>
 
 (function(){
+
 
 
 const socket = io({
@@ -511,58 +552,72 @@ const room = "camera_live_{{ live.id }}";
 
 
 
-const video =
-document.getElementById(
+const video = document.getElementById(
+
 "remoteVideo-{{ live.id }}"
+
 );
 
 
 
-const status =
-document.getElementById(
+const status = document.getElementById(
+
 "liveStatus-{{ live.id }}"
+
 );
 
 
 
-const viewerCount =
-document.getElementById(
+const viewerCount = document.getElementById(
+
 "viewerCount-{{ live.id }}"
+
 );
 
 
 
-const messages =
-document.getElementById(
+const messages = document.getElementById(
+
 "messages-{{ live.id }}"
+
 );
 
 
 
-const floating =
-document.getElementById(
+const floating = document.getElementById(
+
 "floatingReactions-{{ live.id }}"
+
 );
 
 
 
-const input =
-document.getElementById(
+const input = document.getElementById(
+
 "chatInput-{{ live.id }}"
+
 );
 
 
 
-const sendBtn =
-document.getElementById(
+const sendBtn = document.getElementById(
+
 "sendBtn-{{ live.id }}"
+
 );
 
 
 
-let peer = null;
+let peer=null;
 
-let creatorId = null;
+let creatorId=null;
+
+
+
+
+// ===============================
+// WEBRTC CAMERA
+// ===============================
 
 
 
@@ -571,7 +626,9 @@ function createPeer(){
 
 peer = new RTCPeerConnection({
 
+
 iceServers:[
+
 
 {
 
@@ -585,30 +642,33 @@ urls:[
 
 }
 
+
 ]
+
 
 });
 
 
 
-peer.ontrack = function(event){
+
+
+peer.ontrack=function(event){
 
 
 if(event.streams[0]){
 
 
-video.srcObject =
-event.streams[0];
+video.srcObject = event.streams[0];
 
 
 video.play()
 .catch(()=>{});
 
 
+
 if(status){
 
-status.innerHTML =
-"🟢 En direct";
+status.innerHTML="🟢 En direct";
 
 }
 
@@ -621,14 +681,18 @@ status.innerHTML =
 
 
 
+
 peer.onicecandidate=function(event){
 
 
 if(event.candidate && creatorId){
 
 
+
 socket.emit(
+
 "camera_ice",
+
 {
 
 candidate:event.candidate,
@@ -640,14 +704,16 @@ target:creatorId
 );
 
 
+
 }
+
 
 
 };
 
 
-
 }
+
 
 
 
@@ -657,7 +723,9 @@ socket.on("connect",()=>{
 
 
 socket.emit(
+
 "join_camera",
+
 {
 
 room:room,
@@ -672,10 +740,10 @@ creator:false
 
 if(status){
 
-status.innerHTML =
-"🟡 Connexion...";
+status.innerHTML="🟡 Connexion...";
 
 }
+
 
 
 });
@@ -685,7 +753,9 @@ status.innerHTML =
 
 
 socket.on(
+
 "camera_offer",
+
 async(data)=>{
 
 
@@ -701,18 +771,22 @@ createPeer();
 
 
 
+
 await peer.setRemoteDescription(
 
 new RTCSessionDescription(
+
 data.offer
+
 )
 
 );
 
 
 
-const answer =
-await peer.createAnswer();
+
+
+const answer = await peer.createAnswer();
 
 
 
@@ -720,8 +794,12 @@ await peer.setLocalDescription(answer);
 
 
 
+
+
 socket.emit(
+
 "camera_answer",
+
 {
 
 answer:answer,
@@ -740,9 +818,10 @@ target:creatorId
 
 
 
-
 socket.on(
+
 "camera_ice",
+
 async(data)=>{
 
 
@@ -755,7 +834,9 @@ if(peer){
 await peer.addIceCandidate(
 
 new RTCIceCandidate(
+
 data.candidate
+
 )
 
 );
@@ -773,12 +854,10 @@ console.log(e);
 }
 
 
-
 });
-
-
-
-
+// =====================================
+// LIVE ARRÊTÉ
+// =====================================
 
 socket.on(
 "camera_stopped",
@@ -787,8 +866,7 @@ socket.on(
 
 if(status){
 
-status.innerHTML =
-"⛔ Live terminé";
+status.innerHTML="⛔ Live terminé";
 
 }
 
@@ -811,14 +889,15 @@ peer=null;
 }
 
 
+
 });
 
 
 
 
-
-
-// COMPTEUR
+// =====================================
+// COMPTEUR SPECTATEURS
+// =====================================
 
 socket.on(
 "viewer_count",
@@ -827,8 +906,7 @@ socket.on(
 
 if(viewerCount){
 
-viewerCount.innerHTML =
-"👥 "+data.count;
+viewerCount.innerHTML="👥 "+data.count;
 
 }
 
@@ -838,8 +916,9 @@ viewerCount.innerHTML =
 
 
 
-
+// =====================================
 // CHAT
+// =====================================
 
 if(sendBtn){
 
@@ -847,8 +926,7 @@ if(sendBtn){
 sendBtn.onclick=()=>{
 
 
-const text =
-input.value.trim();
+const text=input.value.trim();
 
 
 
@@ -861,7 +939,9 @@ return;
 
 
 socket.emit(
+
 "live_message",
+
 {
 
 room:room,
@@ -877,8 +957,8 @@ message:text
 input.value="";
 
 
-};
 
+};
 
 
 }
@@ -886,23 +966,21 @@ input.value="";
 
 
 
-
 socket.on(
+
 "live_message",
+
 (data)=>{
 
 
-const div =
-document.createElement("div");
+const div=document.createElement("div");
+
+
+div.className="live-chat-message";
 
 
 
-div.className =
-"live-chat-message";
-
-
-
-div.innerHTML =
+div.innerHTML=
 
 "<b>"+data.user+"</b> : "+data.message;
 
@@ -912,7 +990,8 @@ messages.appendChild(div);
 
 
 
-messages.scrollTop =
+messages.scrollTop=
+
 messages.scrollHeight;
 
 
@@ -922,9 +1001,10 @@ messages.scrollHeight;
 
 
 
+// =====================================
+// RÉACTIONS
+// =====================================
 
-
-// REACTIONS
 
 document.querySelectorAll(
 
@@ -936,8 +1016,11 @@ document.querySelectorAll(
 btn.onclick=function(){
 
 
+
 socket.emit(
+
 "live_reaction",
+
 {
 
 room:room,
@@ -953,31 +1036,28 @@ emoji:btn.dataset.emoji
 };
 
 
-
 });
 
 
 
 
 
-
 socket.on(
+
 "live_reaction",
+
 (data)=>{
 
 
-const emoji =
-document.createElement("div");
+const emoji=document.createElement("div");
 
 
 
-emoji.className =
-"floating-emoji";
+emoji.className="floating-emoji";
 
 
 
-emoji.innerHTML =
-data.emoji;
+emoji.innerHTML=data.emoji;
 
 
 
@@ -991,6 +1071,7 @@ setTimeout(()=>{
 emoji.remove();
 
 
+
 },3000);
 
 
@@ -1000,11 +1081,68 @@ emoji.remove();
 
 
 
+// =====================================
+// DEMANDE REJOINDRE
+// =====================================
 
+
+const joinBtn=document.getElementById(
+
+"joinBtn-{{ live.id }}"
+
+);
+
+
+
+if(joinBtn){
+
+
+joinBtn.onclick=()=>{
+
+
+socket.emit(
+
+"request_join_live",
+
+{
+
+room:room
+
+}
+
+);
+
+
+
+joinBtn.disabled=true;
+
+
+
+joinBtn.innerHTML=
+
+"⏳ Demande envoyée";
+
+
+
+};
+
+
+
+}
+
+
+
+
+
+// =====================================
 // FERMETURE
+// =====================================
+
 
 window.addEventListener(
+
 "beforeunload",
+
 ()=>{
 
 
@@ -1017,6 +1155,7 @@ peer.close();
 
 
 socket.disconnect();
+
 
 
 });
@@ -1034,7 +1173,9 @@ socket.disconnect();
 {% endfor %}
 
 
+
 </section>
+
 
 
 {% endblock %}
