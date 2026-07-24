@@ -1,248 +1,266 @@
 {% extends "base.html" %}
 
-
 {% block title %}
 Programmation TV - MY TV APP
 {% endblock %}
 
-
-
 {% block content %}
 
+<section class="schedule-page">
 
-
-<section class="form-page">
-
-
+<div class="page-header">
 
 <h1>
-⏰ Programmation automatique
+
+📅 Programmation TV
+
 </h1>
 
+<p>
 
+Programmez automatiquement la diffusion de vos vidéos.
 
+</p>
+
+</div>
+
+<div class="schedule-layout">
+
+<!-- ========================= -->
+<!-- FORMULAIRE -->
+<!-- ========================= -->
+
+<div class="schedule-form-card">
+
+<h2>
+
+➕ Nouveau programme
+
+</h2>
 
 <form
 method="POST"
 action="{{ url_for('main.schedule') }}">
 
-
-
-
-
-
-
-
 <label>
-Chaîne
-</label>
 
+📺 Chaîne
+
+</label>
 
 <select
 name="channel_id"
 required>
 
-
-
 {% for channel in channels %}
-
-
 
 <option value="{{ channel.id }}">
 
-
 {{ channel.name }}
-
 
 </option>
 
-
-
 {% endfor %}
-
-
 
 </select>
 
-
-
-
-
-
-
 <label>
-Programme vidéo
-</label>
 
+🎬 Vidéo
+
+</label>
 
 <select
 name="video_id"
 required>
 
-
-
 {% for video in videos %}
-
-
 
 <option value="{{ video.id }}">
 
-
 {{ video.title }}
-
 
 </option>
 
-
-
 {% endfor %}
-
-
 
 </select>
 
-
-
-
-
-
-
 <label>
-Date et heure de début
-</label>
 
+🕒 Début
+
+</label>
 
 <input
 type="datetime-local"
 name="start_time"
 required>
 
-
-
-
-
-
-
 <label>
-Date et heure de fin
-</label>
 
+🕔 Fin
+
+</label>
 
 <input
 type="datetime-local"
 name="end_time"
 required>
 
-
-
-
-
-
-
 <label class="checkbox">
-
-
 
 <input
 type="checkbox"
 name="repeat"
 value="true">
 
-
-Répéter automatiquement
-
-
+🔄 Répéter automatiquement
 
 </label>
 
-
-
-
-
-
-
 <button
-type="submit">
+type="submit"
+class="schedule-btn">
 
-Ajouter au programme TV
+<i class="fas fa-calendar-plus"></i>
+
+Ajouter au programme
 
 </button>
 
-
-
-
-
 </form>
-
-
-
-
-
-
-<section class="program-list">
-
-
-<h2>
-Programmes programmés
-</h2>
-
-
-
-
-{% for program in programs %}
-
-
-
-
-<div class="program-card">
-
-
-
-<h3>
-{{ program.video.title }}
-</h3>
-
-
-<p>
-Début :
-{{ program.start_time }}
-</p>
-
-
-<p>
-Fin :
-{{ program.end_time }}
-</p>
-
-
 
 </div>
 
+<!-- ========================= -->
+<!-- PROGRAMMES -->
+<!-- ========================= -->
 
+<div class="schedule-list">
 
+<div class="list-header">
+
+<h2>
+
+📺 Programmes enregistrés
+
+</h2>
+
+<span>
+
+{{ programs|length }}
+
+programme(s)
+
+</span>
+
+</div>
+
+{% for program in programs %}
+
+<div class="schedule-card">
+
+<div class="schedule-top">
+
+<h3>
+
+{{ program.video.title }}
+
+</h3>
+
+<span class="schedule-live">
+
+📡 Programmé
+
+</span>
+
+</div>
+
+<div class="schedule-body">
+
+<p>
+
+📺
+
+<strong>
+
+Chaîne :
+
+</strong>
+
+{{ program.channel.name }}
+
+</p>
+
+<p>
+
+🟢
+
+<strong>
+
+Début :
+
+</strong>
+
+{{ program.start_time }}
+
+</p>
+
+<p>
+
+🔴
+
+<strong>
+
+Fin :
+
+</strong>
+
+{{ program.end_time }}
+
+</p>
+
+{% if program.repeat %}
+
+<div class="repeat-badge">
+
+🔄 Répétition automatique
+
+</div>
+
+{% endif %}
+
+</div>
+
+</div>
 
 {% else %}
 
+<div class="empty-state">
 
+<i class="fas fa-calendar-times"></i>
+
+<h3>
+
+Aucun programme
+
+</h3>
 
 <p>
-Aucun programme enregistré.
+
+Ajoutez votre première programmation.
+
 </p>
 
-
+</div>
 
 {% endfor %}
 
+</div>
 
-
-</section>
-
-
-
-
+</div>
 
 </section>
-
-
 
 {% endblock %}
