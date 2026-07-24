@@ -4,56 +4,84 @@
 {{ video.title }} - MY TV APP
 {% endblock %}
 
-
 {% block content %}
 
-<section class="player-page">
+<section class="watch-page">
 
+<div class="watch-container">
 
-<!-- ==========================
-     LECTEUR VIDEO PRO
-========================== -->
+<!-- ===========================
+     LECTEUR PREMIUM
+=========================== -->
 
-<div class="video-player video-overlay" id="video-container">
+<div class="player-card">
 
+<div class="video-player" id="video-container">
 
 <video
 id="main-video"
+controls
 autoplay
 playsinline
-controls
-poster="{{ video.thumbnail }}"
->
+poster="{{ video.thumbnail }}">
 
 {% if video.file_path %}
 
 <source
 src="{{ video.file_path }}"
-type="video/mp4"
->
+type="video/mp4">
 
 {% endif %}
 
-Votre navigateur ne supporte pas la vidéo.
+Votre navigateur ne supporte pas la lecture vidéo.
 
 </video>
 
+{% if video.channel %}
 
+<div class="player-watermark">
 
-<!-- CONTROLES VIDEO -->
+{% if video.channel.logo %}
 
-<div class="custom-video-controls">
+<img
+src="{{ video.channel.logo }}"
+alt="{{ video.channel.name }}">
 
+{% endif %}
+
+<span>
+
+{{ video.channel.name }}
+
+</span>
+
+</div>
+
+{% endif %}
+
+<div class="player-top">
+
+<span class="player-live">
+
+🔴 MY TV APP
+
+</span>
+
+</div>
+
+<div class="player-controls">
 
 <button id="play-btn">
-▶️
-</button>
 
+<i class="fas fa-play"></i>
+
+</button>
 
 <button id="mute-btn">
-🔊
-</button>
 
+<i class="fas fa-volume-up"></i>
+
+</button>
 
 <input
 type="range"
@@ -61,671 +89,431 @@ id="volume-control"
 min="0"
 max="1"
 step="0.1"
-value="1"
->
-
-
-<button id="rotate-btn">
-↻
-</button>
-
+value="1">
 
 <button id="fullscreen-btn">
-⛶
+
+<i class="fas fa-expand"></i>
+
 </button>
 
+<button id="rotate-btn">
 
-</div>
+<i class="fas fa-rotate-right"></i>
 
-
-
-
-<!-- ORIENTATION -->
-
-<div class="orientation-buttons">
-
-
-<button id="vertical-btn">
-📱 Vertical
 </button>
 
-
-<button id="horizontal-btn">
-🖥️ Horizontal
-</button>
-
+</div>
 
 </div>
 
-
-
-
-
-<!-- LOGO CHAINE -->
-
-{% if video.channel %}
-
-<div class="tv-watermark">
-
-
-{% if video.channel.logo %}
-
-<img
-src="{{ video.channel.logo }}"
-alt="{{ video.channel.name }}"
->
-
-{% endif %}
-
-
-<span>
-{{ video.channel.name }}
-</span>
-
-
 </div>
 
-{% endif %}
+<!-- ===========================
+     INFORMATIONS
+=========================== -->
 
-
-
-</div>
-<!-- ==========================
-     DETAILS VIDEO
-========================== -->
-
-
-<section class="video-details">
-
+<div class="watch-info">
 
 <h1>
+
 {{ video.title }}
+
 </h1>
 
+<div class="watch-meta">
 
+<span>
 
+🎬 {{ video.category }}
 
-{% if video.channel %}
+</span>
+
+<span>
+
+👁️ {{ video.views }}
+
+</span>
+
+<span>
+
+⏱️ {{ video.duration }}
+
+</span>
+
+     </div>
+     {% if video.channel %}
 
 <div class="watch-channel">
 
+    {% if video.channel.logo %}
 
-{% if video.channel.logo %}
+    <img
+    src="{{ video.channel.logo }}"
+    class="watch-channel-logo"
+    alt="{{ video.channel.name }}">
 
-<img
-src="{{ video.channel.logo }}"
-class="watch-channel-logo"
->
+    {% endif %}
 
-{% endif %}
+    <div>
 
+        <h3>
 
-<h3>
-📺 {{ video.channel.name }}
-</h3>
+            {{ video.channel.name }}
 
+        </h3>
+
+        <span>
+
+            📺 Chaîne officielle
+
+        </span>
+
+    </div>
 
 </div>
 
 {% endif %}
 
+<p class="watch-description">
 
-
-
-
-
-<p>
 {{ video.description }}
+
 </p>
 
+<div class="watch-actions">
 
+<button class="action-btn" id="likeBtn">
 
+<i class="fas fa-thumbs-up"></i>
 
-
-
-
-<div class="video-meta">
-
-
-<span>
-🎬 {{ video.category }}
-</span>
-
-
-<span>
-⏱️ {{ video.duration }}
-</span>
-
-
-<span>
-👁️ {{ video.views }} vues
-</span>
-
-
-</div>
-
-
-
-
-
-
-<!-- ==========================
-     ACTIONS STYLE YOUTUBE
-========================== -->
-
-
-<div class="youtube-actions">
-
-
-
-<button
-class="yt-btn"
-id="likeBtn">
-
-👍 
-<span id="likeCount">
-0
-</span>
+<span id="likeCount">0</span>
 
 </button>
 
+<button class="action-btn" id="dislikeBtn">
 
+<i class="fas fa-thumbs-down"></i>
 
-
-<button
-class="yt-btn"
-id="dislikeBtn">
-
-👎
-<span id="dislikeCount">
-0
-</span>
+<span id="dislikeCount">0</span>
 
 </button>
 
+<button class="action-btn" id="commentBtn">
 
+<i class="fas fa-comments"></i>
 
-
-
-<button
-class="yt-btn"
-id="commentBtn">
-
-💬 Commentaires
+Commentaires
 
 </button>
 
+<button class="action-btn" id="shareBtn">
 
+<i class="fas fa-share"></i>
 
-
-
-<button
-class="yt-btn"
-id="shareBtn">
-
-🔗 Partager
+Partager
 
 </button>
-
-
-
-
-
 
 {% if session.get("user_id") %}
 
-
 <a
 href="{{ url_for('main.add_favorite', video_id=video.id) }}"
-class="yt-btn">
+class="action-btn">
 
+<i class="fas fa-heart"></i>
 
-📌 Ma liste
-
+Ma liste
 
 </a>
-
-
 
 {% else %}
 
-
 <a
 href="{{ url_for('main.login') }}"
-class="yt-btn">
+class="action-btn">
 
+<i class="fas fa-heart"></i>
 
-📌 Ma liste
-
+Connexion
 
 </a>
 
-
 {% endif %}
 
-
-
-
-
 </div>
-
-
-
-
-
-
-
-<!-- ==========================
-     COMMENTAIRES VISUELS
-     (sans base de données)
-========================== -->
-
 
 <div
 id="commentBox"
 class="comment-box"
 style="display:none;">
 
-
-
 <h3>
+
 💬 Commentaires
+
 </h3>
-
-
-
 
 <textarea
 id="commentText"
-placeholder="Ajouter un commentaire...">
-</textarea>
-
-
+placeholder="Écrivez un commentaire..."></textarea>
 
 <button
 id="sendComment"
-class="yt-submit">
+class="btn-watch">
 
-Envoyer
+Publier
 
 </button>
 
-
-
-
-<div id="commentsList">
+<div id="commentsList"></div>
 
 </div>
 
+</div>
 
-
-     </div>
-     <!-- ==========================
-     VIDEOS SIMILAIRES
-========================== -->
-
+</div>
 
 <section class="related">
 
-
 <h2>
+
 🎬 Autres vidéos
+
 </h2>
 
-
-
 <div class="netflix-grid">
-
-
-{% for item in related_videos %}
-
+     {% for item in related_videos %}
 
 <div class="netflix-card">
 
-
 <a href="{{ url_for('main.watch', video_id=item.id) }}">
-
 
 {% if item.thumbnail %}
 
-
 <img
 src="{{ item.thumbnail }}"
-alt="{{ item.title }}"
->
-
+alt="{{ item.title }}">
 
 {% else %}
 
-
 <div class="no-image">
-🎬
-</div>
 
+🎬
+
+</div>
 
 {% endif %}
 
-
-
+<div class="card-overlay">
 
 <div class="card-info">
 
-
 <h3>
+
 {{ item.title }}
+
 </h3>
 
-
 <p>
+
 {{ item.category }}
+
 </p>
 
+<div class="card-meta">
 
 <span>
-❤️ {{ item.likes }}
-</span>
 
+❤️ {{ item.likes if item.likes else 0 }}
+
+</span>
 
 <span>
-👁️ {{ item.views }}
-</span>
 
+👁️ {{ item.views if item.views else 0 }}
+
+</span>
 
 </div>
 
+</div>
 
+</div>
 
 </a>
 
-
 </div>
-
 
 {% else %}
 
+<div class="empty-state">
+
+<i class="fas fa-film"></i>
+
+<h3>
+
+Aucune autre vidéo
+
+</h3>
 
 <p>
-Aucune autre vidéo.
+
+Revenez plus tard pour découvrir d'autres contenus.
+
 </p>
-
-
-{% endfor %}
-
 
 </div>
 
+{% endfor %}
 
-</section>
+</div>
 
-
-
-</section>
-
-
-
-
-
-
-<script>
-
+     </section>
+     <script>
 
 // ==========================
-// VIDEO CONTROLS
+// PLAYER
 // ==========================
 
+const video = document.getElementById("main-video");
 
-const video =
-document.getElementById("main-video");
+const playBtn = document.getElementById("play-btn");
+const muteBtn = document.getElementById("mute-btn");
+const volume = document.getElementById("volume-control");
+const fullscreen = document.getElementById("fullscreen-btn");
+const rotate = document.getElementById("rotate-btn");
 
-
-const container =
-document.getElementById("video-container");
-
-
-
-document.getElementById("play-btn").onclick = ()=>{
-
+playBtn.onclick = () => {
 
 if(video.paused){
 
 video.play();
 
-document.getElementById("play-btn").innerHTML="⏸️";
-
+playBtn.innerHTML='<i class="fas fa-pause"></i>';
 
 }else{
 
 video.pause();
 
-document.getElementById("play-btn").innerHTML="▶️";
+playBtn.innerHTML='<i class="fas fa-play"></i>';
 
 }
 
+};
+
+muteBtn.onclick = ()=>{
+
+video.muted=!video.muted;
+
+muteBtn.innerHTML=
+
+video.muted
+
+?
+
+'<i class="fas fa-volume-mute"></i>'
+
+:
+
+'<i class="fas fa-volume-up"></i>';
 
 };
 
+volume.oninput=(e)=>{
 
-
-
-
-document.getElementById("mute-btn").onclick = ()=>{
-
-
-video.muted = !video.muted;
-
-
-document.getElementById("mute-btn").innerHTML =
-video.muted ? "🔇" : "🔊";
-
+video.volume=e.target.value;
 
 };
 
+fullscreen.onclick=()=>{
 
+if(video.requestFullscreen){
 
-
-
-document.getElementById("volume-control").oninput = (e)=>{
-
-video.volume = e.target.value;
-
-};
-
-
-
-
-
-
-// PLEIN ECRAN
-
-document.getElementById("fullscreen-btn").onclick = ()=>{
-
-
-if(container.requestFullscreen){
-
-container.requestFullscreen();
+video.requestFullscreen();
 
 }
 
-
 };
 
+rotate.onclick=()=>{
 
+document.getElementById("video-container")
 
-
-
-// ROTATION
-
-document.getElementById("rotate-btn").onclick = ()=>{
-
-
-container.classList.toggle(
-"rotate-video"
-);
-
+.classList.toggle("rotate-video");
 
 };
-
-
-
-
-
-
-// ORIENTATION
-
-document.getElementById("vertical-btn").onclick = ()=>{
-
-
-container.classList.add("vertical-video");
-
-container.classList.remove("horizontal-video");
-
-
-};
-
-
-
-
-document.getElementById("horizontal-btn").onclick = ()=>{
-
-
-container.classList.add("horizontal-video");
-
-container.classList.remove("vertical-video");
-
-
-};
-
-
-
-
-
-
-
 
 // ==========================
-// LIKE DISLIKE
+// LIKE / DISLIKE
 // ==========================
 
+let likes=0;
+let dislikes=0;
 
-let likes = 0;
-
-let dislikes = 0;
-
-
-
-document.getElementById("likeBtn").onclick = ()=>{
-
+document.getElementById("likeBtn").onclick=()=>{
 
 likes++;
 
-
-document.getElementById("likeCount").innerHTML =
-likes;
-
+document.getElementById("likeCount").textContent=likes;
 
 };
 
-
-
-
-
-document.getElementById("dislikeBtn").onclick = ()=>{
-
+document.getElementById("dislikeBtn").onclick=()=>{
 
 dislikes++;
 
-
-document.getElementById("dislikeCount").innerHTML =
-dislikes;
-
+document.getElementById("dislikeCount").textContent=dislikes;
 
 };
 
-
-
-
-
-
-
-
 // ==========================
-// COMMENTAIRES VISUELS
+// COMMENTAIRES
 // ==========================
 
+document.getElementById("commentBtn").onclick=()=>{
 
-document.getElementById("commentBtn").onclick = ()=>{
+const box=document.getElementById("commentBox");
 
+box.style.display=
 
-let box =
-document.getElementById("commentBox");
+box.style.display==="block"
 
-
-box.style.display =
-box.style.display==="none"
 ?
-"block"
-:
-"none";
 
+"none"
+
+:
+
+"block";
 
 };
 
+document.getElementById("sendComment").onclick=()=>{
 
+const txt=document.getElementById("commentText");
 
+if(txt.value.trim()=="") return;
 
+const p=document.createElement("p");
 
-
-document.getElementById("sendComment").onclick = ()=>{
-
-
-let text =
-document.getElementById("commentText").value;
-
-
-
-if(text.trim()){
-
-
-let p =
-document.createElement("p");
-
-
-p.innerHTML =
-"👤 " + text;
-
-
+p.innerHTML="👤 "+txt.value;
 
 document.getElementById("commentsList")
+
 .appendChild(p);
 
-
-
-document.getElementById("commentText")
-.value="";
-
-
-}
-
-
+txt.value="";
 
 };
-
-
-
-
-
-
 
 // ==========================
 // PARTAGE
 // ==========================
 
-
-document.getElementById("shareBtn").onclick = ()=>{
-
+document.getElementById("shareBtn").onclick=()=>{
 
 if(navigator.share){
-
 
 navigator.share({
 
@@ -733,26 +521,18 @@ title:"{{ video.title }}",
 
 url:window.location.href
 
-
 });
-
 
 }else{
 
+navigator.clipboard.writeText(window.location.href);
 
-alert(
-"Lien : "+window.location.href
-);
-
+alert("Lien copié.");
 
 }
 
-
 };
 
-
 </script>
-
-
 
 {% endblock %}
