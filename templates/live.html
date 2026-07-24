@@ -33,8 +33,10 @@
 <video
 controls
 autoplay
+muted
 playsinline
-width="100%">
+width="100%"
+class="live-url-video">
 
 <source
 src="{{ live.stream_url }}"
@@ -167,6 +169,22 @@ id="joinBtn-{{ live.id }}">
 🎥 Rejoindre
 
 </button>
+  {% if session.get("user_id") and live.channel and live.channel.user_id == session.get("user_id") %}
+
+<form action="{{ url_for('main.delete_live', live_id=live.id) }}" method="POST" style="display:inline;">
+
+<button
+type="submit"
+class="delete-live-btn"
+onclick="return confirm('Supprimer ce direct ?');">
+
+🗑️
+
+</button>
+
+</form>
+
+{% endif %}
 
 </div>
 
@@ -662,5 +680,17 @@ status.innerHTML="🔴 Connexion impossible";
   {% endfor %}
 
 </section>
+<script>
 
+document.querySelectorAll(".live-url-video").forEach(video => {
+
+    video.addEventListener("click", function(){
+
+        this.muted = !this.muted;
+
+    });
+
+});
+
+</script>
 {% endblock %}
