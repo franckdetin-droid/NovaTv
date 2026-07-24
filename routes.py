@@ -237,16 +237,7 @@ def live():
         "live.html",
         lives=lives
     )
-    # =====================================
-# LECTEUR PLAYER HLS
-# =====================================
-
-@main.route("/player")
-def player():
-
-    return render_template(
-        "player.html"
-    )
+    
     # ==========================
 # INSCRIPTION
 # ==========================
