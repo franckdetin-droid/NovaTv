@@ -31,19 +31,63 @@
 {% if live.live_source=="url" %}
 
 <video
-id="player-{{ live.id }}"
+id="hlsPlayer-{{ live.id }}"
 controls
 autoplay
-playsinline
 muted
+playsinline
 width="100%">
-
-<source
-src="{{ live.stream_url }}"
-type="application/x-mpegURL">
-
 </video>
 
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+
+const video = document.getElementById(
+"hlsPlayer-{{ live.id }}"
+);
+
+const url = "{{ live.stream_url }}";
+
+
+if (window.Hls && Hls.isSupported()) {
+
+    const hls = new Hls({
+        enableWorker: true
+    });
+
+    hls.loadSource(url);
+
+    hls.attachMedia(video);
+
+    hls.on(Hls.Events.MANIFEST_PARSED, function(){
+
+        video.play().catch(function(e){
+            console.log("Lecture bloquée", e);
+        });
+
+    });
+
+
+    hls.on(Hls.Events.ERROR, function(event, data){
+
+        console.log("Erreur HLS", data);
+
+    });
+
+
+}
+
+else if(video.canPlayType(
+"application/vnd.apple.mpegurl"
+)){
+
+    video.src = url;
+
+}
+
+});
+
+        </script>
 <script>
 
 (function(){
