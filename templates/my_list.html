@@ -1,87 +1,192 @@
 {% extends "base.html" %}
 
-{% block title %}Ma liste{% endblock %}
+{% block title %}
+Mon profil - MY TV APP
+{% endblock %}
 
 {% block content %}
 
-<div class="container">
+<section class="profile-page">
 
-    <h2 class="section-title">🎬 Ma liste</h2>
+<div class="profile-banner">
 
-    {% if favorites and favorites|length > 0 %}
+<div class="profile-cover"></div>
 
-    <div class="netflix-grid">
+<div class="profile-info">
 
-        {% for fav in favorites %}
+{% if user.profile_image %}
 
-            {% if fav.video %}
+<img
+src="{{ user.profile_image }}"
+class="profile-avatar"
+alt="{{ user.username }}">
 
-            <div class="netflix-card">
+{% else %}
 
-                <!-- LIEN VIDEO -->
-                <a href="{{ url_for('main.watch', video_id=fav.video.id) }}">
+<div class="profile-avatar default-avatar">
 
-                    <!-- IMAGE -->
-                    {% if fav.video.thumbnail %}
-                        <img 
-                            src="{{ url_for('static', filename=fav.video.thumbnail) }}" 
-                            alt="thumbnail"
-                            loading="lazy"
-                        >
-                    {% else %}
-                        <img 
-                            src="{{ url_for('static', filename='default.jpg') }}" 
-                            alt="default"
-                            loading="lazy"
-                        >
-                    {% endif %}
-
-                </a>
-
-                <!-- INFOS -->
-                <div class="card-body">
-
-                    <h3>
-                        {{ fav.video.title or "Sans titre" }}
-                    </h3>
-
-                    <!-- ACTIONS -->
-                    <div class="card-actions">
-
-                        <a href="{{ url_for('main.watch', video_id=fav.video.id) }}" class="btn">
-                            ▶️ Regarder
-                        </a>
-
-                        <a href="{{ url_for('main.remove_favorite', video_id=fav.video.id) }}" class="btn btn-danger">
-                            ❌ Retirer
-                        </a>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            {% endif %}
-
-        {% endfor %}
-
-    </div>
-
-    {% else %}
-
-    <div class="empty-state">
-
-        <p>📭 Ta liste est vide</p>
-
-        <a href="{{ url_for('main.home') }}" class="btn">
-            🔎 Découvrir des vidéos
-        </a>
-
-    </div>
-
-    {% endif %}
+<i class="fas fa-user"></i>
 
 </div>
+
+{% endif %}
+
+<div class="profile-details">
+
+<h1>
+
+{{ user.username }}
+
+</h1>
+
+<p>
+
+<i class="fas fa-envelope"></i>
+
+{{ user.email }}
+
+</p>
+
+<span class="role-badge">
+
+{{ user.role }}
+
+</span>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="profile-stats">
+
+<div class="stat-card">
+
+<h2>📺</h2>
+
+<h3>Chaînes</h3>
+
+<p>Mes chaînes</p>
+
+</div>
+
+<div class="stat-card">
+
+<h2>🎬</h2>
+
+<h3>Creator</h3>
+
+<p>Mes contenus</p>
+
+</div>
+
+<div class="stat-card">
+
+<h2>🕒</h2>
+
+<h3>Historique</h3>
+
+<p>Mes vidéos</p>
+
+</div>
+
+<div class="stat-card">
+
+<h2>❤️</h2>
+
+<h3>Favoris</h3>
+
+<p>Ma liste</p>
+
+</div>
+
+</div>
+
+<div class="profile-menu">
+
+<a
+href="{{ url_for('main.creator') }}"
+class="profile-card">
+
+<i class="fas fa-clapperboard"></i>
+
+<h3>
+
+Creator Studio
+
+</h3>
+
+<p>
+
+Créer et gérer vos contenus.
+
+</p>
+
+</a>
+
+<a
+href="{{ url_for('main.channels') }}"
+class="profile-card">
+
+<i class="fas fa-tv"></i>
+
+<h3>
+
+Chaînes TV
+
+</h3>
+
+<p>
+
+Découvrir les chaînes.
+
+</p>
+
+</a>
+
+<a
+href="{{ url_for('main.history') }}"
+class="profile-card">
+
+<i class="fas fa-clock-rotate-left"></i>
+
+<h3>
+
+Historique
+
+</h3>
+
+<p>
+
+Retrouver vos vidéos.
+
+</p>
+
+</a>
+
+<a
+href="{{ url_for('main.my_list') }}"
+class="profile-card">
+
+<i class="fas fa-heart"></i>
+
+<h3>
+
+Ma liste
+
+</h3>
+
+<p>
+
+Vos vidéos favorites.
+
+</p>
+
+</a>
+
+</div>
+
+</section>
 
 {% endblock %}
