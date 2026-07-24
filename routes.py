@@ -1335,7 +1335,54 @@ def create_camera_stream():
         "live_id": live.id
     }
 
+# ==========================
+# SUPPRIMER UN DIRECT
+# ==========================
 
+@main.route(
+    "/delete-live/<int:live_id>",
+    methods=["POST"]
+)
+def delete_live(live_id):
+
+    if "user_id" not in session:
+        return redirect(
+            url_for("main.login")
+        )
+
+    live = LiveStream.query.get_or_404(
+        live_id
+    )
+
+
+    # Vérifier que le live appartient à l'utilisateur
+
+    channel = Channel.query.get(
+        live.channel_id
+    )
+
+    if not channel or channel.user_id != session["user_id"]:
+        return "❌ Vous n'avez pas l'autorisation de supprimer ce direct"
+
+
+    try:
+
+        # Supprimer le live
+        db.session.delete(live)
+
+        db.session.commit()
+
+
+    except Exception as e:
+
+        db.session.rollback()
+
+        return f"Erreur suppression direct : {e}"
+
+
+    return redirect(
+        url_for("main.live")
+)
 
 # ==========================
 # ARRETER LIVE CAMERA
