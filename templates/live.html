@@ -7,6 +7,7 @@
 {% block content %}
 
 <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 <section class="live-page">
 
 <h1 class="page-title">
@@ -30,9 +31,11 @@
 {% if live.live_source=="url" %}
 
 <video
+id="player-{{ live.id }}"
 controls
 autoplay
 playsinline
+muted
 width="100%">
 
 <source
@@ -40,6 +43,50 @@ src="{{ live.stream_url }}"
 type="application/x-mpegURL">
 
 </video>
+
+<script>
+
+(function(){
+
+const video = document.getElementById(
+"player-{{ live.id }}"
+);
+
+const url = "{{ live.stream_url }}";
+
+
+/* Lecture native */
+if (video.canPlayType("application/vnd.apple.mpegurl")) {
+
+    video.src = url;
+
+}
+
+
+/* Lecture avec hls.js */
+else if (Hls.isSupported()) {
+
+    const hls = new Hls();
+
+    hls.loadSource(url);
+
+    hls.attachMedia(video);
+
+    hls.on(
+        Hls.Events.MANIFEST_PARSED,
+        function(){
+
+            video.play().catch(()=>{});
+
+        }
+    );
+
+}
+
+
+})();
+
+    </script>
 <script>
 
 const video{{ live.id }} = document.getElementById(
