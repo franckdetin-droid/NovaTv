@@ -1763,7 +1763,7 @@ def delete_channel(channel_id):
     )
     # ===== Partenariat chaînes TV =====
 
-@app.route('/partenariat')
+@main.route('/partenariat')
 def partenariat():
     return render_template('partenariat.html')
 
