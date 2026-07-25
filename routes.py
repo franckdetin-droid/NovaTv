@@ -1761,4 +1761,10 @@ def delete_channel(channel_id):
     return redirect(
         url_for("main.creator")
     )
-    
+    # ===== Partenariat chaînes TV =====
+
+@app.route('/partenariat')
+def partenariat():
+    return render_template('partenariat.html')
+
+# ===== Fin Partenariat chaînes TV =====
