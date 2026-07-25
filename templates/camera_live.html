@@ -503,7 +503,326 @@ socket.on("camera_ice", async(data)=>{
 
         console.log(err);
 
+    }let peers = {};
+let pendingIce = {};
+
+
+
+
+    while(pendingIce[id].length){
+
+        await peers[id].addIceCandidate(
+
+            pendingIce[id].shift()
+
+        );
+
     }
+
+}
+
+
+
+// ======================================================
+// NOUVEAU SPECTATEUR
+// ======================================================
+
+socket.on("viewer_joined",async(data)=>{
+
+
+    viewerCount.innerHTML=data.count;
+
+
+    const id=data.viewer_id;
+
+
+    const peer=createPeer(id);
+
+
+    const offer=await peer.createOffer();
+
+
+    await peer.setLocalDescription(offer);
+
+
+
+    socket.emit("camera_offer",{
+
+        target:id,
+
+        offer:offer
+
+    });
+
+
+})
+
+
+// ======================================================
+// CREATION PEER WEBRTC
+// ======================================================
+
+function createPeer(id){
+
+    const peer = new RTCPeerConnection({
+
+        iceServers:[
+
+            {
+                urls:[
+                    "stun:stun.l.google.com:19302",
+                    "stun:stun1.l.google.com:19302"
+                ]
+            }
+
+        ]
+
+    });
+
+
+    if(stream){
+
+        stream.getTracks().forEach(track=>{
+
+            peer.addTrack(track, stream);
+
+        });
+
+    }
+
+
+    peer.ontrack=(event)=>{
+
+        let card=document.getElementById("guest-"+id);
+
+
+        if(!card){
+
+            if(document.querySelector(".guest-empty")){
+
+                document.querySelector(".guest-empty").remove();
+
+            }
+
+
+            card=document.createElement("div");
+
+            card.className="guest-card";
+
+            card.id="guest-"+id;
+
+
+            const guestVideo=document.createElement("video");
+
+            guestVideo.autoplay=true;
+            guestVideo.playsInline=true;
+            guestVideo.srcObject=event.streams[0];
+
+
+            const name=document.createElement("span");
+
+            name.innerHTML="👤 Invité";
+
+
+            card.appendChild(guestVideo);
+            card.appendChild(name);
+
+
+            guestGrid.appendChild(card);
+
+        }
+
+    };
+
+
+    peer.onicecandidate=(event)=>{
+
+        if(event.candidate){
+
+            socket.emit("camera_ice",{
+
+                target:id,
+
+                candidate:event.candidate
+
+            });
+
+        }
+
+    };
+
+
+    peers[id]=peer;
+
+    pendingIce[id]=[];
+
+
+    return peer;
+
+}
+
+
+
+// ======================================================
+// AJOUT ICE EN ATTENTE
+// ======================================================
+
+async function addPendingIce(id){
+
+    if(!pendingIce[id]) return;
+
+
+    while(pendingIce[id].length){
+
+        await peers[id].addIceCandidate(
+
+            pendingIce[id].shift()
+
+        );
+
+    }
+
+}
+
+
+
+// ======================================================
+// NOUVEAU SPECTATEUR
+// ======================================================
+
+socket.on("viewer_joined",async(data)=>{
+
+
+    viewerCount.innerHTML=data.count;
+
+
+    const id=data.viewer_id;
+
+
+    const peer=createPeer(id);
+
+
+    const offer=await peer.createOffer();
+
+
+    await peer.setLocalDescription(offer);
+
+
+
+    socket.emit("camera_offer",{
+
+        target:id,
+
+        offer:offer
+
+    });
+
+
+});
+
+
+
+// ======================================================
+// INVITE ACCEPTE
+// ======================================================
+
+socket.on("guest_joined",async(data)=>{
+
+
+    const id=data.guest;
+
+
+    const peer=createPeer(id);
+
+
+
+    const offer=await peer.createOffer();
+
+
+    await peer.setLocalDescription(offer);
+
+
+
+    socket.emit("camera_offer",{
+
+        target:id,
+
+        offer:offer
+
+    });
+
+
+});
+
+
+
+// ======================================================
+// RECEVOIR ANSWER
+// ======================================================
+
+socket.on("camera_answer",async(data)=>{
+
+
+    const peer=peers[data.sender];
+
+
+    if(peer){
+
+        await peer.setRemoteDescription(
+
+            new RTCSessionDescription(data.answer)
+
+        );
+
+
+        await addPendingIce(data.sender);
+
+    }
+
+
+});
+
+
+
+// ======================================================
+// RECEVOIR ICE
+// ======================================================
+
+socket.on("camera_ice",async(data)=>{
+
+
+    const id=data.sender;
+
+
+    if(peers[id] && peers[id].remoteDescription){
+
+
+        await peers[id].addIceCandidate(
+
+            new RTCIceCandidate(data.candidate)
+
+        );
+
+
+    }else{
+
+
+        if(!pendingIce[id]){
+
+            pendingIce[id]=[];
+
+        }
+
+
+        pendingIce[id].push(
+
+            new RTCIceCandidate(data.candidate)
+
+        );
+
+
+    }
+
 
 });
 
