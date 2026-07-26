@@ -41,10 +41,7 @@ def socket_events(socketio):
     @socketio.on("connect")
     def connect():
 
-        print(
-            "🟢 Connecté :",
-            request.sid
-        )
+        print("🟢 Connecté :", request.sid)
 
     # ============================================
     # DECONNEXION
@@ -67,16 +64,13 @@ def socket_events(socketio):
 
                 emit(
                     "user_left",
-                    {
-                        "id": sid
-                    },
+                    {"id": sid},
                     room=room
                 )
 
                 leave_room(room)
 
                 if len(video_rooms[room]) == 0:
-
                     del video_rooms[room]
 
         # -----------------------------
@@ -98,7 +92,6 @@ def socket_events(socketio):
                 )
 
                 del live_rooms[room]
-
                 continue
 
             # Invité
@@ -109,9 +102,7 @@ def socket_events(socketio):
 
                 emit(
                     "guest_left",
-                    {
-                        "id": sid
-                    },
+                    {"id": sid},
                     room=room
                 )
 
@@ -123,24 +114,17 @@ def socket_events(socketio):
 
                 emit(
                     "viewer_left",
-                    {
-                        "viewer_id": sid
-                    },
+                    {"viewer_id": sid},
                     room=live["creator"]
                 )
 
                 emit(
                     "viewer_count",
-                    {
-                        "count": len(live["viewers"])
-                    },
+                    {"count": len(live["viewers"])},
                     room=room
                 )
 
-        print(
-            "🔴 Déconnecté :",
-            sid
-        )
+        print("🔴 Déconnecté :", sid)
 
     # ============================================
     # APPEL VIDEO
@@ -157,7 +141,6 @@ def socket_events(socketio):
         join_room(room)
 
         if room not in video_rooms:
-
             video_rooms[room] = []
 
         emit(
@@ -168,7 +151,6 @@ def socket_events(socketio):
         )
 
         if request.sid not in video_rooms[room]:
-
             video_rooms[room].append(request.sid)
 
         emit(
@@ -180,10 +162,7 @@ def socket_events(socketio):
             include_self=False
         )
 
-        print(
-            "👥 Appel vidéo :",
-            room
-        )
+        print("👥 Appel vidéo :", room)
 
     @socketio.on("leave_room")
     def leave_video(data):
@@ -198,7 +177,6 @@ def socket_events(socketio):
         if room in video_rooms:
 
             if request.sid in video_rooms[room]:
-
                 video_rooms[room].remove(request.sid)
 
         emit(
@@ -207,8 +185,9 @@ def socket_events(socketio):
                 "id": request.sid
             },
             room=room
-            )
-            # ============================================
+        )
+
+    # ============================================
     # REJOINDRE UN LIVE
     # ============================================
 
@@ -224,16 +203,13 @@ def socket_events(socketio):
         join_room(room)
 
         # Création de la salle
+
         if room not in live_rooms:
 
             live_rooms[room] = {
-
                 "creator": None,
-
                 "guests": set(),
-
                 "viewers": set()
-
             }
 
         live = live_rooms[room]
@@ -260,10 +236,7 @@ def socket_events(socketio):
                 room=request.sid
             )
 
-            print(
-                "🎥 Créateur :",
-                room
-            )
+            print("🎥 Créateur :", room)
 
             return
 
@@ -280,11 +253,8 @@ def socket_events(socketio):
             emit(
                 "viewer_joined",
                 {
-
                     "viewer_id": request.sid,
-
                     "count": len(live["viewers"])
-
                 },
                 room=creator_sid
             )
@@ -292,19 +262,13 @@ def socket_events(socketio):
         emit(
             "viewer_count",
             {
-
                 "count": len(live["viewers"])
-
             },
             room=room
         )
 
-        print(
-            "👀 Spectateur :",
-            request.sid
-        )
-
-    # ============================================
+        print("👀 Spectateur :", request.sid)
+            # ============================================
     # DEMANDE DE REJOINDRE LE LIVE
     # ============================================
 
@@ -321,23 +285,14 @@ def socket_events(socketio):
         if creator:
 
             emit(
-
                 "join_request",
-
                 {
-
                     "guest": request.sid
-
                 },
-
                 room=creator
-
             )
 
-        print(
-            "✋ Demande d'invité :",
-            request.sid
-        )
+        print("✋ Demande d'invité :", request.sid)
 
     # ============================================
     # ACCEPTER UN INVITE
@@ -347,7 +302,6 @@ def socket_events(socketio):
     def accept_guest(data):
 
         room = data.get("room")
-
         guest = data.get("guest")
 
         if room not in live_rooms:
@@ -356,33 +310,20 @@ def socket_events(socketio):
         live_rooms[room]["guests"].add(guest)
 
         emit(
-
             "guest_accepted",
-
             {},
-
             room=guest
-
         )
 
         emit(
-
             "guest_joined",
-
             {
-
                 "guest": guest
-
             },
-
             room=room
-
         )
 
-        print(
-            "✅ Invité accepté :",
-            guest
-        )
+        print("✅ Invité accepté :", guest)
 
     # ============================================
     # REFUSER UN INVITE
@@ -394,20 +335,14 @@ def socket_events(socketio):
         guest = data.get("guest")
 
         emit(
-
             "guest_rejected",
-
             {},
-
             room=guest
-
         )
 
-        print(
-            "❌ Invité refusé :",
-            guest
-        )
-            # ============================================
+        print("❌ Invité refusé :", guest)
+
+    # ============================================
     # CAMERA OFFER
     # ============================================
 
@@ -420,19 +355,12 @@ def socket_events(socketio):
             return
 
         emit(
-
             "camera_offer",
-
             {
-
                 "offer": data["offer"],
-
                 "sender": request.sid
-
             },
-
             room=target
-
         )
 
     # ============================================
@@ -448,19 +376,12 @@ def socket_events(socketio):
             return
 
         emit(
-
             "camera_answer",
-
             {
-
                 "answer": data["answer"],
-
                 "sender": request.sid
-
             },
-
             room=target
-
         )
 
     # ============================================
@@ -476,19 +397,12 @@ def socket_events(socketio):
             return
 
         emit(
-
             "camera_ice",
-
             {
-
                 "candidate": data["candidate"],
-
                 "sender": request.sid
-
             },
-
             room=target
-
         )
 
     # ============================================
@@ -504,19 +418,12 @@ def socket_events(socketio):
             return
 
         emit(
-
             "live_message",
-
             {
-
                 "user": request.sid[:6],
-
                 "message": data.get("message", "")
-
             },
-
             room=room
-
         )
 
     # ============================================
@@ -532,19 +439,12 @@ def socket_events(socketio):
             return
 
         emit(
-
             "live_reaction",
-
             {
-
                 "emoji": data.get("emoji", "👍"),
-
                 "user": request.sid
-
             },
-
             room=room
-
         )
 
     # ============================================
@@ -562,19 +462,12 @@ def socket_events(socketio):
         live = live_rooms[room]
 
         emit(
-
             "live_stats",
-
             {
-
                 "viewer_count": len(live["viewers"]),
-
                 "guest_count": len(live["guests"])
-
             },
-
             room=room
-
         )
             # ============================================
     # EXPULSER UN INVITE
@@ -592,7 +485,6 @@ def socket_events(socketio):
         live = live_rooms[room]
 
         if guest in live["guests"]:
-
             live["guests"].remove(guest)
 
         emit(
@@ -618,10 +510,7 @@ def socket_events(socketio):
             room=room
         )
 
-        print(
-            "🚫 Invité expulsé :",
-            guest
-        )
+        print("🚫 Invité expulsé :", guest)
 
     # ============================================
     # MISE A JOUR DU NOMBRE DE SPECTATEURS
@@ -676,10 +565,7 @@ def socket_events(socketio):
 
             del live_rooms[room]
 
-        print(
-            "⛔ Live arrêté :",
-            room
-        )
+        print("⛔ Live arrêté :", room)
 
     # ============================================
     # PING (connexion)
