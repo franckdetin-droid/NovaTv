@@ -11,6 +11,10 @@
 
 <meta name="theme-color" content="#ff2d55">
 
+<!-- Google AdSense -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js?client=ca-pub-1716743195220353"
+     crossorigin="anonymous"></script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
@@ -121,34 +125,35 @@ autocomplete="off">
 {% endwith %}
 
 {% block content %}
-    {% if session.get("user_id") %}
+
+{% if session.get("user_id") %}
 
 <div class="user-toolbar">
 
-    <a href="{{ url_for('main.profile') }}" class="toolbar-item">
-        <i class="fas fa-user"></i>
-        <span>Profil</span>
-    </a>
+<a href="{{ url_for('main.profile') }}" class="toolbar-item">
+<i class="fas fa-user"></i>
+<span>Profil</span>
+</a>
 
-    <a href="{{ url_for('main.my_list') }}" class="toolbar-item">
-        <i class="fas fa-heart"></i>
-        <span>Ma liste</span>
-    </a>
+<a href="{{ url_for('main.my_list') }}" class="toolbar-item">
+<i class="fas fa-heart"></i>
+<span>Ma liste</span>
+</a>
 
-    <a href="{{ url_for('main.history') }}" class="toolbar-item">
-        <i class="fas fa-clock-rotate-left"></i>
-        <span>Historique</span>
-    </a>
+<a href="{{ url_for('main.history') }}" class="toolbar-item">
+<i class="fas fa-clock-rotate-left"></i>
+<span>Historique</span>
+</a>
 
-    <a href="{{ url_for('main.creator') }}" class="toolbar-item">
-        <i class="fas fa-clapperboard"></i>
-        <span>Studio</span>
-    </a>
+<a href="{{ url_for('main.creator') }}" class="toolbar-item">
+<i class="fas fa-clapperboard"></i>
+<span>Studio</span>
+</a>
 
-    <a href="{{ url_for('main.logout') }}" class="toolbar-item logout">
-        <i class="fas fa-right-from-bracket"></i>
-        <span>Déconnexion</span>
-    </a>
+<a href="{{ url_for('main.logout') }}" class="toolbar-item logout">
+<i class="fas fa-right-from-bracket"></i>
+<span>Déconnexion</span>
+</a>
 
 </div>
 
@@ -156,15 +161,15 @@ autocomplete="off">
 
 <div class="guest-toolbar">
 
-    <a href="{{ url_for('main.login') }}" class="btn-login">
-        <i class="fas fa-right-to-bracket"></i>
-        Connexion
-    </a>
+<a href="{{ url_for('main.login') }}" class="btn-login">
+<i class="fas fa-right-to-bracket"></i>
+Connexion
+</a>
 
-    <a href="{{ url_for('main.register') }}" class="btn-register">
-        <i class="fas fa-user-plus"></i>
-        Inscription
-    </a>
+<a href="{{ url_for('main.register') }}" class="btn-register">
+<i class="fas fa-user-plus"></i>
+Inscription
+</a>
 
 </div>
 
@@ -176,147 +181,144 @@ autocomplete="off">
 
 </div>
 
-    </main>
-    <footer class="main-footer">
+</main>
 
-    <div class="footer-container">
+<footer class="main-footer">
 
-        <!-- Logo -->
+<div class="footer-container">
 
-        <div class="footer-brand">
+<div class="footer-brand">
 
-            <div class="footer-logo">
+<div class="footer-logo">
 
-                <i class="fas fa-tv"></i>
+<i class="fas fa-tv"></i>
 
-                <span>MY TV APP</span>
+<span>MY TV APP</span>
 
-            </div>
+</div>
 
-            <p>
+<p>
 
-                Regardez des chaînes TV en direct,
-                des films, des séries et créez vos
-                propres contenus avec Creator Studio.
+Regardez des chaînes TV en direct,
+des films, des séries et créez vos
+propres contenus avec Creator Studio.
 
-            </p>
+</p>
 
-            <div class="footer-social">
+<div class="footer-social">
 
-                <a href="#"><i class="fab fa-facebook-f"></i></a>
+<a href="#"><i class="fab fa-facebook-f"></i></a>
 
-                <a href="#"><i class="fab fa-instagram"></i></a>
+<a href="#"><i class="fab fa-instagram"></i></a>
 
-                <a href="#"><i class="fab fa-youtube"></i></a>
+<a href="#"><i class="fab fa-youtube"></i></a>
 
-                <a href="#"><i class="fab fa-tiktok"></i></a>
+<a href="#"><i class="fab fa-tiktok"></i></a>
 
-            </div>
+</div>
 
-        </div>
+</div>
 
-        <!-- Navigation -->
+<div class="footer-column">
 
-        <div class="footer-column">
+<h3>Navigation</h3>
 
-            <h3>Navigation</h3>
+<a href="{{ url_for('main.home') }}">
+Accueil
+</a>
 
-            <a href="{{ url_for('main.home') }}">
-                Accueil
-            </a>
+<a href="{{ url_for('main.channels') }}">
+Chaînes
+</a>
 
-            <a href="{{ url_for('main.channels') }}">
-                Chaînes
-            </a>
+<a href="{{ url_for('main.live') }}">
+TV en direct
+</a>
 
-            <a href="{{ url_for('main.live') }}">
-               TV en direct
-            </a>
-            <a href="/partenariat">Partenariat chaînes TV</a>
+<a href="/partenariat">
+Partenariat chaînes TV
+</a>
 
-            <a href="{{ url_for('main.camera_live') }}">
-                Caméra Live
-            </a>
+<a href="{{ url_for('main.camera_live') }}">
+Caméra Live
+</a>
 
-        </div>
+</div>
 
-        <!-- Mon compte -->
+<div class="footer-column">
 
-        <div class="footer-column">
+<h3>Mon compte</h3>
 
-            <h3>Mon compte</h3>
+{% if session.get("user_id") %}
 
-            {% if session.get("user_id") %}
+<a href="{{ url_for('main.profile') }}">
+Profil
+</a>
 
-            <a href="{{ url_for('main.profile') }}">
-                Profil
-            </a>
+<a href="{{ url_for('main.my_list') }}">
+Ma liste
+</a>
 
-            <a href="{{ url_for('main.my_list') }}">
-                Ma liste
-            </a>
+<a href="{{ url_for('main.history') }}">
+Historique
+</a>
 
-            <a href="{{ url_for('main.history') }}">
-                Historique
-            </a>
+<a href="{{ url_for('main.logout') }}">
+Déconnexion
+</a>
 
-            <a href="{{ url_for('main.logout') }}">
-                Déconnexion
-            </a>
+{% else %}
 
-            {% else %}
+<a href="{{ url_for('main.login') }}">
+Connexion
+</a>
 
-            <a href="{{ url_for('main.login') }}">
-                Connexion
-            </a>
+<a href="{{ url_for('main.register') }}">
+Inscription
+</a>
 
-            <a href="{{ url_for('main.register') }}">
-                Inscription
-            </a>
+{% endif %}
 
-            {% endif %}
+</div>
 
-        </div>
+<div class="footer-column">
 
-        <!-- Application -->
+<h3>Application</h3>
 
-        <div class="footer-column">
+<a href="/download">
+Télécharger
+</a>
 
-            <h3>Application</h3>
+<a href="{{ url_for('main.creator') }}">
+Creator Studio
+</a>
 
-            <a href="/download">
-                Télécharger
-            </a>
+<a href="#">
+Confidentialité
+</a>
 
-            <a href="{{ url_for('main.creator') }}">
-                Creator Studio
-            </a>
+<a href="#">
+Conditions d'utilisation
+</a>
 
-            <a href="#">
-                Confidentialité
-            </a>
+</div>
 
-            <a href="#">
-                Conditions d'utilisation
-            </a>
+</div>
 
-        </div>
+<div class="footer-bottom">
 
-    </div>
+<p>
 
-    <div class="footer-bottom">
+© {{ current_year if current_year else 2026 }}
+MY TV APP — Tous droits réservés.
 
-        <p>
+</p>
 
-            © {{ current_year if current_year else 2026 }}
-            MY TV APP — Tous droits réservés.
+</div>
 
-        </p>
+</footer>
 
-    </div>
-
-            </footer>
-            <!-- Overlay menu mobile -->
+<!-- Overlay menu mobile -->
 
 <div class="mobile-overlay"></div>
 
@@ -324,7 +326,7 @@ autocomplete="off">
 
 <button id="backToTop" class="back-to-top">
 
-    <i class="fas fa-arrow-up"></i>
+<i class="fas fa-arrow-up"></i>
 
 </button>
 
@@ -398,4 +400,4 @@ behavior:"smooth"
 
 </body>
 
-</html>
+    </html>
