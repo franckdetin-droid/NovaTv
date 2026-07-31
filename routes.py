@@ -36,7 +36,20 @@ main = Blueprint(
     "main",
     __name__
 )
+# ==========================
+# GOOGLE ADSENSE ADS.TXT
+# ==========================
 
+@main.route("/ads.txt")
+def ads_txt():
+
+    return (
+        "google.com, pub-1716743195220353, DIRECT, f08c47fec0942fa0\n",
+        200,
+        {
+            "Content-Type": "text/plain; charset=utf-8"
+        }
+    )
 # ==========================
 # ACCUEIL
 # ==========================
