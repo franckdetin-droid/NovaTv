@@ -44,7 +44,7 @@ main = Blueprint(
 def ads_txt():
 
     return (
-        "google.com, pub-1716743195220353, DIRECT, f08c47fec0942fa0\n",
+        "google.com, pub-1325542423001419, DIRECT, f08c47fec0942fa0\n",
         200,
         {
             "Content-Type": "text/plain; charset=utf-8"
