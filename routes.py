@@ -103,37 +103,29 @@ def download():
 # PAGES DU SITE
 # ============================================================
 
-from fastapi.responses import FileResponse
-
-
-@main.get("/")
-def index():
-    return FileResponse("static/index.html")
-
-
-@main.get("/about")
+@main.route("/about")
 def about():
-    return FileResponse("static/about.html")
+    return render_template("about.html")
 
 
-@main.get("/contact")
+@main.route("/contact")
 def contact():
-    return FileResponse("static/contact.html")
+    return render_template("contact.html")
 
 
-@main.get("/privacy")
+@main.route("/privacy")
 def privacy():
-    return FileResponse("static/privacy.html")
+    return render_template("privacy.html")
 
 
-@main.get("/terms")
+@main.route("/terms")
 def terms():
-    return FileResponse("static/terms.html")
+    return render_template("terms.html")
+
 
 # ============================================================
-# FIN DES ROUTES DES PAGES
+# FIN DES PAGES DU SITE
 # ============================================================
-
 # ==========================
 # VERIFICATION FICHIERS
 # ==========================
