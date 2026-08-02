@@ -2925,3 +2925,71 @@ footer a:hover{
     }
 
 }
+/* ==========================================================
+   COULEURS DES PAGES D'INFORMATIONS
+========================================================== */
+
+.info-page{
+
+    background:#1b1f2e;
+    color:#ffffff;
+    border:1px solid #2f3654;
+    border-radius:18px;
+    padding:30px;
+    margin:30px auto;
+    max-width:1000px;
+    box-shadow:0 10px 30px rgba(0,0,0,.35);
+
+}
+
+.info-page h1{
+
+    color:#ff2d55;
+    text-align:center;
+    margin-bottom:25px;
+
+}
+
+.info-page h2{
+
+    color:#00cfff;
+    margin-top:25px;
+
+}
+
+.info-page p{
+
+    color:#d9d9d9;
+    line-height:1.8;
+
+}
+
+.info-page a{
+
+    color:#00cfff;
+    text-decoration:none;
+
+}
+
+.info-page a:hover{
+
+    color:#ff2d55;
+
+}
+
+.info-card{
+
+    background:#252b42;
+    border-left:5px solid #ff2d55;
+    border-radius:12px;
+    padding:20px;
+    margin-top:20px;
+
+}
+
+.info-card:hover{
+
+    background:#2d3550;
+    transition:.3s;
+
+   }
