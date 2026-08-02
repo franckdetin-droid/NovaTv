@@ -15,12 +15,11 @@
 <!-- GOOGLE ADSENSE -->
 <!-- ============================= -->
 
-<!-- Identification du compte AdSense -->
-<meta name="google-adsense-account" content="ca-pub-1716743195220353">
+<meta name="google-adsense-account"
+content="ca-pub-1325542423001419">
 
-<!-- Script Google AdSense -->
 <script async
-src="https://pagead2.googlesyndication.com/pagead/js?client=ca-pub-1716743195220353"
+src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1325542423001419"
 crossorigin="anonymous"></script>
 
 <!-- ============================= -->
@@ -119,8 +118,7 @@ autocomplete="off">
 </header>
 
 <main class="main-content">
-
-{% with messages = get_flashed_messages() %}
+     {% with messages = get_flashed_messages() %}
 
 {% if messages %}
 
@@ -138,7 +136,6 @@ autocomplete="off">
 
 {% endwith %}
 
-
 {% block content %}
 
 {% if session.get("user_id") %}
@@ -146,43 +143,28 @@ autocomplete="off">
 <div class="user-toolbar">
 
 <a href="{{ url_for('main.profile') }}" class="toolbar-item">
-
 <i class="fas fa-user"></i>
-
 <span>Profil</span>
-
 </a>
 
 <a href="{{ url_for('main.my_list') }}" class="toolbar-item">
-
 <i class="fas fa-heart"></i>
-
 <span>Ma liste</span>
-
 </a>
 
 <a href="{{ url_for('main.history') }}" class="toolbar-item">
-
 <i class="fas fa-clock-rotate-left"></i>
-
 <span>Historique</span>
-
 </a>
 
 <a href="{{ url_for('main.creator') }}" class="toolbar-item">
-
 <i class="fas fa-clapperboard"></i>
-
 <span>Studio</span>
-
 </a>
 
 <a href="{{ url_for('main.logout') }}" class="toolbar-item logout">
-
 <i class="fas fa-right-from-bracket"></i>
-
 <span>Déconnexion</span>
-
 </a>
 
 </div>
@@ -192,25 +174,18 @@ autocomplete="off">
 <div class="guest-toolbar">
 
 <a href="{{ url_for('main.login') }}" class="btn-login">
-
 <i class="fas fa-right-to-bracket"></i>
-
 Connexion
-
 </a>
 
 <a href="{{ url_for('main.register') }}" class="btn-register">
-
 <i class="fas fa-user-plus"></i>
-
 Inscription
-
 </a>
 
 </div>
 
 {% endif %}
-
 
 <div class="page-container">
 
@@ -220,7 +195,6 @@ Inscription
 
 </main>
 
-
 <footer class="main-footer">
 
 <div class="footer-container">
@@ -228,177 +202,124 @@ Inscription
 <div class="footer-brand">
 
 <div class="footer-logo">
-
 <i class="fas fa-tv"></i>
-
 <span>MY TV APP</span>
-
 </div>
 
 <p>
-
 Regardez des chaînes TV en direct,
 des films, des séries et créez vos
 propres contenus avec Creator Studio.
-
 </p>
 
 <div class="footer-social">
 
 <a href="#">
-
 <i class="fab fa-facebook-f"></i>
-
 </a>
 
 <a href="#">
-
 <i class="fab fa-instagram"></i>
-
 </a>
 
 <a href="#">
-
 <i class="fab fa-youtube"></i>
-
 </a>
 
-<a href="#">
-
+<a href="https://tiktok.com/@lienflux6"
+target="_blank"
+rel="noopener noreferrer">
 <i class="fab fa-tiktok"></i>
-
 </a>
 
 </div>
 
 </div>
-
 
 <div class="footer-column">
 
 <h3>Navigation</h3>
 
-<a href="{{ url_for('main.home') }}">
+<a href="{{ url_for('main.home') }}">Accueil</a>
 
-Accueil
+<a href="{{ url_for('main.channels') }}">Chaînes</a>
 
-</a>
+<a href="{{ url_for('main.live') }}">TV en direct</a>
 
-<a href="{{ url_for('main.channels') }}">
+<a href="/partenariat">Partenariat chaînes TV</a>
 
-Chaînes
+<a href="{{ url_for('main.camera_live') }}">Caméra Live</a>
 
-</a>
-
-<a href="{{ url_for('main.live') }}">
-
-TV en direct
-
-</a>
-
-<a href="/partenariat">
-
-Partenariat chaînes TV
-
-</a>
-
-<a href="{{ url_for('main.camera_live') }}">
-
-Caméra Live
-
-</a>
-
-</div>
-
-
-<div class="footer-column">
+     </div>
+     <div class="footer-column">
 
 <h3>Mon compte</h3>
 
 {% if session.get("user_id") %}
 
 <a href="{{ url_for('main.profile') }}">
-
 Profil
-
 </a>
 
 <a href="{{ url_for('main.my_list') }}">
-
 Ma liste
-
 </a>
 
 <a href="{{ url_for('main.history') }}">
-
 Historique
-
 </a>
 
 <a href="{{ url_for('main.logout') }}">
-
 Déconnexion
-
 </a>
 
 {% else %}
 
 <a href="{{ url_for('main.login') }}">
-
 Connexion
-
 </a>
 
 <a href="{{ url_for('main.register') }}">
-
 Inscription
-
 </a>
 
 {% endif %}
 
 </div>
 
-
 <div class="footer-column">
 
-<h3>Application</h3>
+<h3>Informations</h3>
+
+<a href="{{ url_for('main.about') }}">
+À propos
+</a>
+
+<a href="{{ url_for('main.contact') }}">
+Contact
+</a>
+
+<a href="{{ url_for('main.privacy') }}">
+Politique de confidentialité
+</a>
+
+<a href="{{ url_for('main.terms') }}">
+Conditions d'utilisation
+</a>
 
 <a href="/download">
-
-Télécharger
-
-</a>
-
-<a href="{{ url_for('main.creator') }}">
-
-Creator Studio
-
-</a>
-
-<a href="#">
-
-Confidentialité
-
-</a>
-
-<a href="#">
-
-Conditions d'utilisation
-
+Télécharger l'application
 </a>
 
 </div>
 
 </div>
-
 
 <div class="footer-bottom">
 
 <p>
 
 © {{ current_year if current_year else 2026 }}
-
 MY TV APP — Tous droits réservés.
 
 </p>
@@ -407,13 +328,7 @@ MY TV APP — Tous droits réservés.
 
 </footer>
 
-
-<!-- Overlay menu mobile -->
-
 <div class="mobile-overlay"></div>
-
-
-<!-- Bouton retour en haut -->
 
 <button id="backToTop" class="back-to-top">
 
@@ -421,55 +336,43 @@ MY TV APP — Tous droits réservés.
 
 </button>
 
-
-<!-- Scripts -->
-
 <script src="{{ url_for('static', filename='js/app.js') }}"></script>
-
 
 <script>
 
 document.addEventListener("DOMContentLoaded", function(){
 
-const menuBtn = document.querySelector(".menu-toggle");
-
-const nav = document.querySelector(".nav");
-
-const overlay = document.querySelector(".mobile-overlay");
-
+const menuBtn=document.querySelector(".menu-toggle");
+const nav=document.querySelector(".nav");
+const overlay=document.querySelector(".mobile-overlay");
 
 if(menuBtn){
 
 menuBtn.addEventListener("click",function(){
 
 nav.classList.toggle("active");
-
 overlay.classList.toggle("active");
 
 });
 
 }
 
-
 if(overlay){
 
 overlay.addEventListener("click",function(){
 
 nav.classList.remove("active");
-
 overlay.classList.remove("active");
 
 });
 
 }
 
-
-const topBtn = document.getElementById("backToTop");
-
+const topBtn=document.getElementById("backToTop");
 
 window.addEventListener("scroll",function(){
 
-if(window.scrollY > 400){
+if(window.scrollY>400){
 
 topBtn.classList.add("show");
 
@@ -481,13 +384,11 @@ topBtn.classList.remove("show");
 
 });
 
-
 topBtn.addEventListener("click",function(){
 
 window.scrollTo({
 
 top:0,
-
 behavior:"smooth"
 
 });
@@ -496,12 +397,9 @@ behavior:"smooth"
 
 });
 
-
 </script>
-
 
 {% block scripts %}{% endblock %}
 
 </body>
-
-     </html>
+</html>
