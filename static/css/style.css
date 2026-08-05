@@ -2993,4 +2993,26 @@ footer a:hover{
     transition:.3s;
 
    }
+/* Correction boutons téléphone */
+
+@media(max-width:768px){
+
+    .hero-buttons{
+        display:flex;
+        flex-direction:column;
+        align-items:stretch;
+        gap:15px;
+        width:100%;
+    }
+
+    .hero-buttons a,
+    .btn,
+    button,
+    input[type="submit"]{
+        width:100%;
+        margin:0;
+        justify-content:center;
+    }
+
+}
 
