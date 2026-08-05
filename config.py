@@ -9,55 +9,34 @@ class Config:
     )
 
 
-    # Supabase PostgreSQL
+    # Base PostgreSQL
     SQLALCHEMY_DATABASE_URI = os.environ.get(
         "DATABASE_URL"
     )
-
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
     SQLALCHEMY_ENGINE_OPTIONS = {
-
         "pool_pre_ping": True,
-
         "pool_recycle": 300,
-
         "pool_size": 5,
-
         "max_overflow": 10
-
     }
 
 
+    # Google Drive Storage
 
-    # Upload gros fichiers
+    GOOGLE_DRIVE_FOLDER_ID = os.environ.get(
+        "GOOGLE_DRIVE_FOLDER_ID"
+    )
 
-    UPLOAD_FOLDER = "storage"
+    GOOGLE_CREDENTIALS = os.environ.get(
+        "GOOGLE_CREDENTIALS",
+        "credentials.json"
+    )
 
 
     MAX_CONTENT_LENGTH = (
         5 * 1024 * 1024 * 1024
-    )
-
-
-    CLOUDINARY_UPLOAD_CHUNK_SIZE = 6000000
-
-
-
-    # Cloudinary
-
-    CLOUDINARY_CLOUD_NAME = os.environ.get(
-        "CLOUDINARY_CLOUD_NAME"
-    )
-
-
-    CLOUDINARY_API_KEY = os.environ.get(
-        "CLOUDINARY_API_KEY"
-    )
-
-
-    CLOUDINARY_API_SECRET = os.environ.get(
-        "CLOUDINARY_API_SECRET"
     )
