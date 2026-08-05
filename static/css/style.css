@@ -3015,4 +3015,64 @@ footer a:hover{
     }
 
 }
+/* ==========================
+   CONTROLES CAMERA MOBILE
+========================== */
+
+.live-controls{
+
+    display:flex;
+    flex-wrap:wrap;
+    gap:15px;
+    margin-top:25px;
+    width:100%;
+
+}
+
+
+.live-btn{
+
+    flex:1;
+    min-width:180px;
+    min-height:55px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border:none;
+    border-radius:18px;
+
+    padding:15px 20px;
+
+    font-size:16px;
+    font-weight:700;
+
+    cursor:pointer;
+
+}
+
+
+/* TELEPHONE */
+
+@media(max-width:768px){
+
+    .live-controls{
+
+        flex-direction:column;
+        gap:12px;
+        width:100%;
+
+    }
+
+
+    .live-btn{
+
+        width:100%;
+        min-width:0;
+        height:55px;
+
+    }
+
+   }
 
